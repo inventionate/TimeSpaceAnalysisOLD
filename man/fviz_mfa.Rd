@@ -2,6 +2,9 @@
 % Please edit documentation in R/fviz-mfa.R
 \name{fviz_mfa}
 \alias{fviz_mfa}
+\alias{fviz_mfa_axes}
+\alias{fviz_mfa_biplot}
+\alias{fviz_mfa_group}
 \alias{fviz_mfa_ind}
 \alias{fviz_mfa_quali_var}
 \alias{fviz_mfa_quanti_var}
@@ -30,9 +33,41 @@ fviz_mfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   map = "symmetric", jitter = list(what = "label", width = NULL, height =
   NULL))
+
+fviz_mfa_group(X, axes = c(1, 2), geom = c("point", "text"),
+  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
+  col.quanti.sup = "blue", col.quali.sup = "darkgreen",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  map = "symmetric", jitter = list(what = "label", width = NULL, height =
+  NULL), ...)
+
+fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
+  invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
+  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
+  col.ind.sup = "darkblue", alpha.ind = 1, col.var = "red",
+  alpha.var = 1, col.quanti.sup = "blue", col.quali.sup = "darkgreen",
+  col.circle = "grey70", shape.ind = 19, shape.var = 17,
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  map = "symmetric", arrows = c(FALSE, FALSE), jitter = list(what =
+  "label", width = NULL, height = NULL), ...)
+
+fviz_mfa_biplot(X, axes = c(1, 2), geom = c("point", "text"),
+  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
+  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
+  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
+  col.var = "red", alpha.var = 1, col.quanti.sup = "blue",
+  col.quali.sup = "darkgreen", shape.ind = 19, shape.var = 17,
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  map = "symmetric", arrows = c(FALSE, FALSE), jitter = list(what =
+  "label", width = NULL, height = NULL), ...)
+
+fviz_mfa(X, ...)
 }
 \arguments{
-\item{X}{an object of class MFA [FactoMineR].}
+\item{X}{an object of class MFA [FactoMineR].
+#@inheritParams fviz_mca}
 
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".

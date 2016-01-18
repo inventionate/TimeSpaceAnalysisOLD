@@ -1,5 +1,22 @@
+#' Perform "Specific Correspondance Analysis"
+#'
+#' @param X
+#' @param ncp
+#' @param row.sup
+#' @param col.sup
+#' @param quanti.sup
+#' @param quali.sup
+#' @param graph
+#' @param axes
+#' @param row.w
+#' @param excl
+#'
+#' @return Returns a list with CA results.
+#' @export
+#'
+#' @examples
 spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, quali.sup=NULL, graph = TRUE, axes=c(1,2), row.w=NULL, excl=NULL){
-  
+
   # fct.eta2 <- function(vec,x,weights) {
   # res <- summary(lm(x~vec,weights=weights,na.action=na.omit))$r.squared
   # }
@@ -11,7 +28,7 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
     ni <- colSums(tt*weights)
     unlist(lapply(as.data.frame(x),VB))/colSums(x^2*weights)
   }
-  
+
   if (is.table(X)) X <- as.data.frame.matrix(X)
   if (is.null(rownames(X))) rownames(X) <- 1:nrow(X)
   if (is.null(colnames(X))) colnames(X) <- colnames(X, do.NULL = FALSE,prefix="V")
@@ -68,7 +85,7 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
   inertia.col = marge.col*dist2.col
   names(inertia.col) <- attributes(coord.col)$row.names
   names(inertia.row) <- attributes(coord.row)$row.names
-  
+
   #    res.call <- list(X = X, marge.col = marge.col, marge.row = marge.row, ncp = ncp, row.w=row.w,call=sys.calls()[[1]],Xtot=Xtot,N=sum(row.w*rowSums(X)))
   res.call <- list(X = X, marge.col = marge.col, marge.row = marge.row, excl = excl, ncp = ncp, row.w=row.w,call=match.call(),Xtot=Xtot,N=sum(row.w*rowSums(X)))
   res.col <- list(coord = as.matrix(coord.col[, 1:ncp]), contrib = as.matrix(contrib.col[, 1:ncp] * 100), cos2 = as.matrix(cos2.col[, 1:ncp]), inertia=inertia.col)
@@ -101,7 +118,7 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
     somme.col <- colSums(X.col.sup)
     X.col.sup <- t(t(X.col.sup)/somme.col)
     coord.col.sup <- as.data.frame(crossprod(as.matrix(X.col.sup),U))
-    
+
     dist2.col <- colSums((X.col.sup-marge.row)^2/marge.row)
     cos2.col.sup <- coord.col.sup^2/dist2.col
     coord.col.sup <- as.matrix(coord.col.sup[,1:ncp,drop=FALSE])
@@ -131,7 +148,7 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
       for (j in 1:length(quali.sup)) res$quali.sup$coord <- rbind.data.frame(res$quali.sup$coord,sweep(sapply(as.data.frame(sweep(res$row$coord,1,marge.row,FUN="*")),tapply,Xtot[,quali.sup[j]],sum), 1, tapply(marge.row,Xtot[,quali.sup[j]],sum),FUN="/"))
     }
     rownames(res$quali.sup$coord) <- paste(rep(colnames(Xtot)[quali.sup],lapply(Xtot[,quali.sup,drop=FALSE],nlevels)) , unlist(lapply(Xtot[,quali.sup,drop=FALSE],levels)),sep=".")
-    
+
     if (!is.null(row.sup)) Zqs <- tab.disjonctif(Xtot[-row.sup,quali.sup])
     else Zqs <- tab.disjonctif(Xtot[,quali.sup])
     Nj <- colSums(Zqs * row.w)
@@ -139,14 +156,14 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
     if (total>1) coef <- sqrt(Nj * ((total - 1)/(total - Nj)))
     else coef <- sqrt(Nj)
     res$quali.sup$v.test <- res$quali.sup$coord*coef
-    
+
     eta2 = matrix(NA, length(quali.sup), ncp)
     # if (is.null(row.sup)) {
     # for (i in 1:ncp)  eta2[, i] <- unlist(lapply(as.data.frame(Xtot[, quali.sup]),fct.eta2,res$row$coord[,i],weights=marge.row))
     # } else {
     # for (i in 1:ncp)  eta2[, i] <- unlist(lapply(as.data.frame(Xtot[-row.sup, quali.sup]),fct.eta2,res$row$coord[,i],weights=marge.row))
-    # }	  
-    
+    # }
+
     if (is.null(row.sup)) {
       eta2 <- sapply(as.data.frame(Xtot[, quali.sup,drop=FALSE]),fct.eta2,res$row$coord,weights=marge.row)
     } else {
@@ -155,11 +172,11 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
     eta2 <- t(as.matrix(eta2,ncol=ncp))
     colnames(eta2) = paste("Dim", 1:ncp)
     rownames(eta2) = colnames(Xtot)[quali.sup]
-    
+
     res$quali.sup$eta2 <- eta2
     res$call$quali.sup <- quali.sup
   }
-  
+
   class(res) <- c("CA", "list")
   if (graph & (ncp>1)) {
     plot(res,axes=axes)

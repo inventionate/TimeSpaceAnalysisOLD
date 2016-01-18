@@ -1,3 +1,14 @@
+#' Print summaory of spMFA results.
+#'
+#' @param x
+#' @param file
+#' @param sep
+#' @param ...
+#'
+#' @return List of spMFA results.
+#' @export
+#'
+#' @examples
 print.spMFA <- function (x, file = NULL, sep = ";", ...){
   res.spmfa <- x
   if (!inherits(res.spmfa, "spMFA")) stop("non convenient data")
@@ -33,7 +44,7 @@ print.spMFA <- function (x, file = NULL, sep = ";", ...){
     res[indice, ] <- c("$quali.var.sup", "results for the categorical supplementary variables")
     indice <- indice + 1
   }
-  
+
   if (!is.null(res.spmfa["freq"]$freq)){
     res[indice, ] <- c("$freq", "results for the frequencies")
     indice <- indice + 1
@@ -42,8 +53,8 @@ print.spMFA <- function (x, file = NULL, sep = ";", ...){
     res[indice, ] <- c("$freq.sup", "results for the supplementary frequencies")
     indice <- indice + 1
   }
-  
-  
+
+
   if (!is.null(res.spmfa$quanti.var)){
     res[indice, ] <- c("$summary.quanti", "summary for the quantitative variables")
     indice <- indice + 1

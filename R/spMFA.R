@@ -1,15 +1,35 @@
+#' Performs a Specific Multiple Factor Analysis.
+#'
+#' @param base
+#' @param group
+#' @param type
+#' @param excl
+#' @param ind.sup
+#' @param ncp
+#' @param name.group
+#' @param num.group.sup
+#' @param graph
+#' @param weight.col.mfa
+#' @param row.w
+#' @param axes
+#' @param tab.comp
+#'
+#' @return Returns a list of spMFA results.
+#' @export
+#'
+#' @examples
 spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.sup = NULL, ncp = 5, name.group = NULL, num.group.sup = NULL, graph = TRUE, weight.col.mfa = NULL, row.w = NULL, axes=c(1,2),tab.comp=NULL){
-  
+
   moy.p <- function(V, poids) {
     res <- sum(V * poids,na.rm=TRUE)/sum(poids[!is.na(V)])
   }
   ec <- function(V, poids) {
     res <- sqrt(sum(V^2 * poids,na.rm=TRUE)/sum(poids[!is.na(V)]))
   }
-  
-  
+
+
   # @info GDA Extensions aus Nicolas Robettes GDAtools Paket.
-  # Mit dieser Funktion lassen sich modified rates berechnen, die Anhaltspunkte für 
+  # Mit dieser Funktion lassen sich modified rates berechnen, die Anhaltspunkte für
   # die Wahl der zu interpretierende Achsen geben
   modif.rate <- function(resmca) {
     Q <- ncol(resmca$call$X)
@@ -20,17 +40,17 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     cum.mrate <- cumsum(mrate)
     return(data.frame(mrate,cum.mrate))
   }
-  
+
   ##################
-  ## Main program ##   
+  ## Main program ##
   ##################
-  
+
   if (!is.null(tab.comp)){
     if (!is.null(weight.col.mfa)) stop("Weightings on the variables are not allowed with the tab.comp argument")
     if (!is.null(ind.sup)) stop("Supplementary individuals are not allowed with tab.comp")
     if (!is.null(num.group.sup)) stop("Supplementary groups are not allowed with tab.comp")
   }
-  
+
   nature.group <- NULL
   for (i in 1:length(group)){
     if ((type[i] == "n")&&(!(i%in%num.group.sup))) nature.group <- c(nature.group,"quali")
@@ -41,8 +61,8 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     if (((type[i] == "f")||(type[i] == "f2"))&&(i%in%num.group.sup)) nature.group <- c(nature.group,"contingency.sup")
   }
   nature.var <- rep(nature.group,times=group)
-  
-  ### Add 
+
+  ### Add
   type.var <- NULL
   for (i in 1:length(group)){
     if ((type[i] == "n")&&(!(i%in%num.group.sup))) type.var <- c(type.var,rep("quali",group[i]))
@@ -104,13 +124,13 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       }
     }
   }
-  
+
   if (is.null(row.w)) row.w <- rep(1,nb.actif)
-  
+
   if (any("f" %in% type)+any("f2" %in% type)+any("f3" %in% type)>1) stop("For the contingency tables, the type must the the same")
   if (("f" %in% type)||("f2" %in% type)||("f3" %in% type)) {
     grfrec<-c(which(type=="f"),which(type=="f2"),which(type=="f3"))
-    
+
     ## pour avoir individus actifs, que ind.sup soit NULL ou non
     ##		ind.actif <- !((1:nrow(base))%in%intersect(ind.sup,(1:nrow(base))))
     for (i in grfrec){
@@ -144,10 +164,10 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
         if (!(j%in%num.group.sup)) row.w<-row.w+Fi.t[[j]]
       }
     }
-    
+
     F..t<-numeric()
     for (j in grfrec)	F..t[j]<-sum(Fi.t[[j]][1:nb.actif])
-    
+
     for (t in grfrec){
       if (t==1) {
         base[,1:group[t]]<-sweep(base[,1:group[t]],2,F.jt[[t]],FUN="/")
@@ -161,11 +181,11 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       }
     }
     row.w <- row.w[1:nb.actif]
-  }		
-  
+  }
+
   if (!is.null(ind.sup))  row.w.moy.ec <- c(row.w,rep(0,length(ind.sup)))
   else row.w.moy.ec <- row.w
-  
+
   if (is.null(weight.col.mfa)) weight.col.mfa <- rep(1,sum(group.mod))
   ### Begin handle missing values
   if (!is.null(tab.comp)){
@@ -188,7 +208,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       # @info Anpassungen für spMCA
       else res.separe[[g]] <- spMCA(aux.base, excl = excl[[g]], ind.sup = ind.sup, ncp=ncp, graph = FALSE, row.w=row.w)
     }
-    
+
     ###  Begin handle missing values
     if (!is.null(tab.comp)){
       if (type[g] == "s") res.separe[[g]] <- PCA(tab.comp[,ind.var.group[[g]]],scale.unit=TRUE,row.w=row.w,ind.sup=ind.sup,col.w=weight.col.mfa[(ind.grpe + 1):(ind.grpe + group[g])],graph=FALSE)
@@ -196,7 +216,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       if (type[g] == "n") res.separe[[g]] <- MCA(aux.base, ind.sup = ind.sup, ncp=ncp, graph = FALSE, row.w=row.w,tab.disj=tab.comp[,ind.var.group[[g]]])
     }
     ###  End handle missing values
-    
+
     ind.grpe <- ind.grpe + group[g]
   }
   data <- matrix(0,nbre.ind,0)
@@ -233,7 +253,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       #    		if (type[g]=="f") ponderation[(ind.grpe.mod+1):(ind.grpe.mod+group[g])]<-F.jt[[g]]/res.separe[[g]]$eig[1,1]
       #		    else ponderation[(ind.grpe+1):(ind.grpe.mod+group[g])]<-P.jt[[g]]/length(grfrec2)/res.separe[[g]]$eig[1,1]
     }
-    
+
     ## modif Avril 2011
     if (type[g] == "n") {
       ## a remettre si j'enleve yyyyy
@@ -296,7 +316,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
           data.group.sup <- as.data.frame(data[,(1+nb.of.var):(nb.of.var+group.mod[i])])
           # @info Adaption für die strukturierte Datenanalyse.
           # Hier wird festgelegt, für welche Varaibalen Varianzwerte berechnet werden sollen
-          # Indizes und Namen der passiven Variablen berechnen 
+          # Indizes und Namen der passiven Variablen berechnen
           indices <- NULL
           for(i in 1:length(group)) {
             indices <- c(indices, rep(group[i], group[i]))
@@ -340,7 +360,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     aux.quali.sup.indice=NULL
   }
   ###  End handle missing values
-  
+
   # @info spMCA Adaption (Gewichte nach der Berechnung auf 0 setzen aka spMCA)
   res.globale <- spPCA(data.pca, scale.unit = FALSE, col.w = ponderation, row.w=row.w,ncp = ncp.tmp, ind.sup = ind.sup, quali.sup = aux.quali.sup.indice, structuring.factors = structuring.factors, quanti.sup = data.group.sup.indice, graph = FALSE)
   # res.globale <- PCA(data.pca, scale.unit = FALSE, col.w = ponderation, row.w=row.w,ncp = ncp.tmp, ind.sup = ind.sup, quali.sup = aux.quali.sup.indice, quanti.sup = data.group.sup.indice, graph = FALSE)
@@ -377,7 +397,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
   }
   coord.group <- t(t(contrib.group)*res.globale$eig[1:ncol(contrib.group),1])
   cos2.group <- coord.group^2/dist2.group
-  
+
   if (!is.null(num.group.sup)){
     coord.group.sup <- matrix(NA, length(num.group.sup), ncp.tmp)
     dimnames(coord.group.sup) <- list(name.group[num.group.sup], paste("Dim", c(1:ncp.tmp), sep = "."))
@@ -448,9 +468,9 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
   }
   res.ind.partiel <- vector(mode = "list", length = nbre.group)
   names(res.ind.partiel) <- name.group
-  
+
   for (g in group.actif){
-    Xis <- t(t(as.matrix(data.partiel[[g]]))-res.globale$call$centre) 
+    Xis <- t(t(as.matrix(data.partiel[[g]]))-res.globale$call$centre)
     Xis <- t(t(Xis)/res.globale$call$ecart.type)
     ##      coord.ind.sup <- length(group.actif) * as.matrix(Xis)%*%diag((res.globale$call$col.w))%*%res.globale$svd$V
     coord.ind.sup <- length(group.actif) * as.matrix(Xis)
@@ -466,11 +486,11 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     ##        for (g in 1:length(group.actif)) cor.grpe.fact[g, f] <- cor(res.ind.partiel[[group.actif[g]]]$coord.sup[1:nb.actif, f], res.globale$ind$coord[, f])
     for (g in 1:length(group.actif))  cor.grpe.fact[g, f] <- cov.wt(cbind.data.frame(res.ind.partiel[[group.actif[g]]]$coord.sup[1:nb.actif, f], res.globale$ind$coord[, f]),wt=row.w/sum(row.w),method="ML",cor=TRUE)$cor[1,2]
   }
-  
+
   It <- vector(length = ncp.tmp)
   for (g in group.actif)  It <- It + apply(res.ind.partiel[[g]]$coord.sup[1:nb.actif,]^2*row.w,2,sum)
-  rap.inertie <- apply(res.globale$ind$coord^2*row.w,2,sum) * length(group.actif) / It 
-  
+  rap.inertie <- apply(res.globale$ind$coord^2*row.w,2,sum) * length(group.actif) / It
+
   res.groupes <- list(Lg = Lg, RV = RV, coord = coord.group[, 1:ncp], contrib = contrib.group[, 1:ncp] * 100,  cos2 = cos2.group[, 1:ncp], dist2 = dist2.group[-length(dist2.group)], correlation = cor.grpe.fact[, 1:ncp])
   if (!is.null(num.group.sup)){
     res.groupes$coord.sup <- coord.group.sup[,1:ncp,drop=FALSE]
@@ -566,15 +586,15 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
           # Anzahl der zu selektierenden Modalitäten bestimmen durchführen
           nb.mod.rm <- res.separe[[g]]$call$excl[nb.mod.rm.select]
           # print(nb.mod.rm)
-          # Selektion durchführen, indem von der kummulierten Summe der ursprünglichen Levels abgezogen wird, 
+          # Selektion durchführen, indem von der kummulierten Summe der ursprünglichen Levels abgezogen wird,
           # da sich die Selektion auf den urpsünglichen (kompletten) Datensatz bezieht.
           nb.mod <- c(nb.mod, (nb.mod.orig[v]-length(nb.mod.rm)))
           # length(nb.mod.rm)
           # cumsum(nb.mod.orig)[1]
         }
         nom.mod <- c(nom.mod, levels(res.separe[[g]]$call$X[, v]))
-  
-#         nom.mod <- NULL        
+
+#         nom.mod <- NULL
 #         nom.mod <- c(nom.mod, levels(sp_mca_studienwahlmotive$call$X[, 1]))
 # nom.mod <- c(nom.mod, levels(sp_mca_studienwahlmotive$call$X[, 2]))
 # nom.mod <- c(nom.mod, levels(sp_mca_studienwahlmotive$call$X[, 3]))
@@ -583,8 +603,8 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
 # nom.mod <- c(nom.mod, levels(sp_mca_studienwahlmotive$call$X[, 6]))
 # nom.mod <- c(nom.mod, levels(sp_mca_studienwahlmotive$call$X[, 7]))
 # nom.mod <- c(nom.mod, levels(sp_mca_studienwahlmotive$call$X[, 8]))
-# 
-# nom.mod[-sp_mca_studienwahlmotive$call$excl]        
+#
+# nom.mod[-sp_mca_studienwahlmotive$call$excl]
       }
       # print(nb.mod.orig)
       # print(nb.mod)
@@ -619,7 +639,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     res.ind <- list(coord = coord.ind[1:nb.actif,,drop=FALSE], contrib = contrib.ind, cos2 = cos2.ind[1:nb.actif,,drop=FALSE], within.inertia = inertie.intra.ind[1:nb.actif,1:ncp,drop=FALSE], coord.partiel = coord.ind.partiel[1:(length(group.actif)*nb.actif),,drop=FALSE], within.partial.inertia = inertie.intra.ind.partiel[1:(length(group.actif)*nb.actif),1:ncp,drop=FALSE] )
   }
   else res.ind <- list(coord = coord.ind, contrib = contrib.ind, cos2 = cos2.ind, within.inertia = inertie.intra.ind[,1:ncp,drop=FALSE], coord.partiel = coord.ind.partiel, within.partial.inertia = inertie.intra.ind.partiel[,1:ncp,drop=FALSE])
-  
+
   res.quali.var <- res.quali.var.sup <- NULL
   bool.act <- FALSE
   bool.sup <- FALSE
@@ -656,7 +676,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       coord.quali.sup <- t(t(coord.quali.sup)*res.globale$call$col.w)
       coord.quali.sup <- crossprod(t(coord.quali.sup),res.globale$svd$V)
       coord.quali.partiel[liste.ligne + g - 1, ] <- coord.quali.sup[,1:ncp]
-      tmp[,,g] <- (coord.quali.sup - res.globale$quali.sup$coord)^2 / length(group.actif) 
+      tmp[,,g] <- (coord.quali.sup - res.globale$quali.sup$coord)^2 / length(group.actif)
     }
     colnames(coord.quali.partiel) <-  paste("Dim", 1:ncp, sep = ".")
     tmp <- sweep(tmp,2,variab.auxil,FUN="/") * 100   ### attention array
@@ -668,7 +688,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     rownames(inertie.intra.cg) <- rownames(res.globale$quali.sup$coord)
     rownames(inertie.intra.cg.partiel) <- nom.ligne.bary
     colnames(inertie.intra.cg) <- colnames(inertie.intra.cg.partiel) <- paste("Dim", c(1:ncp.tmp), sep = ".")
-    
+
     ind.col <- 0
     ind.col.act <- NULL
     ind.col.sup <- NULL
@@ -690,8 +710,8 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     # @info spMCA Adaption
     # Passive Modalitäten ausschließen
     if(!is.null(ind.excl.act)) ind.col.act <- ind.col.act[-ind.excl.act]
-    
-    
+
+
     if (!is.null(ind.col.sup)) {
       coord.quali.sup <- coord.quali[ind.col.sup,,drop=FALSE]
       cos2.quali.sup <- cos2.quali[ind.col.sup,,drop=FALSE]
@@ -754,12 +774,12 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     # print(nrow(coord.quali.act))
     if (bool.act) res.quali.var <- list(coord = coord.quali.act, contrib = contrib.quali.act, cos2 = cos2.quali.act, v.test = val.test.quali.act, coord.partiel = coord.quali.partiel.act, within.inertia = inertie.intra.cg.act, within.partial.inertia = inertie.intra.cg.partiel.act)
     # Anpassungen für die Ausgabe der Strukturierten Datenanalyse
-    if (bool.sup) res.quali.var.sup <- list(coord = coord.quali.sup, cos2 = cos2.quali.sup, v.test = val.test.quali.sup, 
-                                            variance = variance.quali.sup, 
+    if (bool.sup) res.quali.var.sup <- list(coord = coord.quali.sup, cos2 = cos2.quali.sup, v.test = val.test.quali.sup,
+                                            variance = variance.quali.sup,
                                             within = within.variance.quali.sup,
                                             between = between.variance.quali.sup,
-                                            total = total.variance.quali.sup, 
-                                            eta2 = eta2.sup, 
+                                            total = total.variance.quali.sup,
+                                            eta2 = eta2.sup,
                                             coord.partiel = coord.quali.partiel.sup, within.inertia = inertie.intra.cg.sup, within.partial.inertia = inertie.intra.cg.partiel.sup)
   }
   indice.quanti <- NULL
@@ -787,7 +807,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
     contrib.freq <- res.globale$var$contrib[indice.freq, 1:ncp,drop=FALSE]
     res.freq <- list(coord = coord.freq, contrib = contrib.freq, cos2 = cos2.freq)
   }
-  
+
   res.quanti.var.sup <- NULL
   res.freq.sup <- NULL
   if (!is.null(num.group.sup)){
@@ -811,7 +831,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
       res.freq.sup <- list(coord = coord.freq.sup, cos2 = cos2.freq.sup)
     }
   }
-  
+
   aux <- res.separe[[1]]$ind$coord
   name.aux <- paste(colnames(res.separe[[1]]$ind$coord),name.group[1],sep=".")
   for (g in 2:nbre.group) {
@@ -823,7 +843,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
   cor.partial.axes <- cov.wt(aux,wt=row.w/sum(row.w),method="ML",cor=TRUE)$cor
   dimnames(cor.partial.axes) <- list(name.aux,name.aux)
   res.partial.axes <- list(coord = coord.res.partial.axes[, 1:ncp], cor = cor.res.partial.axes[, 1:ncp], contrib = contrib.res.partial.axes[, 1:ncp], cor.between = cor.partial.axes)
-  resultats <- list(separate.analyses = res.separe, eig = eig, group = res.groupes, 
+  resultats <- list(separate.analyses = res.separe, eig = eig, group = res.groupes,
                     inertia.ratio = rap.inertie[1:ncp], ind = res.ind)
   if (!is.null(ind.sup)) resultats$ind.sup <- res.ind.sup
   if (!is.null(c(res.quanti.var,res.quanti.var.sup))) resultats$summary.quanti = summary.c
@@ -839,7 +859,7 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
   resultats$call$call <- match.call()
   #	resultats$call$call <- sys.calls()[[1]]
   resultats$global.pca = res.globale
-  
+
   # @info modif.rates der Ausgabe hinzufügen
   data.mrate <- modif.rate(resultats)
   mrate <- rep(0, nrow(resultats$eig))
@@ -851,10 +871,10 @@ spMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.
   cum.mrate <- as.data.frame(cum.mrate)
   colnames(cum.mrate) <- "cumulative modified rates"
   resultats$eig <- cbind(resultats$eig, mrate, cum.mrate)
-  
-  
+
+
   class(resultats) <- c("spMFA", "list")
-  
+
   if (graph & (ncp>1)){
     if (bool.act | bool.sup){
       cg.plot.partial <- NULL

@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-dim_desc=function (res, axes = 1:3, proba = 0.05)
+dimdesc <- function (res, axes = 1:3, proba = 0.05)
 {
   if (!inherits(res, "PCA") & !inherits(res, "CA") & !inherits(res, "MCA") & !inherits(res, "spMCA") & !inherits(res,
                                                                                        "MFA") & !inherits(res, "spMFA") & !inherits(res, "HMFA") & !inherits(res, "DMFA") &  !inherits(res, "FAMD") & !inherits(res, "HMFA") & !inherits(res, "spHMFA"))

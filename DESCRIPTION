@@ -37,7 +37,7 @@ Suggests:
 Collate:
     'db-load.R'
     'db-save.R'
-    'dim-desc.R'
+    'dimdesc.R'
     'eigenvalue.R'
     'facto-summarize.R'
     'fviz-hcpc.R'

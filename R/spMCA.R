@@ -1,7 +1,27 @@
+#' Performs a Specific Multiple Correspondance Analysis.
+#'
+#' @param X
+#' @param ncp
+#' @param excl
+#' @param ind.sup
+#' @param quanti.sup
+#' @param quali.sup
+#' @param graph
+#' @param level.ventil
+#' @param axes
+#' @param row.w
+#' @param method
+#' @param na.method
+#' @param tab.disj
+#'
+#' @return Returns a list of spMCA results.
+#' @export
+#'
+#' @examples
 spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, quali.sup = NULL,
-                 graph = TRUE, level.ventil = 0, axes = c(1, 2), row.w = NULL, 
+                 graph = TRUE, level.ventil = 0, axes = c(1, 2), row.w = NULL,
                  method="Indicator",na.method="NA",tab.disj=NULL){
-  
+
   ############
   ventil.tab <- function (tab, level.ventil=0.05,row.w=NULL,ind.sup=NULL,quali.sup=NULL,quanti.sup=NULL) {
     if (is.null(row.w)) row.w <- rep(1,nrow(tab)-length(ind.sup))
@@ -17,7 +37,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     }
     return(tab)
   }
-  
+
   ventilation <- function(Xqual,level.ventil=0.05,row.w=NULL,ind.sup=NULL) {
     if (!is.factor(Xqual)) stop("Xqual should be a factor \n")
     modalites <- levels(Xqual)
@@ -31,7 +51,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     }
     selecti <- (tabl/sum(tabl,na.rm=TRUE))< level.ventil
     if (sum(selecti)==length(modalites)) return(Xqual)
-    
+
     if (!any(selecti)) return(Xqual) else {
       lesquels <- modalites[!selecti]
       #  if (length(lesquels)==1) return(NULL) else {
@@ -39,7 +59,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
         prov <- factor(Xqual[(Xqual%in%lesquels)],levels=lesquels)
         prov <- table(prov)
         proba <- prov/sum(prov)
-        
+
         for (j in modalites[selecti]) {
           Xqual[which(Xqual==j)] <- sample(lesquels,sum(Xqual==j,na.rm=TRUE), replace=TRUE,prob=proba)
         }
@@ -48,7 +68,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     }
     return(Xqualvent)
   }
-  
+
   ventilation.ordonnee <- function(Xqual,level.ventil=0.05,ind.sup=NULL,row.w=NULL) {
     if (!is.ordered(Xqual)) stop("Xqual must be ordered \n")
     mod <- levels(Xqual)
@@ -79,12 +99,12 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     # else return(NULL)
     return(Xqual)
   }
-  
+
   # fct.eta2 <- function(vec,x,weights) {
   # res <- summary(lm(x~vec,weights=weights))$r.squared
   # }
-  
-  
+
+
   fct.eta2 <- function(vec,x,weights) {   ## pb avec les poids
     VB <- function(xx) {
       return(sum((colSums((tt*xx)*weights)^2)/ni))
@@ -93,9 +113,9 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     ni <- colSums(tt*weights)
     unlist(lapply(as.data.frame(x),VB))/colSums(x^2*weights)
   }
-  
+
   # @info GDA Extensions aus Nicolas Robettes GDAtools Paket.
-  # Mit dieser Funktion lassen sich modified rates berechnen, die Anhaltspunkte für 
+  # Mit dieser Funktion lassen sich modified rates berechnen, die Anhaltspunkte für
   # die Wahl der zu interpretierende Achsen geben
   modif.rate <- function(resmca) {
     Q <- ncol(resmca$call$X)
@@ -106,29 +126,29 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     cum.mrate <- cumsum(mrate)
     return(data.frame(mrate,cum.mrate))
   }
-  
+
   ##################
-  ## Main program ##   
+  ## Main program ##
   ##################
-  
+
   if (is.null(rownames(X))) rownames(X) <- 1:nrow(X)
   if (is.null(colnames(X))) colnames(X) <- colnames(X, do.NULL = FALSE,prefix="V")
   X <- as.data.frame(X)
   X <- droplevels(X)
   ind.act <- (1:nrow(X))[!(1:nrow(X))%in%ind.sup]
-  
+
   if (!is.null(which(lapply(X,class)=="logical"))){
     for (k in which(lapply(X,class)=="logical")) X[,k] <- as.factor(X[,k])
   }
-  
+
   if (level.ventil > 0) X <- ventil.tab(X,level.ventil=level.ventil,row.w=row.w,ind.sup=ind.sup,quali.sup=quali.sup,quanti.sup=quanti.sup)
-  
+
   niveau <- NULL
   for (j in 1:ncol(X)) niveau = c(niveau, levels(X[, j]))
   for (j in 1:ncol(X)) {
     if (sum(niveau %in% levels(X[, j])) != nlevels(X[, j])) levels(X[, j]) = paste(attributes(X)$names[j], levels(X[, j]), sep = "_")
   }
-  
+
   nonact <- c(quanti.sup,quali.sup)
   if (!is.null(nonact)) act <- (1:ncol(X))[-nonact]
   else act <- (1:ncol(X))
@@ -147,7 +167,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     } else Z[ind.act,] <- tab.disj
   }
   Ztot <- Z
-  
+
   col.sup <- NULL
   if (!is.null(quali.sup)){
     if (any(is.na(X[,quali.sup,drop=FALSE]))){
@@ -159,7 +179,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     col.sup <- (ncol(Z) + 1):ncol(Ztot)
   }
   Xact <- X[,act]
-  
+
   if (!is.null(quanti.sup)){
     if (any(is.na(X[,quanti.sup,drop=FALSE]))){
       for (j in quanti.sup) X[,j] <- replace(X[,j],is.na(X[,j]), mean(X[,j], na.rm=TRUE))
@@ -168,15 +188,15 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     if (!is.null(ind.sup)) X.quanti.sup <- X.quanti.sup[ind.act, ,drop=FALSE]
     colnames(X.quanti.sup) = attributes(X)$names[quanti.sup]
   }
-  
+
   if (is.null(row.w)) row.w = rep(1, nrow(X) - length(ind.sup))
   if (length(row.w) != nrow(X) - length(ind.sup)) stop("length of vector row.w should be the number of active rows")
   if (tolower(method)=="burt") {  ## boucle utile pour calculer la distance au cdg et pour calculer les cos2
     # @info Specific MCA Anpassungen
-    res.mca <- spCA(Ztot, excl = excl, ncp = ncol(Z)-length(act), row.sup = ind.sup, col.sup = col.sup, graph = FALSE, row.w = row.w) 
+    res.mca <- spCA(Ztot, excl = excl, ncp = ncol(Z)-length(act), row.sup = ind.sup, col.sup = col.sup, graph = FALSE, row.w = row.w)
     res.mca$col$coord <- t(t(res.mca$col$coord)*sqrt(res.mca$eig[1:ncol(res.mca$col$coord),1]))
     auxil <- rowSums(res.mca$col$coord^2)
-    if (!is.null(col.sup)){ 
+    if (!is.null(col.sup)){
       res.mca$col.sup$coord <- t(t(res.mca$col.sup$coord)*sqrt(res.mca$eig[1:ncol(res.mca$col.sup$coord),1]))
       auxil2 <- rowSums(res.mca$col.sup$coord^2)
     }
@@ -185,7 +205,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
   # @info Specific MCA Anpassungen
   # Die auszuschließenden Antwortmodalitäten werden komplett gelöscht
   res.mca <- spCA(Ztot, excl = excl, ncp = min(ncp,ncol(Z)-length(act)), row.sup = ind.sup, col.sup = col.sup, graph = FALSE, row.w = row.w)
-  if (is.null(ncol(res.mca$row$coord))) res.mca$row$coord = matrix(res.mca$row$coord,ncol=1) 
+  if (is.null(ncol(res.mca$row$coord))) res.mca$row$coord = matrix(res.mca$row$coord,ncol=1)
   ncp <- ncol(res.mca$row$coord)
   res.mca$call$X <- X
   res.mca$call$ind.sup = ind.sup
@@ -224,21 +244,21 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
       res.mca$quali.sup$cos2 <- res.mca$quali.sup$coord^2/auxil2
     }
   }
-  
+
   if (!is.null(ind.sup)) Z = Z[ind.act, ]
   Nj <- colSums(Z * row.w)
   N <- sum(Nj)/(ncol(X) - length(quali.sup) - length(quanti.sup))
   if (N>1) coef <- sqrt(Nj * ((N - 1)/(N - Nj)))
   else coef <- sqrt(Nj)
   res.mca$var$v.test <- as.matrix(res.mca$var$coord*coef)
-  
+
   # if (ncp>1) eta2 <- t(sapply(Xact,fct.eta2,res.mca$ind$coord,weights=row.w))
   # else {
   # eta2 <- as.matrix(sapply(Xact,fct.eta2,res.mca$ind$coord,weights=row.w),ncol=ncp)
   # colnames(eta2) = paste("Dim", 1:ncp)
   # rownames(eta2) = colnames(Xact)
   # }
-  
+
   variable <- rep(attributes(Xact)$names,unlist(lapply(Xact,nlevels)))
   if (length(act)>1){
     CTR <- aggregate(res.mca$var$contrib/100,by=list(factor(variable)),FUN=sum)
@@ -247,14 +267,14 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     eta2 <- CTR[attributes(Xact)$names,,drop=FALSE]
     res.mca$var$eta2 <- eta2
   }
-  
+
   if (!is.null(quali.sup)) {
     if (!is.null(ind.sup)) Zqs = Zqs[ind.act, ]
     Nj <- colSums(Zqs * row.w)
     if (N>1) coef <- sqrt(Nj * ((N - 1)/(N - Nj)))
     else coef <- sqrt(Nj)
     res.mca$quali.sup$v.test <- as.matrix(res.mca$quali.sup$coord*coef)
-    
+
     eta2 = matrix(NA, length(quali.sup), ncp)
     colnames(eta2) = paste("Dim", 1:ncp)
     rownames(eta2) = attributes(X)$names[quali.sup]
@@ -263,7 +283,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     else {
       eta2 <- as.matrix(sapply(as.data.frame(X[rownames(Xact), quali.sup,drop=FALSE]),fct.eta2,res.mca$ind$coord,weights=row.w),ncol=ncp)
     }
-    # @info Varianzberechnungen in Anlehnung an (M)ANOVA verfahren. 
+    # @info Varianzberechnungen in Anlehnung an (M)ANOVA verfahren.
     # Der Algorithmus ist eine Adaption aus Nicolas Robettes GDAtools "varsup" Funktion.
     v_n <- sum(row.w)
     v_var <- X[quali.sup]
@@ -316,7 +336,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     # eta2
     res.mca$quali.sup$eta2 <- eta2
   }
-  
+
   if (!is.null(quanti.sup)) {
     U <- res.mca$svd$U
     coord.quanti.sup <- matrix(NA, ncol(X.quanti.sup), ncp)
@@ -325,13 +345,13 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
     dimnames(coord.quanti.sup) <- list(colnames(X.quanti.sup), paste("Dim", 1:ncp))
     res.mca$quanti.sup$coord <- coord.quanti.sup
   }
-  
+
   if (tolower(method)=="burt"){
     res.mca$eig[,1] <- res.mca$eig[,1]^2
     res.mca$eig[,2] <- res.mca$eig[,1]/sum(res.mca$eig[,1]) * 100
-    res.mca$eig[,3] <- cumsum(res.mca$eig[,2])      
+    res.mca$eig[,3] <- cumsum(res.mca$eig[,2])
   }
-  
+
   # @info Specific MCA Anpassungen
   # Die Ergebnisse der ausgeschlossenen Antwortmodalitäten ausschließen
   res.mca$var$coord <- res.mca$var$coord[-excl,]
@@ -339,7 +359,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
   res.mca$var$cos2 <- res.mca$var$cos2[-excl,]
   res.mca$var$v.test <- res.mca$var$v.test[-excl,]
   res.mca$var$eta2 <- res.mca$var$eta2[-excl,]
-  
+
   # @info modif.rates der Ausgabe hinzufügen
   data.mrate <- modif.rate(res.mca)
   mrate <- rep(0, nrow(res.mca$eig))
@@ -351,7 +371,7 @@ spMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, q
   cum.mrate <- as.data.frame(cum.mrate)
   colnames(cum.mrate) <- "cumulative modified rates"
   res.mca$eig <- cbind(res.mca$eig, mrate, cum.mrate)
-  
+
   class(res.mca) <- c("spMCA", "list")
   if (graph & (ncp>1)) {
     plot.MCA(res.mca, choix = "ind", invisible="ind", axes = axes,new.plot=TRUE)

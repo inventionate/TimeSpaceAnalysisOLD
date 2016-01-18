@@ -1,7 +1,30 @@
-spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3, 
-                  max = NULL, metric = "euclidean", method = "ward", order = TRUE, 
+#' Performs a Specific Hierarchical Cluster of Principal Components.
+#'
+#' @param res
+#' @param nb.clust
+#' @param consol
+#' @param iter.max
+#' @param min
+#' @param max
+#' @param metric
+#' @param method
+#' @param order
+#' @param graph.scale
+#' @param nb.par
+#' @param graph
+#' @param proba
+#' @param cluster.CA
+#' @param kk
+#' @param ...
+#'
+#' @return Returns a list of spHCPC results.
+#' @export
+#'
+#' @examples
+spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
+                  max = NULL, metric = "euclidean", method = "ward", order = TRUE,
                   graph.scale = "inertia", nb.par = 5, graph = TRUE, proba = 0.05,cluster.CA="rows",
-                  kk=Inf,...) 
+                  kk=Inf,...)
 {
   auto.cut.tree = function(res, min, max, metric, method, weight=NULL,cla=NULL,...) {
     if (order) {
@@ -15,8 +38,8 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
       res$call$row.w = sss[,ncol(sss)-1]
       res$call$row.w.init = sss[,ncol(sss)]
     }
-    X = as.data.frame(res$ind$coord)	
-    
+    X = as.data.frame(res$ind$coord)
+
     #		if("flashClust"%in%rownames(installed.packages())) require(flashClust,quiet=TRUE)
     do <- dist(X,method=metric)^2
     if (is.null(weight)) weight=rep(1,nrow(X))
@@ -28,7 +51,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
     intra <- rev(cumsum(rev(inert.gain)))
     quot = intra[min:(max)]/intra[(min - 1):(max - 1)]
     nb.clust = which.min(quot) + min - 1
-    return(list(res = res, tree = hc, nb.clust = nb.clust, 
+    return(list(res = res, tree = hc, nb.clust = nb.clust,
                 within = intra, inert.gain = inert.gain, quot = quot))
   }
   consolidation = function(X, clust, iter.max = 10, ...) {
@@ -48,11 +71,11 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
     }
     else {
       distance <- as.matrix(dist(Z, method = method))
-      distance <- distance[(nrow(Y) + 1):nrow(distance), 
+      distance <- distance[(nrow(Y) + 1):nrow(distance),
                            -((nrow(Y) + 1):ncol(distance))]
       distance <- sort(distance[clust, ], decreasing = FALSE)
     }
-    if (length(distance) > default.size) 
+    if (length(distance) > default.size)
       distance <- distance[1:default.size]
     else distance <- distance
   }
@@ -77,8 +100,8 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
     else ind.car = ind.car
   }
   #### Main program
-  #   if((method=="ward")&(!("flashClust"%in%rownames(installed.packages())))) method="ward.D" ### use of ward.D because I transform the distance to have the results obtained by ward.D2 
-  res.sauv <- res	
+  #   if((method=="ward")&(!("flashClust"%in%rownames(installed.packages())))) method="ward.D" ### use of ward.D because I transform the distance to have the results obtained by ward.D2
+  res.sauv <- res
   if ((kk!=Inf)&(consol==TRUE)){
     warning("No consolidation has been done after the hierarchical clustering since kk is different from Inf (see help for more details)")
     consol=FALSE
@@ -94,7 +117,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   #    }
   if (is.matrix(res)) res <- as.data.frame(res)
   cla <- NULL
-  
+
   if (inherits(res, "PCA") | inherits(res, "MCA") | inherits(res,"MFA") | inherits(res, "HMFA") | inherits(res, "FAMD")) {
     if (kk<nrow(res$ind$coord)) res <- as.data.frame(res$ind$coord)
   }
@@ -134,21 +157,21 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
       nb.ind <- nrow(t$res$ind$coord)
       inertia.height <- rep(0, nb.ind - 1)
       for (i in 1:(nb.ind - 1)) inertia.height[i] <- t$inert.gain[(nb.ind - i)]
-      inertia.height <- sort(inertia.height, decreasing = FALSE) 
+      inertia.height <- sort(inertia.height, decreasing = FALSE)
       t$tree$height <- inertia.height
     }
-    auto.haut <- ((t$tree$height[length(t$tree$height) - t$nb.clust + 
+    auto.haut <- ((t$tree$height[length(t$tree$height) - t$nb.clust +
                                    2]) + (t$tree$height[length(t$tree$height) - t$nb.clust + 1]))/2
     if (graph) {
       if (!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) dev.new()
       old.mar <- par()$mar
       par(mar = c(0.5, 2, 0.75, 0))
-      lay = matrix(ncol = 5, nrow = 5, c(2, 4, 4, 4, 4, 
-                                         2, 4, 4, 4, 4, 2, 4, 4, 4, 4, 2, 4, 4, 4, 4, 
+      lay = matrix(ncol = 5, nrow = 5, c(2, 4, 4, 4, 4,
+                                         2, 4, 4, 4, 4, 2, 4, 4, 4, 4, 2, 4, 4, 4, 4,
                                          1, 3, 3, 3, 3))
       layout(lay, respect = TRUE)
-      barplot(t$inert.gain[1:max(15, max)], col = c(rep("black", 
-                                                        t$nb.clust - 1), rep("grey", max(max, 15) - t$nb.clust + 
+      barplot(t$inert.gain[1:max(15, max)], col = c(rep("black",
+                                                        t$nb.clust - 1), rep("grey", max(max, 15) - t$nb.clust +
                                                                                1)), rep(0.1, max(max, 15)), space = 0.9)
       plot(x = 1, xlab = "", ylab = "", main = "", col = "white", axes = FALSE)
       text(1, 1, "Hierarchical Clustering", cex = 2)
@@ -185,8 +208,8 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   nb.clust <- max(clust)
   X = as.data.frame(t$res$ind$coord)
   ordColo = unique(clust[t$tree$order])
-  
-  
+
+
   if ((graph)&!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) {
     #        rect <- rect.hclust(t$tree, h = y, border = seq(1, nb.clust, 1))
     rect <- rect.hclust(t$tree, h = y, border = ordColo)
@@ -220,14 +243,14 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
       names(rr) <- names(cla$cluster)
       cla$cluster <- as.factor(rr)
     }
-    ## fin ajout			
+    ## fin ajout
     centers = res.consol$centers
   }
   if (!consol) {
     list.centers <- by(X, clust, colMeans)
     centers <- matrix(unlist(list.centers), ncol = ncol(X),byrow = TRUE)
     colnames(centers) = colnames(X)
-    
+
     ## ajout pour trier les classes
     aux <- names(clust) <- rownames(X)
     ord <- order(centers[,1,drop=FALSE])
@@ -241,7 +264,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
       names(rr)=names(cla$cluster)
       cla$cluster=as.factor(rr)
     }
-    ## fin ajout		
+    ## fin ajout
   }
   clust <- as.factor(clust)
   ## Add 2014-07-08
@@ -254,7 +277,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
         if (cluster.CA=="columns") {
           if (!is.null(res.sauv$call$col.sup)) data.clust <- cbind.data.frame(t(res.sauv$call$Xtot[,-res.sauv$call$col.sup]), clust=cla$cluster)
           else data.clust <- cbind.data.frame(t(res.sauv$call$Xtot), clust=cla$cluster)
-        } 
+        }
         if (cluster.CA=="rows") {
           if (!is.null(res.sauv$call$row.sup)) data.clust <- cbind.data.frame(res.sauv$call$Xtot[-res.sauv$call$row.sup,], clust=cla$cluster)
           else data.clust <- cbind.data.frame(res.sauv$call$Xtot, clust=cla$cluster)
@@ -289,7 +312,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   if (inherits(res.sauv, "CA")&(cluster.CA=="rows")) tabInd <- cbind.data.frame(res.sauv$row$coord,data.clust[rownames(res.sauv$row$coord),ncol(data.clust)])
   if (inherits(res.sauv, "CA")&(cluster.CA=="columns")) tabInd <- cbind.data.frame(res.sauv$col$coord,data.clust[rownames(res.sauv$col$coord),ncol(data.clust)])
   colnames(tabInd)[ncol(tabInd)]="Cluster"
-  
+
   list.centers <- by(tabInd[,-ncol(tabInd),drop=FALSE], tabInd[,ncol(tabInd)], colMeans)
   centers <- matrix(unlist(list.centers), ncol = ncol(tabInd)-1,byrow = TRUE)
   colnames(centers) = colnames(tabInd)[-ncol(tabInd)]
@@ -297,7 +320,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   para <- by(tabInd, cluster, simplify = FALSE, select, default.size = nb.par, method = metric, coord.centers = centers)
   dist <- by(tabInd, cluster, simplify = FALSE, distinctivness, default.size = nb.par, method = metric, coord.centers = centers)
   desc.ind <- list(para = para, dist = dist)
-  
+
   if (consol) call <- list(t = t, min = min, max = max, X = X, bw.before.consol=sum(rev(t$tree$height)[1:(nb.clust-1)]),bw.after.consol=res.consol$betweenss/nrow(data.clust),vec = vec,call=match.call())
   else call <- list(t = t, min = min, max = max, X = X, bw.before.consol=sum(rev(t$tree$height)[1:(nb.clust-1)]),vec = vec,call=match.call())
   #    call <- list(t = t, min = min, max = max, X = data.clust, vec = vec,call=sys.calls()[[1]])
@@ -305,7 +328,7 @@ spHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   else res.HCPC <- list(data.clust = data.clust, desc.var = desc.var, desc.axes = desc.axe, call = call, desc.ind = desc.ind)
   if ((kk==Inf)&(graph)&!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) {
     #       plot.HCPC(res.HCPC,choice="tree",new.plot=FALSE)
-    if (vec || (ncol(tabInd)==2)) 
+    if (vec || (ncol(tabInd)==2))
       plot.HCPC(res.HCPC, choice = "3D.map", t.level = "all", angle = 0, ind.names = FALSE,new.plot=TRUE)
     else {
       plot.HCPC(res.HCPC, choice = "3D.map", t.level = "all", ind.names = TRUE,new.plot=TRUE)

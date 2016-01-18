@@ -1,3 +1,14 @@
+#' Print results of spMCA.
+#'
+#' @param x
+#' @param file
+#' @param sep
+#' @param ...
+#'
+#' @return Returns a list of spMCA results.
+#' @export
+#'
+#' @examples
 print.spMCA <- function (x, file = NULL, sep = ";", ...){
   res.mca <- x
   if (!inherits(res.mca, "spMCA")) stop("non convenient data")

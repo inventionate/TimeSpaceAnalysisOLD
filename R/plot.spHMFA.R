@@ -1,7 +1,28 @@
+#' Plot Secific Hierarchical Multiple Factor Analysis.
+#'
+#' @param x
+#' @param axes
+#' @param num
+#' @param choix
+#' @param plot.nodes
+#' @param select
+#' @param unselect
+#' @param lim.cos2.var
+#' @param xlim
+#' @param ylim
+#' @param cex
+#' @param title
+#' @param new.plot
+#' @param ...
+#'
+#' @return Returns standard plots of spHMFA results.
+#' @export
+#'
+#' @examples
 plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FALSE, select = NULL, unselect = 0.7,
-                      lab.grpe = TRUE, lab.var = TRUE, lab.ind.moy = TRUE, invisible = NULL, 
+                      lab.grpe = TRUE, lab.var = TRUE, lab.ind.moy = TRUE, invisible = NULL,
                       lim.cos2.var = 0., xlim = NULL, ylim = NULL, cex = 1, title = NULL, new.plot=FALSE, ...) {
-  
+
   partial.tab.pour.plot <- function(res.sphmfa,coord=c(1,2)) {
     H <- res.sphmfa$call$H
     P <- res.sphmfa$partial
@@ -32,7 +53,7 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
     ptpp1[[nbnivo]] <- ptpp2
     return(ptpp1)
   }
-  
+
   #################################################################
   ##"plot.partial.ind" <- function(res.sphmfa, numb = 6, coord=c(1,2), cex = 1) {
   ##
@@ -44,7 +65,7 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
   ##    if (!is.null(res.sphmfa$quali.var$coord)) nbind <- nbind + nrow(res.sphmfa$quali.var$coord)
   ##    mult <- nbind / numb
   ##    if ((nbind / numb)!=as.integer(nbind / numb))   mult <- as.integer(mult) + 1
-  ##    quali <- FALSE 
+  ##    quali <- FALSE
   ##    for (m in 1:mult) {
   ##        par(mfrow = c(2,(numb/2)))
   ##        for (ind in 1:numb) {
@@ -95,10 +116,10 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
   ##      if (m < mult) dev.new()
   ##    }
   ##}
-  
+
   ###############################################################
   plot.partial <- function(res.sphmfa , coord=c(1,2), invisible = NULL, title = NULL, cex = 1, nivo=length(res.sphmfa$partial)){
-    
+
     test.invisible <- vector(length = 2)
     if (!is.null(invisible)) {
       test.invisible[1] <- match("ind", invisible)
@@ -119,7 +140,7 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       x <- c(xmin,xmax)*1.1
       y <- c(ymin,ymax)*1.1
       nbnivo <- length(coord.partial)
-      
+
       plot(0, 0, xlab = lab.x, ylab = lab.y, xlim = x, ylim = y, col = "white", asp=1, cex=cex)
       #    title(sub = sub.title, cex.sub = cex, font.sub = 2, col.sub = "steelblue4", adj = 0, line = 3.8)
       abline(v=0,lty=2, cex=cex)
@@ -149,7 +170,7 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       }
       name <- c(name,rownames(res.sphmfa$group$coord[[nbnivo]]))
     }
-    
+
     if (!is.null(res.sphmfa$quali.var)){
       coord.partial <- res.sphmfa$quali.var$partial
       nbnivo <- length(coord.partial)
@@ -167,7 +188,7 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
         abline(v=0,lty=2, cex=cex)
         abline(h=0,lty=2, cex=cex)
       }
-      
+
       if (is.na(test.invisible[2])) {
         name <- NULL
         points(res.sphmfa$quali.var$coord[,coord],pch=15,cex=cex)
@@ -202,16 +223,16 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       title(sub= "Superimposed representation of the partial clouds" , cex.sub = cex, font.sub = 2, col.sub = "steelblue4", adj = 0, line = 3.8)
     }
   }
-  
+
   plot.moy <- function(res.sphmfa , coord=c(1,2), invisible = NULL, title = NULL, cex = 1, xlim = NULL, ylim = NULL){
-  
+
     test.invisible <- vector(length = 2)
     if (!is.null(invisible)) {
       test.invisible[1] <- match("ind", invisible)
       test.invisible[2] <- match("quali", invisible)
     }
     else test.invisible <- rep(NA, 2)
-    
+
     xmin <- xmax <- ymin <- ymax <- 0
     if (is.na(test.invisible[1])) {
       xmin <- min(xmin,min(res.sphmfa$ind$coord[,coord[1]]))
@@ -220,11 +241,11 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       ymax <- max(ymax,max(res.sphmfa$ind$coord[,coord[2]]))
       x <- c(xmin,xmax)*1.1
       y <- c(ymin,ymax)*1.1
-      
+
       # @info Optionserweiterungen
       if(!is.null(xlim)) x <- xlim
       if(!is.null(ylim)) y <- ylim
-      
+
       plot(0, 0, xlab = lab.x, ylab = lab.y, xlim = x, ylim = y, col = "white", asp=1, cex=cex)
       #    title(sub = sub.title, cex.sub = cex, font.sub = 2, col.sub = "steelblue4", adj = 0, line = 3.8)
       abline(v=0,lty=2, cex=cex)
@@ -232,8 +253,8 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       points(res.sphmfa$ind$coord[,coord],pch=20,cex=cex)
       if (lab.ind.moy) text(res.sphmfa$ind$coord[,coord[1]],res.sphmfa$ind$coord[,coord[2]],rownames(res.sphmfa$ind$coord), pos = 4,offset = 0.2, cex=0.8*cex)
     }
-    
-    
+
+
     selection <- NULL
     if (!is.null(select)) {
       if (mode(select)=="numeric") selection <- select
@@ -249,10 +270,10 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
             else selection <- which(apply(res.sphmfa$ind$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
-    
+
     coo <- labe <- coll <- ipch <- fonte <- NULL
     coo <- rbind(coo,res.sphmfa$ind$coord)
     labe <- rownames(res.sphmfa$quali.var$coord) # evtl. ind
@@ -264,9 +285,9 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       else coll[!((1:length(coll))%in%selection)] = unselect
       labe[!((1:length(coll))%in%selection)] <- ""
     }
-    
-    
-    
+
+
+
     if (!is.null(res.sphmfa$quali.var)){
       if (!is.na(test.invisible[1])) {
         xmin <- xmax <- ymin <- ymax <- 0
@@ -276,16 +297,16 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
         ymax <- max(res.sphmfa$quali.var$coord[,coord[2]])
         x <- c(xmin,xmax)*1.1
         y <- c(ymin,ymax)*1.1
-        
+
         # @info Optionserweiterungen
         if(!is.null(xlim)) x <- xlim
         if(!is.null(ylim)) y <- ylim
-        
+
         plot(0, 0, xlab = lab.x, ylab = lab.y, xlim = x, ylim = y, col = "white", asp=1, cex=cex)
         abline(v=0,lty=2, cex=cex)
         abline(h=0,lty=2, cex=cex)
       }
-      
+
       if (is.na(test.invisible[2])) {
         points(res.sphmfa$quali.var$coord[,coord],pch=15,cex=cex, col = coll)
         if (lab.ind.moy) text(res.sphmfa$quali.var$coord[,coord[1]],res.sphmfa$quali.var$coord[,coord[2]],labe, pos = 4,offset = 0.2, cex=0.8*cex)
@@ -297,9 +318,9 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       title(sub= "Individuals factor map" , cex.sub = cex, font.sub = 2, col.sub = "steelblue4", adj = 0, line = 3.8)
     }
   }
-  
+
   ###############################################################
-  
+
   res.sphmfa <- x
   if (!inherits(res.sphmfa, "spHMFA")) stop("non convenient data")
   color = c("black","red","green3","blue",
@@ -307,12 +328,12 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
             "lightblue","darkkhaki", "darkmagenta","darkolivegreen","lightcyan", "darkorange",
             "darkorchid","darkred","darksalmon","darkseagreen","darkslateblue","darkslategray","darkslategrey",
             "darkturquoise","darkviolet", "lightgray","lightsalmon","lightyellow", "maroon")
-  
+
   sub.title <- NULL
   lab.x <- paste("Dim ", axes[1], " (",signif(res.sphmfa$eig[axes[1],2],4)," %)",sep="")
   lab.y <- paste("Dim ", axes[2], " (",signif(res.sphmfa$eig[axes[2],2],4)," %)",sep="")
-  
-  
+
+
   if (choix == "group") {
     if ((new.plot)&!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) dev.new()
     if (is.null(title)) title <- "Groups representation"
@@ -324,9 +345,9 @@ plot.spHMFA <- function(x, axes = c(1,2), num=6, choix = "ind", plot.nodes = FAL
       if (lab.grpe) text(coord.actif[, 1], y = coord.actif[, 2], labels = rownames(coord.actif), pos = 3, col = color[h],cex=cex)
     }
     title(sub = sub.title, cex.sub = cex, font.sub = 2, col.sub = "steelblue4", adj = 0, line = 3.8)
-    
+
   }
-  
+
   if (choix == "var") {
     if (is.null(res.sphmfa$quanti.var$coord)) stop("No quantitative variables to plot")
     if ((new.plot)&!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) dev.new()

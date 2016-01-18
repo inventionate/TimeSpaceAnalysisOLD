@@ -1,3 +1,14 @@
+#' Print spHMFA summary.
+#'
+#' @param x
+#' @param file
+#' @param sep
+#' @param ...
+#'
+#' @return List of spHMFA results.
+#' @export
+#'
+#' @examples
 print.spHMFA <- function (x, file = NULL, sep = ";", ...){
   res.sphmfa <- x
   if (!inherits(res.sphmfa, "spHMFA")) stop("non convenient data")

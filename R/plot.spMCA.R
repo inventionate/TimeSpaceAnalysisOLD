@@ -1,10 +1,39 @@
+#' Plot of spMCA results.
+#'
+#' @param x
+#' @param axes
+#' @param choix
+#' @param xlim
+#' @param ylim
+#' @param invisible
+#' @param col.ind
+#' @param col.var
+#' @param col.quali.sup
+#' @param col.ind.sup
+#' @param col.quanti.sup
+#' @param label
+#' @param title
+#' @param habillage
+#' @param palette
+#' @param autoLab
+#' @param new.plot
+#' @param select
+#' @param selectMod
+#' @param unselect
+#' @param shadowtext
+#' @param ...
+#'
+#' @return Retutns a standard plot of spMCA results.
+#' @export
+#'
+#' @examples
 plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
-                      xlim = NULL, ylim = NULL, invisible = c("none","ind", "var", "ind.sup", "quali.sup", "quanti.sup"), 
+                      xlim = NULL, ylim = NULL, invisible = c("none","ind", "var", "ind.sup", "quali.sup", "quanti.sup"),
                       col.ind = "blue", col.var = "red", col.quali.sup = "darkgreen",
                       col.ind.sup = "darkblue", col.quanti.sup = "blue",
-                      label=c("all","none","ind", "var", "ind.sup", "quali.sup", "quanti.sup"), title = NULL, habillage = "none", palette=NULL, 
+                      label=c("all","none","ind", "var", "ind.sup", "quali.sup", "quanti.sup"), title = NULL, habillage = "none", palette=NULL,
                       autoLab = c("auto","yes","no"),new.plot=FALSE,select=NULL,selectMod=NULL, unselect=0.7, shadowtext=FALSE,...){
-  
+
   label <- match.arg(label,c("all","none","ind", "var", "ind.sup", "quali.sup", "quanti.sup"),several.ok=TRUE)
   choix <- match.arg(choix,c("ind","var","quanti.sup"))
   autoLab <- match.arg(autoLab,c("auto","yes","no"))
@@ -12,14 +41,14 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
   if (autoLab=="no") autoLab=FALSE
   invisible <- match.arg(invisible,c("none","ind", "var", "ind.sup", "quali.sup", "quanti.sup"),several.ok=TRUE)
   if ("none"%in%invisible) invisible = NULL
-  
+
   res.mca <- x
   if (!inherits(res.mca, "spMCA")) stop("non convenient data")
   if (is.numeric(unselect)) if ((unselect>1)|(unselect<0)) stop("unselect should be betwwen 0 and 1")
-  
+
   lab.x <- paste("Dim ",axes[1]," (",format(res.mca$eig[axes[1],2],nsmall=2,digits=2),"%)",sep="")
   lab.y <- paste("Dim ",axes[2]," (",format(res.mca$eig[axes[2],2],nsmall=2,digits=2),"%)",sep="")
-  
+
   if (choix =="ind"){
     lab.ind <- lab.var <- lab.quali.sup <- lab.ind.sup <- FALSE
     if(length(label)==1 && label=="all") lab.ind <- lab.var <- lab.quali.sup <- lab.ind.sup <- TRUE
@@ -27,7 +56,7 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
     if("var" %in% label) lab.var<-TRUE
     if("quali.sup" %in% label) lab.quali.sup<-TRUE
     if("ind.sup" %in% label) lab.ind.sup<-TRUE
-    
+
     test.invisible <- vector(length = 5)
     if (!is.null(invisible)) {
       test.invisible[1] <- match("ind", invisible)
@@ -88,10 +117,10 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
             else selection <- which(apply(res.mca$ind$cos2[,axes,drop=FALSE],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
-    
+
     if (!is.null(select)&(!is.null(res.mca$call$ind.sup))) {
       if (mode(select)=="numeric") selectionS <- select
       else {
@@ -104,10 +133,10 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
             else selectionS <- which(apply(res.mca$ind.sup$cos2[,axes,drop=FALSE],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selectionS <- select
-        }  
+        }
       }
     }
-    
+
     if (!is.null(selectMod)) {
       if (mode(selectMod)=="numeric") selection2 <- selectMod
       else {
@@ -119,12 +148,12 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
             if (sum(as.numeric(unlist(strsplit(selectMod,"cos2"))),na.rm=T)>=1) selection2 <- (rev(order(apply(res.mca$var$cos2[,axes],1,sum))))[1:min(nrow(res.mca$var$coord),sum(as.numeric(unlist(strsplit(selectMod,"cos2"))),na.rm=T))]
             else selection2 <- which(apply(res.mca$var$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(selectMod,"cos2"))),na.rm=T))
           }
-          if (grepl("v.test",selectMod)) selection2 <- union(which(abs(res.mca$var$v.test[,axes[1],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T)),which(abs(res.mca$var$v.test[,axes[2],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T))) 
+          if (grepl("v.test",selectMod)) selection2 <- union(which(abs(res.mca$var$v.test[,axes[1],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T)),which(abs(res.mca$var$v.test[,axes[2],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T)))
           if (is.integer(selectMod)) selection2 <- selectMod
-        }  
+        }
       }
     }
-    
+
     if ((!is.null(selectMod))&(!is.null(res.mca$call$quali.sup))) {
       if (mode(selectMod)=="numeric") selection3 <- selectMod
       else {
@@ -136,12 +165,12 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
             if (sum(as.numeric(unlist(strsplit(selectMod,"cos2"))),na.rm=T)>=1) selection3 <- (rev(order(apply(res.mca$quali.sup$cos2[,axes,drop=FALSE],1,sum))))[1:min(nrow(res.mca$quali.sup$coord),sum(as.numeric(unlist(strsplit(selectMod,"cos2"))),na.rm=T))]
             else selection3 <- which(apply(res.mca$quali.sup$cos2[,axes,drop=FALSE],1,sum)>sum(as.numeric(unlist(strsplit(selectMod,"cos2"))),na.rm=T))
           }
-          if (grepl("v.test",selectMod)) selection3 <- union(which(abs(res.mca$quali.sup$v.test[,axes[1],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T)),which(abs(res.mca$quali.sup$v.test[,axes[2],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T))) 
+          if (grepl("v.test",selectMod)) selection3 <- union(which(abs(res.mca$quali.sup$v.test[,axes[1],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T)),which(abs(res.mca$quali.sup$v.test[,axes[2],drop=FALSE])>sum(as.integer(unlist(strsplit(selectMod,"v.test"))),na.rm=T)))
           if (is.integer(selectMod)) selection3 <- selectMod
-        }  
+        }
       }
     }
-    
+
     if (habillage == "quali") {
       aux = 1
       col.var = NULL
@@ -168,7 +197,7 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
       col.var <- rep(col.var,nrow(coord.var))
       if (!is.null(res.mca$call$quali.sup)) col.quali.sup <- rep(col.quali.sup,nrow(coord.quali.sup))
     }
-    
+
     titre = title
     if (is.null(title)) titre <- "MCA factor map"
     if (is.na(test.invisible[1])|is.na(test.invisible[2])|is.na(test.invisible[4])|is.na(test.invisible[5])) {
@@ -185,7 +214,7 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
         if (length(col.ind)==1) coll <- c(coll,rep(col.ind,nrow(coord.ind)))
         else coll <- c(coll,col.ind)
         if (!is.null(select)) {
-          if (is.numeric(unselect)) coll[!((1:length(coll))%in%selection)] <- rgb(t(col2rgb(coll[!((1:length(coll))%in%selection)])),alpha=255*(1-unselect),maxColorValue=255) 
+          if (is.numeric(unselect)) coll[!((1:length(coll))%in%selection)] <- rgb(t(col2rgb(coll[!((1:length(coll))%in%selection)])),alpha=255*(1-unselect),maxColorValue=255)
           else coll[!((1:length(coll))%in%selection)] <- unselect
           labe[!((1:length(labe))%in%selection)] <- ""
         }
@@ -198,7 +227,7 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
         } else  labe2 <- rep("",nrow(coord.var))
         coll2 <- col.var
         if (!is.null(selectMod)) {
-          if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selection2)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selection2)])),alpha=255*(1-unselect),maxColorValue=255) 
+          if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selection2)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selection2)])),alpha=255*(1-unselect),maxColorValue=255)
           else coll2[!((1:length(coll2))%in%selection2)] = unselect
           labe2[!((1:length(labe2))%in%selection2)] <- ""
         }
@@ -213,13 +242,13 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
         } else  labe2 <- rep("",nrow(coord.quali.sup))
         coll2 <- col.quali.sup
         if ((!is.null(selectMod))&!is.null(selection3)) {
-          if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selection3)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selection3)])),alpha=255*(1-unselect),maxColorValue=255) 
+          if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selection3)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selection3)])),alpha=255*(1-unselect),maxColorValue=255)
           else coll2[!((1:length(coll2))%in%selection3)] = unselect
           labe2[!((1:length(labe2))%in%selection3)] <- ""
         }
         if (length(selectMod)==1) {
           if (grepl("contrib",selectMod)){
-            if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255) 
+            if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255)
             else coll2[1:length(coll2)] = unselect
             labe2[1:length(coll2)] <- ""
           }}
@@ -234,13 +263,13 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
         } else  labe2 <- rep("",nrow(coord.ind.sup))
         coll2 <- rep(col.ind.sup,nrow(coord.ind.sup))
         if ((!is.null(select))&!is.null(selectionS)) {
-          if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selectionS)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selectionS)])),alpha=255*(1-unselect),maxColorValue=255) 
+          if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selectionS)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selectionS)])),alpha=255*(1-unselect),maxColorValue=255)
           else coll2[!((1:length(coll2))%in%selectionS)] = unselect
           labe2[!((1:length(labe2))%in%selectionS)] <- ""
         }
         if (!is.null(select)){
           if (grepl("contrib",select)){
-            if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255) 
+            if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255)
             else coll2[1:length(coll2)] = unselect
             labe2[1:length(coll2)] <- ""
           }}
@@ -271,7 +300,7 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
       y.cercle <- sqrt(1 - x.cercle^2)
       lines(x.cercle, y = y.cercle,...)
       lines(x.cercle, y = -y.cercle,...)
-      
+
       if (!is.null(select)) {
         if (mode(select)=="numeric") selection <- select
         else {
@@ -279,11 +308,11 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
           else {
             if (grepl("coord",select)) selection <- (rev(order(apply(res.mca$quanti.sup$coord[,axes]^2,1,sum))))[1:min(nrow(res.mca$quanti.sup$coord),sum(as.integer(unlist(strsplit(select,"coord"))),na.rm=T))]
             if (is.integer(select)) selection <- select
-          }  
+          }
         }
         res.mca$quanti.sup$coord = res.mca$quanti.sup$coord[selection,,drop=FALSE]
       }
-      
+
       for (v in 1:nrow(res.mca$quanti.sup$coord)) {
         arrows(0, 0, res.mca$quanti.sup$coord[v, axes[1]], res.mca$quanti.sup$coord[v, axes[2]], length = 0.1, angle = 15, code = 2, col = col.quanti.sup,...)
         if (abs(res.mca$quanti.sup$coord[v,axes[1]])>abs(res.mca$quanti.sup$coord[v,axes[2]])){
@@ -300,14 +329,14 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
       }
     }
   }
-  
+
   if (choix == "var") {
     lab.var <- lab.quali.sup <- lab.quanti.sup <- FALSE
     if(length(label)==1 && label=="all") lab.var <- lab.quali.sup <- lab.quanti.sup <- TRUE
     if("var" %in% label) lab.var<-TRUE
     if("quali.sup" %in% label) lab.quali.sup<-TRUE
     if("quanti.sup" %in% label) lab.quanti.sup<-TRUE
-    
+
     test.invisible <- vector(length = 3)
     if (!is.null(invisible)) {
       test.invisible[1] <- match("var", invisible)
@@ -315,7 +344,7 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
       test.invisible[3] <- match("quanti.sup", invisible)
     }
     else  test.invisible <- rep(NA, 3)
-    
+
     if ((new.plot)&!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) dev.new()
     if (is.null(palette)) palette(c("black","red","green3","blue","cyan","magenta","darkgray","darkgoldenrod","darkgreen","violet","turquoise","orange","lightpink","lavender","yellow","lightgreen","lightgrey","lightblue","darkkhaki", "darkmagenta","darkolivegreen","lightcyan", "darkorange", "darkorchid","darkred","darksalmon","darkseagreen","darkslateblue","darkslategray","darkslategrey","darkturquoise","darkviolet", "lightgray","lightsalmon","lightyellow", "maroon"))
     if (is.null(xlim)) xlim <- c(0,1)
@@ -359,5 +388,5 @@ plot.spMCA <- function (x, axes = c(1, 2), choix=c("ind","var","quanti.sup"),
     }
     points(coo[, 1], y = coo[, 2], pch = ipch, col = coll, ...)
   }
-  
+
 }

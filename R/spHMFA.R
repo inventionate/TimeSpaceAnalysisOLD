@@ -1,12 +1,27 @@
+#' Perform Specific Hierarchical Multiple Factor Analysis
+#'
+#' @param X
+#' @param H
+#' @param type
+#' @param excl
+#' @param ncp
+#' @param graph
+#' @param axes
+#' @param name.group
+#'
+#' @return Returns a list of spHMFA results.
+#' @export
+#'
+#' @examples
 spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, graph = TRUE, axes=c(1,2), name.group = NULL) {
-  
+
   # @info spMFA Anapssung
   # Gesamtliste für auszuschließende Modalitäten erstellen
   ind.grpe <- group.mod <- ind.col <- 0
   group.mod <- ind.excl <- ind.excl.act <- NULL
-  
+
   # @info GDA Extensions aus Nicolas Robettes GDAtools Paket.
-  # Mit dieser Funktion lassen sich modified rates berechnen, die Anhaltspunkte für 
+  # Mit dieser Funktion lassen sich modified rates berechnen, die Anhaltspunkte für
   # die Wahl der zu interpretierende Achsen geben
   modif.rate <- function(resmca) {
     Q <- ncol(resmca$call$X)
@@ -17,7 +32,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     cum.mrate <- cumsum(mrate)
     return(data.frame(mrate,cum.mrate))
   }
-  
+
   group <- H[[1]]
   for(g in 1:length(group)) {
     aux.base <- droplevels(X)[, (ind.grpe + 1):(ind.grpe + group[g]),drop=FALSE]
@@ -34,12 +49,12 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     ind.col = ind.col + group.mod[g]
     # Returning ind.excl.act
   }
-  
+
   excl.grp <- NULL
   for(g in 1:length(excl)) {
     excl.grp <- c(excl.grp, length(excl[[g]]))
   }
-  
+
   hdil <- function(H) {
     nbnivh <- length(H)
     dil <- H
@@ -56,7 +71,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     }
     return(dil)
   }
-  
+
   htabdes <- function(H) {
     nbnivh <- length(H)
     nbvarh <- H
@@ -80,7 +95,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     }
     return(nbvarh)
   }
-  
+
   hweight <- function(X, H, type = rep("s", length(H[[1]])), excl = NULL) {
     Hq = H
     niv1 = spMFA(X, group = H[[1]], type = type, excl = excl, graph = FALSE)
@@ -103,7 +118,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     }
     return(cw.partiel)
   }
-  
+
   if (is.null(rownames(X))) rownames(X) = 1:nrow(X)
   if (is.null(colnames(X))) colnames(X) = paste("V",1:ncol(X),sep="")
   for (j in 1:ncol(X)) if (colnames(X)[j]=="") colnames(X)[j] = paste("V",j,sep="")
@@ -112,7 +127,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
   for (j in 1:ncol(X)) {
     if (!is.numeric(X[,j])) levels(X[,j])[which(table(X[,j])==0)] <- levels(X[,j])[which(table(X[,j])!=0)[1]]
   }
-  
+
   poids <- hweight(X, H, type = type, excl = excl)
   nbind <- dim(X)[1]
   nbnivo <- length(H)
@@ -125,12 +140,12 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
   # Alle passiven Modalitäten von der weiteren Knotenberechung ausschließen
   if(is.null(ind.excl.act)) X <- niv1$call$XTDC
   else X <- niv1$call$XTDC[-ind.excl.act]
-  
+
   Hq = H
-  
+
   if(is.null(excl)) Hq[[1]] = niv1$call$group.mod
   else Hq[[1]] = niv1$call$group.mod - excl.grp
-  
+
   Xdes = htabdes(Hq)
   ind.var <- 0
   ind.quali <- NULL
@@ -156,9 +171,9 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     }
     res1[[h]] <- data.partiel
   }
-  
+
   res.afmh <- spPCA(X, col.w = poids[[nbnivo]], graph = FALSE, ncp = ncp, scale.unit = FALSE)
-  
+
   dilat <- hdil(H)
   nb.v.p <- ncol(res.afmh$ind$coord)
   coord.group <- list()
@@ -184,12 +199,12 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
   }
   part1 <- list()
   if (!is.null(ind.quali)) part1.quali <- list()
-  
+
   for (h in 1:nbnivo) {
     nbgroup <- length(H[[h]])
     part2 <- array(0, dim = c(nrow(res.afmh$ind$coord), nb.v.p, nbgroup))
     if (!is.null(ind.quali)) part2.quali <- array(0, dim = c(length(ind.quali), nb.v.p, nbgroup))
-    
+
     for (g in 1:nbgroup) {
       formule <- matrix(0, dim(X)[1], nb.v.p)
       formule <- sweep(as.matrix(res1[[h]][[g]]),2, poids[[nbnivo]],FUN="*")
@@ -209,13 +224,13 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
     }
     part1[[h]] <- part2
     if (!is.null(ind.quali)) {
-      for (k in 1:length(ind.quali)) 
+      for (k in 1:length(ind.quali))
         if (sum(as.integer(X[,ind.quali[k]] > 0))<2) part2.quali[k, , ] <- part2[X[,ind.quali[k]] > 0, , ]
         else part2.quali[k, , ] <- apply(part2[X[,ind.quali[k]] > 0, , ], c(2, 3), mean)
         part1.quali[[h]] <- part2.quali
     }
   }
-  
+
   ## ajout
   canonical <- matrix(0, 0 ,ncol(res.afmh$ind$coord))
   colnames(canonical)=colnames(res.afmh$ind$coord)
@@ -247,7 +262,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
   }
   if (!is.null(ind.quali)) {
     aux <- matrix(0, nrow = length(ind.quali), ncol = ncol(res.afmh$ind$coord))
-    for (k in 1:length(ind.quali)) 
+    for (k in 1:length(ind.quali))
       if (sum(as.integer(X[,ind.quali[k]] > 0))<2) aux[k, ] <- res.afmh$ind$coord[X[,ind.quali[k]] > 0, ]
       else aux[k, ] <- apply(res.afmh$ind$coord[X[,ind.quali[k]] > 0, ], 2, mean)
       dimnames(aux) <- dimnames(res.afmh$var$contrib[ind.quali, ])
@@ -258,7 +273,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
   results$call$H <- H
   results$call$X <- X
   results$call$call <- sys.calls()[[1]]
-  
+
   # @info modif.rates der Ausgabe hinzufügen
   data.mrate <- modif.rate(results)
   mrate <- rep(0, nrow(results$eig))
@@ -270,7 +285,7 @@ spHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, g
   cum.mrate <- as.data.frame(cum.mrate)
   colnames(cum.mrate) <- "cumulative modified rates"
   results$eig <- cbind(results$eig, mrate, cum.mrate)
-  
+
   if (!is.null(ind.quali)) results$call$Hq <- Xdes
   class(results) <- c("spHMFA", "list")
   if (graph) {

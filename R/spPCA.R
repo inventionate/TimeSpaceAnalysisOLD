@@ -1,19 +1,37 @@
+#' Performs a Specific Principal Component Analysis
+#'
+#' @param X
+#' @param scale.unit
+#' @param ncp
+#' @param ind.sup
+#' @param quanti.sup
+#' @param structuring.factors
+#' @param quali.sup
+#' @param row.w
+#' @param col.w
+#' @param graph
+#' @param axes
+#'
+#' @return Returns a list of spPCA results.
+#' @export
+#'
+#' @examples
 spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = NULL, structuring.factors = NULL,
-                 quali.sup = NULL, row.w = NULL, col.w = NULL, graph = TRUE, axes = c(1, 2)) 
+                 quali.sup = NULL, row.w = NULL, col.w = NULL, graph = TRUE, axes = c(1, 2))
 {
      # moy.p <- function(V, poids) {
      #     res <- sum(V * poids)/sum(poids)
      # }
-     # 
+     #
   moy.ptab <- function(V, poids) {
     #        res <- colSums(V * (poids/sum(poids)))
     as.vector(crossprod(poids/sum(poids),as.matrix(V)))
   }
-  
+
   #    ec <- function(V, poids) {
   #        res <- sqrt(sum(V^2 * poids)/sum(poids))
   #    }
-  
+
   ec.tab <- function(V, poids) {
     #        res <- sqrt(colSums(V^2 * poids)/sum(poids))
     ecart.type <- sqrt(as.vector(crossprod(poids/sum(poids),as.matrix(V^2))))
@@ -23,7 +41,7 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
   # fct.eta2 <- function(vec,x,weights) {
   # res <- summary(lm(x~vec,weights=weights))$r.squared
   # }
-  
+
   fct.eta2 <- function(vec,x,weights) {   ## pb avec les poids
     VB <- function(xx) {
       return(sum((colSums((tt*xx)*weights)^2)/ni))
@@ -32,21 +50,21 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
     ni <- colSums(tt*weights)
     unlist(lapply(as.data.frame(x),VB))/colSums(x^2*weights)
   }
-  
+
   X <- as.data.frame(X)
   X <- droplevels(X)
   if (any(is.na(X))) {
     warning("Missing values are imputed by the mean of the variable: you should use the imputePCA function of the missMDA package")
-    if (is.null(quali.sup)) 
+    if (is.null(quali.sup))
       X[is.na(X)] = matrix(colMeans(X,na.rm=TRUE),ncol=ncol(X),nrow=nrow(X),byrow=TRUE)[is.na(X)]
     else for (j in (1:ncol(X))[-quali.sup]) X[, j] <- replace(X[, j], is.na(X[, j]), mean(X[, j], na.rm = TRUE))
   }
   Xtot <- X
-  if (!is.null(quali.sup)) 
+  if (!is.null(quali.sup))
     X <- X[, -quali.sup,drop=FALSE]
   if (any(!sapply(X, is.numeric))) {
     auxi = NULL
-    for (j in 1:ncol(X)) if (!is.numeric(X[, j])) 
+    for (j in 1:ncol(X)) if (!is.numeric(X[, j]))
       auxi = c(auxi, colnames(X)[j])
     stop(paste("\nThe following variables are not quantitative: ", auxi))
   }
@@ -74,8 +92,8 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
   dist2.ind <- rowSums(X^2*sqrt(col.w))
   dist2.ind <- as.vector(tcrossprod(as.matrix(X^2*sqrt(col.w)),t(rep(1,ncol(X)))))
   dist2.var <- as.vector(crossprod(rep(1,nrow(X)),as.matrix(X^2*row.w)))
-  res.call <- list(row.w = (row.w/sum(row.w)), col.w = col.w, 
-                   scale.unit = scale.unit, ncp = ncp, centre = centre, 
+  res.call <- list(row.w = (row.w/sum(row.w)), col.w = col.w,
+                   scale.unit = scale.unit, ncp = ncp, centre = centre,
                    ecart.type = ecart.type, X = Xtot, row.w.init = row.w.init,call=match.call())
   tmp <- svd.triplet(X, row.w = row.w, col.w = col.w,ncp=ncp)
   # @info spMCA Adaption
@@ -84,7 +102,7 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
   eig <- tmp$vs^2
   vp <- as.data.frame(matrix(NA, length(eig), 3))
   rownames(vp) <- paste("comp", 1:length(eig))
-  colnames(vp) <- c("eigenvalue", "percentage of variance", 
+  colnames(vp) <- c("eigenvalue", "percentage of variance",
                     "cumulative percentage of variance")
   vp[, "eigenvalue"] <- eig
   vp[, "percentage of variance"] <- (eig/sum(eig)) * 100
@@ -99,18 +117,18 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
   cor.var <- coord.var/sqrt(dist2)
   cos2.var <- cor.var^2
   rownames(coord.var) <- rownames(cos2.var) <- rownames(cor.var) <- rownames(contrib.var) <- colnames(X)
-  colnames(coord.var) <- colnames(cos2.var) <- colnames(cor.var) <- colnames(contrib.var) <- paste("Dim", 
+  colnames(coord.var) <- colnames(cos2.var) <- colnames(cor.var) <- colnames(contrib.var) <- paste("Dim",
                                                                                                    c(1:ncol(V)), sep = ".")
-  res.var <- list(coord = coord.var[, 1:ncp], cor = cor.var[, 
-                                                            1:ncp], cos2 = cos2.var[, 1:ncp], contrib = contrib.var[, 
+  res.var <- list(coord = coord.var[, 1:ncp], cor = cor.var[,
+                                                            1:ncp], cos2 = cos2.var[, 1:ncp], contrib = contrib.var[,
                                                                                                                     1:ncp] * 100)
   dist2 <- dist2.ind
   cos2.ind <- coord.ind^2/dist2
   contrib.ind <- t(t(coord.ind^2*row.w/sum(row.w))/eig)
   rownames(coord.ind) <- rownames(cos2.ind) <- rownames(contrib.ind) <- names(dist2) <- rownames(X)
-  colnames(coord.ind) <- colnames(cos2.ind) <- colnames(contrib.ind) <- paste("Dim", 
+  colnames(coord.ind) <- colnames(cos2.ind) <- colnames(contrib.ind) <- paste("Dim",
                                                                               c(1:ncol(U)), sep = ".")
-  res.ind <- list(coord = coord.ind[, 1:ncp,drop=FALSE], cos2 = cos2.ind[, 
+  res.ind <- list(coord = coord.ind[, 1:ncp,drop=FALSE], cos2 = cos2.ind[,
                                                                          1:ncp,drop=FALSE], contrib = contrib.ind[, 1:ncp,drop=FALSE] * 100, dist = sqrt(dist2))
   res <- list(eig = vp, var = res.var, ind = res.ind, svd = tmp)
   if (!is.null(ind.sup)) {
@@ -132,7 +150,7 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
   if (!is.null(quanti.sup)) {
     X.quanti.sup <- as.data.frame(Xtot[, quanti.sup,drop=FALSE])
     if (!is.null(ind.sup)) X.quanti.sup <- as.data.frame(X.quanti.sup[-ind.sup, ,drop=FALSE])
-    colnames(X.quanti.sup) <- colnames(Xtot)[quanti.sup]        
+    colnames(X.quanti.sup) <- colnames(Xtot)[quanti.sup]
     res.call$quanti.sup = X.quanti.sup
     centre.sup <- moy.ptab(X.quanti.sup,row.w)
     X.quanti.sup <- t(t(as.matrix(X.quanti.sup))-centre.sup)
@@ -157,7 +175,7 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
     if (!is.null(ind.sup)) X.quali.sup <- as.data.frame(X.quali.sup[-ind.sup,,drop=FALSE])
     colnames(X.quali.sup) <- colnames(Xtot)[quali.sup]
     nombre <- modalite <- NULL
-    
+
     # eta2 <- matrix(NA, length(quali.sup), ncp)
     # if (ncp>1){
     # for (i in 1:ncp)  eta2[, i] <- unlist(lapply(X.quali.sup,fct.eta2,res$ind$coord[,i,drop=FALSE],weights=row.w))
@@ -165,8 +183,8 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
     # eta2 <- as.matrix(eta2,ncol=ncp)
     # colnames(eta2) = paste("Dim", 1:ncp)
     # rownames(eta2) = colnames(X.quali.sup)
-    
-    
+
+
     # @info Hier umfrangreiche Möglichkeiten einer an (M)ANOVA Verfahren angelehnten Strukturierten Datenanalyse integrieren,
     # wie es auch bei der spMCA Funktion gemacht wurde (vgl. Robette GDAtools und Le Roux/Rouanet 2004: 268).
 
@@ -175,7 +193,7 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
       # Der Algorithmus ist eine Adaption aus Nicolas Robettes GDAtools "varsup" Funktion.
       v_n <- sum(row.w)
       v_var <- Xtot[quali.sup]
-      
+
       # Varianzen für die einzelnen Variablen berechnen
       v_vrc_g <- NULL
       v_wi_g <- v_be_g <- v_tot <- matrix(nrow = ncol(v_var), ncol = ncp)
@@ -230,7 +248,7 @@ spPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = N
       colnames(eta2) = paste("Dim", 1:ncp)
       rownames(eta2) = colnames(X.quali.sup)
     }
-    
+
     for (i in 1:ncol(X.quali.sup)) {
       var <- as.factor(X.quali.sup[, i])
       n.mod <- nlevels(var)

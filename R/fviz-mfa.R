@@ -14,7 +14,7 @@ NULL
 #' \item{fviz_mfa(): An alias of fviz_mca_biplot()}
 #' }
 #' @param X an object of class MFA [FactoMineR].
-#' @inheritParams fviz_mca
+#' #@inheritParams fviz_mca
 #' @param label a text specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -526,7 +526,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
 
 
 
-#' @rdname fviz_mca
+#' @rdname fviz_mfa
 #' @export
 fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"),
                             label = "all", invisible="none", labelsize=4, pointsize = 2,
@@ -564,7 +564,7 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"),
 
 
 
-#' @rdname fviz_mca
+#' @rdname fviz_mfa
 #' @export
 fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                             label = "all", invisible="none", labelsize=4, pointsize = 2,
@@ -626,7 +626,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   p + labs(title="MFA - Partial Axes Representations")
 }
 
-#' @rdname fviz_mca
+#' @rdname fviz_mfa
 #' @export
 fviz_mfa_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                             label = "all", invisible="none", labelsize=4, pointsize = 2,
@@ -668,7 +668,7 @@ fviz_mfa_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   # Individuals
   geom2 <- geom
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
-  p <- fviz_mca_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
+  p <- fviz_mfa_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
                     labelsize=labelsize, pointsize = pointsize,
                     col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
                     shape.ind=shape.ind,
@@ -707,7 +707,7 @@ fviz_mfa_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   p+labs(title="MFA factor map - Biplot")
 }
 
-#' @rdname fviz_mca
+#' @rdname fviz_mfa
 #' @export
 fviz_mfa <- function(X, ...){
   fviz_mfa_biplot(X, ...)

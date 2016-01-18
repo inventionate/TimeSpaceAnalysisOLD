@@ -1,13 +1,12 @@
-# db_load Funktion Bereinigte und
-# sortierte Daten in eine remote
-# Datenbank speichern.  remote_db_path:
-# (string) Dateipfad zur SQLite
-# Datenbank.  source_df: (dplyr)
-# data_frame, tbl, die als
-# Quelldatenbank dient.
-# Copyright © 2015 Fabian Mundt
-
-# Funktion
+#' Save data frame as SQLite table.
+#'
+#' @param remote_db_path
+#'
+#' @return The SQLite database.
+#' @export
+#'
+#' @examples
+#' db_load('/path/to/database.sqlite')
 db_load <- function(remote_db_path) {
   # Vorhandene Datenbank löschen
   if (file.exists(remote_db_path))

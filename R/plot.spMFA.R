@@ -1,9 +1,42 @@
-plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","freq"), ellipse = NULL, ellipse.par = NULL, 
+#' Plot spMFA results.
+#'
+#' @param x
+#' @param axes
+#' @param choix
+#' @param ellipse
+#' @param ellipse.par
+#' @param lab.grpe
+#' @param lab.var
+#' @param lab.ind
+#' @param lab.par
+#' @param lab.col
+#' @param habillage
+#' @param col.hab
+#' @param invisible
+#' @param partial
+#' @param lim.cos2.var
+#' @param chrono
+#' @param xlim
+#' @param ylim
+#' @param title
+#' @param palette
+#' @param autoLab
+#' @param new.plot
+#' @param select
+#' @param unselect
+#' @param shadowtext
+#' @param ...
+#'
+#' @return Returns the standard plots of spMFA results.
+#' @export
+#'
+#' @examples
+plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","freq"), ellipse = NULL, ellipse.par = NULL,
                    lab.grpe = TRUE, lab.var = TRUE, lab.ind = TRUE, lab.par = FALSE, lab.col = TRUE,
-                   habillage = "ind", col.hab = NULL, invisible = c("none","ind", "ind.sup", "quanti","quanti.sup","quali","quali.sup","row", "row.sup","col", "col.sup"), partial = NULL, 
-                   lim.cos2.var = 0., chrono = FALSE, xlim = NULL, ylim = NULL, 
+                   habillage = "ind", col.hab = NULL, invisible = c("none","ind", "ind.sup", "quanti","quanti.sup","quali","quali.sup","row", "row.sup","col", "col.sup"), partial = NULL,
+                   lim.cos2.var = 0., chrono = FALSE, xlim = NULL, ylim = NULL,
                    title = NULL, palette = NULL, autoLab = c("auto","yes","no"),new.plot = FALSE, select = NULL,
-                   unselect = 0.7,shadowtext=FALSE,...) 
+                   unselect = 0.7,shadowtext=FALSE,...)
 {
   res.spmfa <- x
   if (!inherits(res.spmfa, "spMFA")) stop("non convenient data")
@@ -48,7 +81,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
           # 		    if (grepl("contrib",select)) selection <- (rev(order(apply(res.spmfa$partial.axes$contrib[,axes],1,sum))))[1:min(nrow(res.spmfa$partial.axes$coord),sum(as.integer(unlist(strsplit(select,"contrib"))),na.rm=T))]
           if (grepl("coord",select)) selection <- (rev(order(apply(res.spmfa$partial.axes$coord[,axes]^2,1,sum))))[1:min(nrow(res.spmfa$partial.axes$coord),sum(as.integer(unlist(strsplit(select,"coord"))),na.rm=T))]
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
     if (habillage == "group") {
@@ -96,11 +129,11 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     if (autoLab==TRUE) autoLab(coord.axes[, 1], y = coord.axes[, 2], labels = labe, col=couleur.axes, shadotext=shadowtext,...)
     if (habillage == "group") legend("topleft", legend = rownames(res.spmfa$group$Lg)[-length(rownames(res.spmfa$group$Lg))], text.col = unique(couleur.axes), ...)
   }
-  
+
   if (choix == "group") {
     coord.actif <- res.spmfa$group$coord[, axes, drop = FALSE]
     if (!is.null(res.spmfa$group$coord.sup))  coord.illu <- res.spmfa$group$coord.sup[, axes, drop = FALSE]
-    
+
     ## D�but ajout 2015/04/23
     selection <- selectionS <- NULL
     if (!is.null(select)) {
@@ -115,7 +148,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selection <- which(apply(res.spmfa$group$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
     if ((!is.null(select))&(!is.null(res.spmfa$group$coord.sup))) {
@@ -130,18 +163,18 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selectionS <- which(apply(res.spmfa$group$cos2.sup[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selectionS <- select
-        }  
+        }
       }
     }
     ## Fin ajout 2015/04/23
-    
+
     if (length(col.hab)==1) col.hab=rep(col.hab,length(group))
     if (is.null(col.hab)) {
       col.hab = rep("darkred", nrow(coord.actif))
       if (!is.null(res.spmfa$group$coord.sup))  col.hab = c(col.hab, rep("darkolivegreen", nrow(coord.illu)))
     }
     if (habillage == "group") col.hab <- (2:(length(group) + 1))
-    
+
     if ((new.plot)&!nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))) dev.new()
     if (is.null(palette)) palette(c("black", "red", "green3", "blue", "cyan", "magenta","darkgray", "darkgoldenrod", "darkgreen", "violet","turquoise", "orange", "lightpink", "lavender", "yellow","lightgreen", "lightgrey", "lightblue", "darkkhaki","darkmagenta", "darkolivegreen", "lightcyan", "darkorange","darkorchid", "darkred", "darksalmon", "darkseagreen","darkslateblue", "darkslategray", "darkslategrey","darkturquoise", "darkviolet", "lightgray", "lightsalmon","lightyellow", "maroon"))
     coo <- labe <- coll <- ipch <- fonte <- NULL
@@ -158,11 +191,11 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     ipch <- c(ipch,rep(17,nrow(coord.actif)))
     fonte <- c(fonte,rep(1,nrow(coord.actif)))
     if (!is.null(selection)){
-      if (is.numeric(unselect)) coll[!((1:length(coll))%in%selection)] = rgb(t(col2rgb(coll[!((1:length(coll))%in%selection)])),alpha=255*(1-unselect),maxColorValue=255) 
+      if (is.numeric(unselect)) coll[!((1:length(coll))%in%selection)] = rgb(t(col2rgb(coll[!((1:length(coll))%in%selection)])),alpha=255*(1-unselect),maxColorValue=255)
       else coll[!((1:length(coll))%in%selection)] = unselect
       labe[!((1:length(coll))%in%selection)] <- ""
     }
-    
+
     if (!is.null(res.spmfa$group$coord.sup)) {
       coo <- rbind(coo,coord.illu)
       if (lab.grpe){ labe2 <- rownames(coord.illu)
@@ -177,12 +210,12 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       #	    fonte <- c(fonte,rep(3,nrow(coord.illu)))
       if (length(select)==1){
         if (grepl("contrib",select)){
-          if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255) 
+          if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255)
           else coll2[1:length(coll2)] = unselect
           labe2[1:length(coll2)] <- ""
         }}
       if (!is.null(selectionS)){
-        if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selectionS)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selectionS)])),alpha=255*(1-unselect),maxColorValue=255) 
+        if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selectionS)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selectionS)])),alpha=255*(1-unselect),maxColorValue=255)
         else coll2[!((1:length(coll2))%in%selectionS)] = unselect
         labe2[!((1:length(coll2))%in%selectionS)] <- ""
       }
@@ -218,14 +251,14 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
           col <- 1+rep(which(type=="c"),times=group[type=="c"])
         }
       }
-      
+
     } else {
       if (is.null(col.hab) | length(col.hab) < sum(group[type == "c"])) col <- rep(1, sum(group[type == "c"]))
       else col <- col.hab
     }
     if (is.null(title))  title <- "Correlation circle"
-    plot(0, 0, main = title, xlab = lab.x, ylab = lab.y, 
-         xlim = c(-1.1, 1.1), ylim = c(-1.1, 1.1), col = "white", 
+    plot(0, 0, main = title, xlab = lab.x, ylab = lab.y,
+         xlim = c(-1.1, 1.1), ylim = c(-1.1, 1.1), col = "white",
          asp = 1, ...)
     x.cercle <- seq(-1, 1, by = 0.01)
     y.cercle <- sqrt(1 - x.cercle^2)
@@ -246,7 +279,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selection <- which(apply(res.spmfa$quanti.var$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
     if ((!is.null(select))&(!is.null(res.spmfa$quanti.var.sup))) {
@@ -261,10 +294,10 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selectionS <- which(apply(res.spmfa$quanti.var.sup$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selectionS <- select
-        }  
+        }
       }
     }
-    
+
     labe <- labe2 <- coll <- coll2 <- NULL
     if (!is.null(res.spmfa["quanti.var"]$quanti.var)&is.na(test.invisible[1])){
       coll <- col[1:nrow(res.spmfa["quanti.var"]$quanti.var$coord)]
@@ -276,28 +309,28 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       else  labe2 <- rep("",nrow(res.spmfa$quanti.var.sup$coord))
       coll2 <- col[(length(coll)+1):length(col)]
     }
-    
+
     if (!is.null(select)){
-      if (!is.null(res.spmfa["quanti.var"]$quanti.var)&is.na(test.invisible[1])){			
-        if (is.numeric(unselect)) coll[!((1:length(coll))%in%selection)] = rgb(t(col2rgb(coll[!((1:length(coll))%in%selection)])),alpha=255*(1-unselect),maxColorValue=255) 
+      if (!is.null(res.spmfa["quanti.var"]$quanti.var)&is.na(test.invisible[1])){
+        if (is.numeric(unselect)) coll[!((1:length(coll))%in%selection)] = rgb(t(col2rgb(coll[!((1:length(coll))%in%selection)])),alpha=255*(1-unselect),maxColorValue=255)
         else coll[!((1:length(coll))%in%selection)] = unselect
         labe[!((1:length(coll))%in%selection)] <- ""
       }
       if (!is.null(res.spmfa$quanti.var.sup)&is.na(test.invisible[2])){
-        if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selectionS)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selectionS)])),alpha=255*(1-unselect),maxColorValue=255) 
+        if (is.numeric(unselect)) coll2[!((1:length(coll2))%in%selectionS)] = rgb(t(col2rgb(coll2[!((1:length(coll2))%in%selectionS)])),alpha=255*(1-unselect),maxColorValue=255)
         else coll2[!((1:length(coll2))%in%selectionS)] = unselect
         labe2[!((1:length(coll2))%in%selectionS)] <- ""
       }
     }
     col <- c(coll,coll2)
     labe <- c(labe,labe2)
-    
-    if (habillage == "group" & is.na(test.invisible[1]) & is.na(test.invisible[2])) 
+
+    if (habillage == "group" & is.na(test.invisible[1]) & is.na(test.invisible[2]))
       legend("topleft", legend = rownames(res.spmfa$group$Lg[-nrow(res.spmfa$group$Lg), ])[type == "c"], text.col = col.hab[type == "c"], cex = 0.8*par("cex"))
     if (habillage == "group" & is.na(test.invisible[1]) & !is.na(test.invisible[2])){
-      if ("quanti.sup"%in%res.spmfa$call$nature.var) legend("topleft", legend = rownames(res.spmfa$group$Lg[-c(num.group.sup, nrow(res.spmfa$group$Lg)), ])[type.act == "c"], 
+      if ("quanti.sup"%in%res.spmfa$call$nature.var) legend("topleft", legend = rownames(res.spmfa$group$Lg[-c(num.group.sup, nrow(res.spmfa$group$Lg)), ])[type.act == "c"],
                                                           text.col = col.hab[which(!((1:length(group))%in%res.spmfa$call$num.group.sup))[type.act == "c"]], cex = 0.8*par("cex"))
-      else legend("topleft", legend = rownames(res.spmfa$group$Lg[-nrow(res.spmfa$group$Lg), ])[type == "c"], 
+      else legend("topleft", legend = rownames(res.spmfa$group$Lg[-nrow(res.spmfa$group$Lg), ])[type == "c"],
                   text.col = col.hab[type == "c"], cex = 0.8*par("cex"))
     }
     if (habillage == "group" & !is.na(test.invisible[1]) & is.na(test.invisible[2])){
@@ -306,7 +339,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     }
     nrow.coord.var <- 0
     coo <- posi <- NULL
-    
+
     if ((!is.null(res.spmfa["quanti.var"]$quanti.var))&(is.na(test.invisible[1]))){
       if (length(apply(res.spmfa["quanti.var"]$quanti.var$cos2[, axes,drop=FALSE],1,sum, na.rm = TRUE) >= lim.cos2.var)>0){
         coord.var <- res.spmfa$quanti.var$cor[which(apply(res.spmfa$quanti.var$cos2[, axes,drop=FALSE],1,sum, na.rm = TRUE) >= lim.cos2.var),axes,drop=FALSE]
@@ -326,7 +359,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
           }
         }
       }}
-    
+
     if ((!is.null(res.spmfa$quanti.var.sup$coord))& (is.na(test.invisible[2]))){
       if (!is.null(res.spmfa$quanti.var.sup$coord[ which(apply(res.spmfa$quanti.var.sup$cos2[, axes,drop=FALSE],1,sum, na.rm = TRUE) >= lim.cos2.var),])) {
         coord.quanti <- res.spmfa$quanti.var.sup$cor[ which(apply(res.spmfa$quanti.var.sup$cos2[, axes,drop=FALSE],1,sum, na.rm = TRUE) >= lim.cos2.var),axes,drop=FALSE]
@@ -345,7 +378,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
           }
         }
       }
-    }	
+    }
     if (autoLab=="auto") autoLab = (length(labe)<50)
     if (autoLab==FALSE) text(coo[, 1], y = coo[, 2], labels = labe, pos = posi, col = col,...)
     if (autoLab==TRUE) autoLab(coo[, 1], y = coo[, 2], labels = labe, col=col, shadotext=shadowtext,...)
@@ -364,7 +397,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     coord.row.sup <- coord.col.sup <- NULL
     if (!is.null(res.spmfa$ind.sup)) coord.row.sup <- res.spmfa$ind.sup$coord[, axes, drop = FALSE]
     if (!is.null(res.spmfa$freq.sup)) coord.col.sup <- res.spmfa$freq.sup$coord[, axes, drop = FALSE]
-    
+
     test.invisible <- vector(length = 4)
     if (!is.null(invisible)) {
       test.invisible[1] <- match("row", invisible)
@@ -405,7 +438,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       ymin = ylim[1]
       ymax = ylim[2]
     }
-    
+
     col <- NULL
     if (habillage == "group") {
       if (is.null(col.hab) | length(col.hab) < length(group[type == "f"])) col.hab <- 2:(length(group[type == "f"]) + 1)
@@ -414,13 +447,13 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       if (is.null(col.hab) | length(col.hab) < sum(group[type == "f"])) col <- rep(1, sum(group[type == "f"]))
       else col <- col.hab
     }
-    
+
     if (is.null(title)) titre <- "Factor map for the contingency table(s)"
     else titre <- title
     plot(0, 0, main = titre, xlab = lab.x, ylab = lab.y, xlim = xlim, ylim = ylim, col = "white", asp=1, ...)
     abline(h=0,lty=2,...)
     abline(v=0,lty=2,...)
-    
+
     selection <- selectionC <- selectionS <- selectionCS <- NULL
     if (!is.null(select)) {
       if (mode(select)=="numeric") selection <- select
@@ -436,7 +469,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selection <- which(apply(res.spmfa$ind$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
     if ((!is.null(select))&(!is.null(res.spmfa$ind.sup$coord))) {
@@ -452,7 +485,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selectionS <- which(apply(res.spmfa$ind.sup$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selectionS <- select
-        }  
+        }
       }
     }
     if ((!is.null(select))&(!is.null(res.spmfa$freq$coord))) {
@@ -468,7 +501,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selectionC <- which(apply(res.spmfa$freq$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selectionC <- select
-        }  
+        }
       }
     }
     if ((!is.null(select))&(!is.null(res.spmfa$freq.sup$coord))) {
@@ -483,11 +516,11 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selectionCS <- which(apply(res.spmfa$freq.sup$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selectionCS <- select
-        }  
+        }
       }
     }
-    
-    
+
+
     coo <- labe <- coll <- ipch <- fonte <- NULL
     if (is.na(test.invisible[1])) {
       coo <- rbind(coo,coord.row)
@@ -546,7 +579,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       }
       if (length(select)==1){
         if (grepl("contrib",select)){
-          if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255) 
+          if (is.numeric(unselect)) coll2[1:length(coll2)] = rgb(t(col2rgb(coll2[1:length(coll2)])),alpha=255*(1-unselect),maxColorValue=255)
           else coll2[1:length(coll2)] = unselect
           labe2[1:length(coll2)] <- ""
         }}
@@ -562,7 +595,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     if (!shadowtext) points(coo[, 1], y = coo[, 2], pch = ipch, col = coll, ...)
     if (habillage == "group") legend("topleft", legend = rownames(res.spmfa$group$Lg[-nrow(res.spmfa$group$Lg), ])[type == "f"], text.col = col.hab, cex = 0.8*par("cex"))
   }
-  
+
   if (choix == "ind") {
     test.invisible <- vector(length = 3)
     if (!is.null(invisible)) {
@@ -598,43 +631,43 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       if (length(partial) == 1) {
         if (partial == "all") {
           group.ind.actif <- 1:nrow(coord.ind)
-          if (!is.null(res.spmfa$ind.sup)) 
+          if (!is.null(res.spmfa$ind.sup))
             group.ind.sup <- 1:nrow(coord.ind.sup)
-          if (!is.null(res.spmfa["quali.var"]$quali.var)) 
+          if (!is.null(res.spmfa["quali.var"]$quali.var))
             group.quali <- 1:nrow(coord.quali)
-          if (!is.null(res.spmfa["quali.var.sup"]$quali.var.sup)) 
+          if (!is.null(res.spmfa["quali.var.sup"]$quali.var.sup))
             group.quali.sup <- 1:nrow(coord.quali.sup)
         }
         else {
           for (i in 1:length(partial)) {
-            if (partial[i] %in% rownames(coord.ind)) 
-              group.ind.actif <- c(group.ind.actif, match(partial[i], 
+            if (partial[i] %in% rownames(coord.ind))
+              group.ind.actif <- c(group.ind.actif, match(partial[i],
                                                           rownames(coord.ind)))
-            if (partial[i] %in% rownames(coord.ind.sup)) 
-              group.ind.sup <- c(group.ind.sup, match(partial[i], 
+            if (partial[i] %in% rownames(coord.ind.sup))
+              group.ind.sup <- c(group.ind.sup, match(partial[i],
                                                       rownames(coord.ind.sup)))
-            if (partial[i] %in% rownames(coord.quali)) 
-              group.quali <- c(group.quali, match(partial[i], 
+            if (partial[i] %in% rownames(coord.quali))
+              group.quali <- c(group.quali, match(partial[i],
                                                   rownames(coord.quali)))
-            if (partial[i] %in% rownames(coord.quali.sup)) 
-              group.quali.sup <- c(group.quali.sup, match(partial[i], 
+            if (partial[i] %in% rownames(coord.quali.sup))
+              group.quali.sup <- c(group.quali.sup, match(partial[i],
                                                           rownames(coord.quali.sup)))
           }
         }
       }
       else {
         for (i in 1:length(partial)) {
-          if (partial[i] %in% rownames(coord.ind)) 
-            group.ind.actif <- c(group.ind.actif, match(partial[i], 
+          if (partial[i] %in% rownames(coord.ind))
+            group.ind.actif <- c(group.ind.actif, match(partial[i],
                                                         rownames(coord.ind)))
-          if (partial[i] %in% rownames(coord.ind.sup)) 
-            group.ind.sup <- c(group.ind.sup, match(partial[i], 
+          if (partial[i] %in% rownames(coord.ind.sup))
+            group.ind.sup <- c(group.ind.sup, match(partial[i],
                                                     rownames(coord.ind.sup)))
-          if (partial[i] %in% rownames(coord.quali)) 
-            group.quali <- c(group.quali, match(partial[i], 
+          if (partial[i] %in% rownames(coord.quali))
+            group.quali <- c(group.quali, match(partial[i],
                                                 rownames(coord.quali)))
-          if (partial[i] %in% rownames(coord.quali.sup)) 
-            group.quali.sup <- c(group.quali.sup, match(partial[i], 
+          if (partial[i] %in% rownames(coord.quali.sup))
+            group.quali.sup <- c(group.quali.sup, match(partial[i],
                                                         rownames(coord.quali.sup)))
         }
       }
@@ -655,40 +688,40 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       if (is.na(test.invisible[1]))  xmax <- max(xmax, coord.ind[, 1])
       if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) xmin <- min(xmin, coord.ind.sup[, 1])
       if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) xmax <- max(xmax, coord.ind.sup[, 1])
-      if (is.na(test.invisible[1])) xmin <- min(xmin, coord.ind.partiel[unlist(lapply(group.ind.actif, 
+      if (is.na(test.invisible[1])) xmin <- min(xmin, coord.ind.partiel[unlist(lapply(group.ind.actif,
                                                                                       function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 1])
-      if (is.na(test.invisible[1])) xmax <- max(xmax, coord.ind.partiel[unlist(lapply(group.ind.actif, 
+      if (is.na(test.invisible[1])) xmax <- max(xmax, coord.ind.partiel[unlist(lapply(group.ind.actif,
                                                                                       function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 1])
-      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) xmin <- min(xmin, coord.ind.partiel.sup[unlist(lapply(group.ind.sup, 
+      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) xmin <- min(xmin, coord.ind.partiel.sup[unlist(lapply(group.ind.sup,
                                                                                                                       function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 1])
-      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) 
-        xmax <- max(xmax, coord.ind.partiel.sup[unlist(lapply(group.ind.sup, function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2]))
+        xmax <- max(xmax, coord.ind.partiel.sup[unlist(lapply(group.ind.sup, function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                 1])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
         xmin <- min(xmin, coord.quali[, 1])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
         xmax <- max(xmax, coord.quali[, 1])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
-        xmin <- min(xmin, coord.quali.partiel[unlist(lapply(group.quali, 
-                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
+        xmin <- min(xmin, coord.quali.partiel[unlist(lapply(group.quali,
+                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                               1])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
-        xmax <- max(xmax, coord.quali.partiel[unlist(lapply(group.quali, 
-                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
+        xmax <- max(xmax, coord.quali.partiel[unlist(lapply(group.quali,
+                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                               1])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        xmin <- min(xmin, coord.quali[, 1], coord.quali.sup[, 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        xmin <- min(xmin, coord.quali[, 1], coord.quali.sup[,
                                                             1])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        xmax <- max(xmax, coord.quali[, 1], coord.quali.sup[, 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        xmax <- max(xmax, coord.quali[, 1], coord.quali.sup[,
                                                             1])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        xmin <- min(xmin, coord.quali.partiel.sup[unlist(lapply(group.quali.sup, 
-                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        xmin <- min(xmin, coord.quali.partiel.sup[unlist(lapply(group.quali.sup,
+                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                   1])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        xmax <- max(xmax, coord.quali.partiel.sup[unlist(lapply(group.quali.sup, 
-                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        xmax <- max(xmax, coord.quali.partiel.sup[unlist(lapply(group.quali.sup,
+                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                   1])
       xlim <- c(xmin, xmax) * 1.1
     }
@@ -698,55 +731,55 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     }
     if (is.null(ylim)) {
       ymin <- ymax <- 0
-      if (is.na(test.invisible[1])) 
+      if (is.na(test.invisible[1]))
         ymin <- min(ymin, coord.ind[, 2])
-      if (is.na(test.invisible[1])) 
+      if (is.na(test.invisible[1]))
         ymax <- max(ymax, coord.ind[, 2])
-      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) 
+      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2]))
         ymin <- min(ymin, coord.ind.sup[, 2])
-      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) 
+      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2]))
         ymax <- max(ymax, coord.ind.sup[, 2])
-      if (is.na(test.invisible[1])) 
-        ymin <- min(ymin, coord.ind.partiel[unlist(lapply(group.ind.actif, 
-                                                          function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (is.na(test.invisible[1]))
+        ymin <- min(ymin, coord.ind.partiel[unlist(lapply(group.ind.actif,
+                                                          function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                             2])
-      if (is.na(test.invisible[1])) 
-        ymax <- max(ymax, coord.ind.partiel[unlist(lapply(group.ind.actif, 
-                                                          function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (is.na(test.invisible[1]))
+        ymax <- max(ymax, coord.ind.partiel[unlist(lapply(group.ind.actif,
+                                                          function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                             2])
-      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) 
-        ymin <- min(ymin, coord.ind.partiel.sup[unlist(lapply(group.ind.sup, 
-                                                              function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2]))
+        ymin <- min(ymin, coord.ind.partiel.sup[unlist(lapply(group.ind.sup,
+                                                              function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                 2])
-      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2])) 
-        ymax <- max(ymax, coord.ind.partiel.sup[unlist(lapply(group.ind.sup, 
-                                                              function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$ind.sup) & is.na(test.invisible[2]))
+        ymax <- max(ymax, coord.ind.partiel.sup[unlist(lapply(group.ind.sup,
+                                                              function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                 2])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
         ymin <- min(ymin, coord.quali[, 2])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
         ymax <- max(ymax, coord.quali[, 2])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
-        ymin <- min(ymin, coord.quali.partiel[unlist(lapply(group.quali, 
-                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
+        ymin <- min(ymin, coord.quali.partiel[unlist(lapply(group.quali,
+                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                               2])
-      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3])) 
-        ymax <- max(ymax, coord.quali.partiel[unlist(lapply(group.quali, 
-                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa["quali.var"]$quali.var) & is.na(test.invisible[3]))
+        ymax <- max(ymax, coord.quali.partiel[unlist(lapply(group.quali,
+                                                            function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                               2])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        ymin <- min(ymin, coord.quali[, 1], coord.quali.sup[, 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        ymin <- min(ymin, coord.quali[, 1], coord.quali.sup[,
                                                             2])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        ymax <- max(ymax, coord.quali[, 1], coord.quali.sup[, 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        ymax <- max(ymax, coord.quali[, 1], coord.quali.sup[,
                                                             2])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        ymin <- min(ymin, coord.quali.partiel.sup[unlist(lapply(group.quali.sup, 
-                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        ymin <- min(ymin, coord.quali.partiel.sup[unlist(lapply(group.quali.sup,
+                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                   2])
-      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3])) 
-        ymax <- max(ymax, coord.quali.partiel.sup[unlist(lapply(group.quali.sup, 
-                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))), 
+      if (!is.null(res.spmfa$quali.var.sup) & is.na(test.invisible[3]))
+        ymax <- max(ymax, coord.quali.partiel.sup[unlist(lapply(group.quali.sup,
+                                                                function(k) seq(nbre.grpe * (k - 1) + 1, length = nbre.grpe))),
                                                   2])
       ylim <- c(ymin, ymax) * 1.1
     }
@@ -754,7 +787,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       ymin = ylim[1]
       ymax = ylim[2]
     }
-    
+
     selection <- NULL
     if (!is.null(select)) {
       if (mode(select)=="numeric") selection <- select
@@ -770,10 +803,10 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
             else selection <- which(apply(res.spmfa$ind$cos2[,axes],1,sum)>sum(as.numeric(unlist(strsplit(select,"cos2"))),na.rm=T))
           }
           if (is.integer(select)) selection <- select
-        }  
+        }
       }
     }
-    
+
     if (habillage == "group") {
       if (is.null(col.hab) | length(col.hab) != (nbre.grpe)) col.hab <- 2:(nbre.grpe + 1)
       col.ind <- c(rep(1, nb.ind.actif), rep(col.hab, nb.ind.actif))
@@ -874,22 +907,22 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
         if (col2rgb(coll[i],alpha=TRUE)[4]== 255){
           for (j in 1:nbre.grpe) {
             points(coord.ind.partiel[(i - 1) * nbre.grpe + j, ], cex = 0.8 * par("cex"), col = col.ind[nb.ind.actif + (i - 1) * nbre.grpe + j], pch = 20)
-            if (lab.par) text(coord.ind.partiel[(i - 1) * nbre.grpe + j, 1], y = coord.ind.partiel[(i - 1) * 
-                                                                                                     nbre.grpe + j, 2], labels = rownames(coord.ind.partiel)[(i - 
-                                                                                                                                                                1) * nbre.grpe + j], pos = 3, col = col.ind[nb.ind.actif + 
+            if (lab.par) text(coord.ind.partiel[(i - 1) * nbre.grpe + j, 1], y = coord.ind.partiel[(i - 1) *
+                                                                                                     nbre.grpe + j, 2], labels = rownames(coord.ind.partiel)[(i -
+                                                                                                                                                                1) * nbre.grpe + j], pos = 3, col = col.ind[nb.ind.actif +
                                                                                                                                                                                                               (i - 1) * nbre.grpe + j],...)
             if (chrono) {
-              if (j > 1) 
-                lines(c(coord.ind.partiel[(i - 1) * nbre.grpe + 
-                                            (j - 1), 1], coord.ind.partiel[(i - 1) * 
-                                                                             nbre.grpe + j, 1]), c(coord.ind.partiel[(i - 
-                                                                                                                        1) * nbre.grpe + (j - 1), 2], coord.ind.partiel[(i - 
+              if (j > 1)
+                lines(c(coord.ind.partiel[(i - 1) * nbre.grpe +
+                                            (j - 1), 1], coord.ind.partiel[(i - 1) *
+                                                                             nbre.grpe + j, 1]), c(coord.ind.partiel[(i -
+                                                                                                                        1) * nbre.grpe + (j - 1), 2], coord.ind.partiel[(i -
                                                                                                                                                                            1) * nbre.grpe + j, 2]), col = col.ind[i],...)
             }
-            else lines(c(coord.ind[i, 1], coord.ind.partiel[(i - 
-                                                               1) * nbre.grpe + j, 1]), c(coord.ind[i, 2], 
-                                                                                          coord.ind.partiel[(i - 1) * nbre.grpe + j, 
-                                                                                                            2]), col = col.ind[nb.ind.actif + (i - 
+            else lines(c(coord.ind[i, 1], coord.ind.partiel[(i -
+                                                               1) * nbre.grpe + j, 1]), c(coord.ind[i, 2],
+                                                                                          coord.ind.partiel[(i - 1) * nbre.grpe + j,
+                                                                                                            2]), col = col.ind[nb.ind.actif + (i -
                                                                                                                                                  1) * nbre.grpe + j], lty = j,...)
           }
         }
@@ -904,29 +937,29 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       fonte <- c(fonte,rep(3,nrow(coord.ind.sup)))
       for (i in group.ind.sup) {
         for (j in 1:nbre.grpe) {
-          points(coord.ind.partiel.sup[(i - 1) * nbre.grpe + 
-                                         j, ], cex = 0.8 * par("cex"), col = col.ind.sup[nb.ind - 
-                                                                                           nb.ind.actif + (i - 1) * nbre.grpe + j], 
+          points(coord.ind.partiel.sup[(i - 1) * nbre.grpe +
+                                         j, ], cex = 0.8 * par("cex"), col = col.ind.sup[nb.ind -
+                                                                                           nb.ind.actif + (i - 1) * nbre.grpe + j],
                  pch = 21)
-          if (lab.par) 
-            text(coord.ind.partiel.sup[(i - 1) * nbre.grpe + 
-                                         j, 1], y = coord.ind.partiel.sup[nb.ind + 
-                                                                            (i - 1) * nbre.grpe + j, 2], labels = rownames(coord.ind.partiel.sup)[(i - 
-                                                                                                                                                     1) * nbre.grpe + j], pos = 3, col = col.ind.sup[nb.ind - 
+          if (lab.par)
+            text(coord.ind.partiel.sup[(i - 1) * nbre.grpe +
+                                         j, 1], y = coord.ind.partiel.sup[nb.ind +
+                                                                            (i - 1) * nbre.grpe + j, 2], labels = rownames(coord.ind.partiel.sup)[(i -
+                                                                                                                                                     1) * nbre.grpe + j], pos = 3, col = col.ind.sup[nb.ind -
                                                                                                                                                                                                        nb.ind.actif + (i - 1) * nbre.grpe + j],cex=par("cex")*0.8)
           if (chrono) {
-            if (j > 1) 
-              lines(c(coord.ind.partiel.sup[(i - 1) * 
-                                              nbre.grpe + (j - 1), 1], coord.ind.partiel.sup[(i - 
-                                                                                                1) * nbre.grpe + j, 1]), c(coord.ind.partiel.sup[(i - 
-                                                                                                                                                    1) * nbre.grpe + (j - 1), 2], coord.ind.partiel.sup[(i - 
-                                                                                                                                                                                                           1) * nbre.grpe + j, 2]), col = col.ind[nb.ind.actif + 
+            if (j > 1)
+              lines(c(coord.ind.partiel.sup[(i - 1) *
+                                              nbre.grpe + (j - 1), 1], coord.ind.partiel.sup[(i -
+                                                                                                1) * nbre.grpe + j, 1]), c(coord.ind.partiel.sup[(i -
+                                                                                                                                                    1) * nbre.grpe + (j - 1), 2], coord.ind.partiel.sup[(i -
+                                                                                                                                                                                                           1) * nbre.grpe + j, 2]), col = col.ind[nb.ind.actif +
                                                                                                                                                                                                                                                     i])
           }
-          else lines(c(coord.ind.sup[i, 1], coord.ind.partiel.sup[(i - 
-                                                                     1) * nbre.grpe + j, 1]), c(coord.ind.sup[i, 
-                                                                                                              2], coord.ind.partiel.sup[(i - 1) * nbre.grpe + 
-                                                                                                                                          j, 2]), col = col.ind.sup[nb.ind - nb.ind.actif + 
+          else lines(c(coord.ind.sup[i, 1], coord.ind.partiel.sup[(i -
+                                                                     1) * nbre.grpe + j, 1]), c(coord.ind.sup[i,
+                                                                                                              2], coord.ind.partiel.sup[(i - 1) * nbre.grpe +
+                                                                                                                                          j, 2]), col = col.ind.sup[nb.ind - nb.ind.actif +
                                                                                                                                                                       (i - 1) * nbre.grpe + j], lty = j)
         }
       }
@@ -941,22 +974,22 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       for (i in group.quali) {
         for (j in 1:nbre.grpe) {
           points(coord.quali.partiel[(i - 1) * nbre.grpe +  j, ], pch = 15, col = col.quali[nrow.coord.quali + (i - 1) * nbre.grpe + j], cex = par("cex") * 0.8)
-          if (lab.var & lab.par) 
-            text(coord.quali.partiel[(i - 1) * nbre.grpe + j, 1], y = coord.quali.partiel[(i - 1) * 
-                                                                                            nbre.grpe + j, 2], labels = rownames(coord.quali.partiel)[(i - 
+          if (lab.var & lab.par)
+            text(coord.quali.partiel[(i - 1) * nbre.grpe + j, 1], y = coord.quali.partiel[(i - 1) *
+                                                                                            nbre.grpe + j, 2], labels = rownames(coord.quali.partiel)[(i -
                                                                                                                                                          1) * nbre.grpe + j], pos = 3, col = col.quali[nrow.coord.quali + (i - 1) * nbre.grpe + j],...)
           if (chrono) {
-            if (j > 1) 
-              lines(c(coord.quali.partiel[(i - 1) * nbre.grpe + 
-                                            (j - 1), 1], coord.quali.partiel[(i - 
-                                                                                1) * nbre.grpe + j, 1]), c(coord.quali.partiel[(i - 
-                                                                                                                                  1) * nbre.grpe + (j - 1), 2], coord.quali.partiel[(i - 
+            if (j > 1)
+              lines(c(coord.quali.partiel[(i - 1) * nbre.grpe +
+                                            (j - 1), 1], coord.quali.partiel[(i -
+                                                                                1) * nbre.grpe + j, 1]), c(coord.quali.partiel[(i -
+                                                                                                                                  1) * nbre.grpe + (j - 1), 2], coord.quali.partiel[(i -
                                                                                                                                                                                        1) * nbre.grpe + j, 2]), col = col.quali[i])
           }
-          else lines(c(coord.quali[i, 1], coord.quali.partiel[(i - 
-                                                                 1) * nbre.grpe + j, 1]), c(coord.quali[i, 
-                                                                                                        2], coord.quali.partiel[(i - 1) * nbre.grpe + 
-                                                                                                                                  j, 2]), col = col.quali[nrow.coord.quali + 
+          else lines(c(coord.quali[i, 1], coord.quali.partiel[(i -
+                                                                 1) * nbre.grpe + j, 1]), c(coord.quali[i,
+                                                                                                        2], coord.quali.partiel[(i - 1) * nbre.grpe +
+                                                                                                                                  j, 2]), col = col.quali[nrow.coord.quali +
                                                                                                                                                             (i - 1) * nbre.grpe + j], lty = j)
         }
       }
@@ -970,28 +1003,28 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       fonte <- c(fonte,rep(4,nrow(coord.quali.sup)))
       for (i in group.quali.sup) {
         for (j in 1:nbre.grpe) {
-          points(coord.quali.partiel.sup[(i - 1) * nbre.grpe + 
-                                           j, ], pch = 22, col = col.quali.sup[nrow(coord.quali.sup) + 
+          points(coord.quali.partiel.sup[(i - 1) * nbre.grpe +
+                                           j, ], pch = 22, col = col.quali.sup[nrow(coord.quali.sup) +
                                                                                  (i - 1) * nbre.grpe + j], cex = par("cex") * 0.8)
-          if (lab.var & lab.par) 
-            text(coord.quali.partiel.sup[(i - 1) * nbre.grpe + 
-                                           j, 1], y = coord.quali.partiel.sup[(i - 
-                                                                                 1) * nbre.grpe + j, 2], labels = rownames(coord.quali.partiel.sup)[(i - 
-                                                                                                                                                       1) * nbre.grpe + j], pos = 3, col = col.quali.sup[nrow(coord.quali.sup) + 
+          if (lab.var & lab.par)
+            text(coord.quali.partiel.sup[(i - 1) * nbre.grpe +
+                                           j, 1], y = coord.quali.partiel.sup[(i -
+                                                                                 1) * nbre.grpe + j, 2], labels = rownames(coord.quali.partiel.sup)[(i -
+                                                                                                                                                       1) * nbre.grpe + j], pos = 3, col = col.quali.sup[nrow(coord.quali.sup) +
                                                                                                                                                                                                            (i - 1) * nbre.grpe + j],...)
           if (chrono) {
-            if (j > 1) 
-              lines(c(coord.quali.partiel.sup[(i - 1) * 
-                                                nbre.grpe + (j - 1), 1], coord.quali.partiel.sup[(i - 
-                                                                                                    1) * nbre.grpe + j, 1]), c(coord.quali.partiel.sup[(i - 
-                                                                                                                                                          1) * nbre.grpe + (j - 1), 2], coord.quali.partiel.sup[(i - 
-                                                                                                                                                                                                                   1) * nbre.grpe + j, 2]), col = col.quali[nrow.coord.quali + 
+            if (j > 1)
+              lines(c(coord.quali.partiel.sup[(i - 1) *
+                                                nbre.grpe + (j - 1), 1], coord.quali.partiel.sup[(i -
+                                                                                                    1) * nbre.grpe + j, 1]), c(coord.quali.partiel.sup[(i -
+                                                                                                                                                          1) * nbre.grpe + (j - 1), 2], coord.quali.partiel.sup[(i -
+                                                                                                                                                                                                                   1) * nbre.grpe + j, 2]), col = col.quali[nrow.coord.quali +
                                                                                                                                                                                                                                                               i])
           }
-          else lines(c(coord.quali.sup[i, 1], coord.quali.partiel.sup[(i - 
-                                                                         1) * nbre.grpe + j, 1]), c(coord.quali.sup[i, 
-                                                                                                                    2], coord.quali.partiel.sup[(i - 1) * nbre.grpe + 
-                                                                                                                                                  j, 2]), col = col.quali.sup[nrow(coord.quali.sup) + 
+          else lines(c(coord.quali.sup[i, 1], coord.quali.partiel.sup[(i -
+                                                                         1) * nbre.grpe + j, 1]), c(coord.quali.sup[i,
+                                                                                                                    2], coord.quali.partiel.sup[(i - 1) * nbre.grpe +
+                                                                                                                                                  j, 2]), col = col.quali.sup[nrow(coord.quali.sup) +
                                                                                                                                                                                 (i - 1) * nbre.grpe + j], lty = j)
         }
       }
@@ -1000,21 +1033,21 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     if (any(labe!="")){
       if (autoLab=="auto") autoLab = (length(which(labe!=""))<50)
       if (autoLab ==TRUE) autoLab(coo[labe!="", 1], y = coo[labe!="", 2], labels = labe[labe!=""], col = coll[labe!=""],  font=fonte[labe!=""],shadotext=shadowtext,...)
-      if (autoLab ==FALSE) text(coo[labe!="", 1], y = coo[labe!="", 2], labels = labe[labe!=""], col = coll[labe!=""],  font=fonte[labe!=""],pos=3,...)		
+      if (autoLab ==FALSE) text(coo[labe!="", 1], y = coo[labe!="", 2], labels = labe[labe!=""], col = coll[labe!=""],  font=fonte[labe!=""],pos=3,...)
     }
     if (!shadowtext) points(coo[, 1], y = coo[, 2], pch = ipch, col = coll, ...)
-    if ((!is.null(partial)) & (habillage == "group")) 
-      legend("topleft", legend = rownames(res.spmfa$group$Lg)[-c(num.group.sup, 
-                                                               length(rownames(res.spmfa$group$Lg)))], lty = 1:length(rownames(res.spmfa$group$Lg)[-c(num.group.sup, 
-                                                                                                                                                  length(rownames(res.spmfa$group$Lg)))]), text.col = col.hab, 
+    if ((!is.null(partial)) & (habillage == "group"))
+      legend("topleft", legend = rownames(res.spmfa$group$Lg)[-c(num.group.sup,
+                                                               length(rownames(res.spmfa$group$Lg)))], lty = 1:length(rownames(res.spmfa$group$Lg)[-c(num.group.sup,
+                                                                                                                                                  length(rownames(res.spmfa$group$Lg)))]), text.col = col.hab,
              col = col.hab, cex = par("cex")*0.8)
-    if ((!is.null(partial)) & (habillage != "group")) 
-      legend("topleft", legend = rownames(res.spmfa$group$Lg)[-c(num.group.sup, 
-                                                               length(rownames(res.spmfa$group$Lg)))], lty = 1:length(rownames(res.spmfa$group$Lg)[-c(num.group.sup, 
+    if ((!is.null(partial)) & (habillage != "group"))
+      legend("topleft", legend = rownames(res.spmfa$group$Lg)[-c(num.group.sup,
+                                                               length(rownames(res.spmfa$group$Lg)))], lty = 1:length(rownames(res.spmfa$group$Lg)[-c(num.group.sup,
                                                                                                                                                   length(rownames(res.spmfa$group$Lg)))]), cex = par("cex")*0.8)
-    if ((habillage != "none") & (habillage != "ind") & (habillage != 
-                                                        "group")) 
-      legend("topleft", legend = levels(res.spmfa$call$X[, 
+    if ((habillage != "none") & (habillage != "ind") & (habillage !=
+                                                        "group"))
+      legend("topleft", legend = levels(res.spmfa$call$X[,
                                                        habillage]), text.col = col.hab, cex = par("cex")*0.8)
     if (!is.null(coord.ellipse) & is.na(test.invisible[2])) {
       for (e in 1:nb.ind.actif) {
@@ -1026,7 +1059,7 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
     }
     if (!is.null(coord.ellipse)) {
       for (e in 1:nlevels(coord.ellipse[, 1])) {
-        data.elli <- coord.ellipse[(npoint.ellipse * 
+        data.elli <- coord.ellipse[(npoint.ellipse *
                                       (e - 1) + 1):(npoint.ellipse * e), -1]
         lines(data.elli[, 1], y = data.elli[, 2], col = col.ellipse[e])
       }
@@ -1035,9 +1068,9 @@ plot.spMFA=function (x, axes = c(1, 2), choix = c("ind","var","group","axes","fr
       for (i in group.ind.actif) {
         for (j in 1:nbre.grpe) {
           ind.e <- (i - 1) * nbre.grpe + j
-          data.elli <- coord.ellipse.par[(npoint.ellipse.par * 
+          data.elli <- coord.ellipse.par[(npoint.ellipse.par *
                                             (ind.e - 1) + 1):(npoint.ellipse.par * ind.e), -1]
-          lines(data.elli[, 1], y = data.elli[, 2], col = col.ellipse.par[ind.e], 
+          lines(data.elli[, 1], y = data.elli[, 2], col = col.ellipse.par[ind.e],
                 lty = 2)
         }
       }
