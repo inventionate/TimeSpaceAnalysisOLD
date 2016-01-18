@@ -1,14 +1,24 @@
-dimdesc=function (res, axes = 1:3, proba = 0.05) 
+#' Dimension description of component analysis.
+#'
+#' @param res
+#' @param axes
+#' @param proba
+#'
+#' @return list of representative kategories and modalities.
+#' @export
+#'
+#' @examples
+dim_desc=function (res, axes = 1:3, proba = 0.05)
 {
-  if (!inherits(res, "PCA") & !inherits(res, "CA") & !inherits(res, "MCA") & !inherits(res, "spMCA") & !inherits(res, 
-                                                                                       "MFA") & !inherits(res, "spMFA") & !inherits(res, "HMFA") & !inherits(res, "DMFA") &  !inherits(res, "FAMD") & !inherits(res, "HMFA") & !inherits(res, "spHMFA")) 
+  if (!inherits(res, "PCA") & !inherits(res, "CA") & !inherits(res, "MCA") & !inherits(res, "spMCA") & !inherits(res,
+                                                                                       "MFA") & !inherits(res, "spMFA") & !inherits(res, "HMFA") & !inherits(res, "DMFA") &  !inherits(res, "FAMD") & !inherits(res, "HMFA") & !inherits(res, "spHMFA"))
     stop("non convenient data")
   if (inherits(res, "CA")) {
     result <- structure(vector(mode = "list", length = length(axes)), names = colnames(res$row$coord)[axes])
     tableau <- res$row$coord[,axes,drop=FALSE]
-    if (!is.null(res$call$row.sup))  tableau = rbind.data.frame(tableau,res$row.sup$coord[,axes,drop=FALSE])	
+    if (!is.null(res$call$row.sup))  tableau = rbind.data.frame(tableau,res$row.sup$coord[,axes,drop=FALSE])
     tableaucol <- res$col$coord[, axes,drop=FALSE]
-    if (!is.null(res$call$col.sup))  tableaucol = rbind.data.frame(tableaucol,res$col.sup$coord[,axes,drop=FALSE])	
+    if (!is.null(res$call$col.sup))  tableaucol = rbind.data.frame(tableaucol,res$col.sup$coord[,axes,drop=FALSE])
     for (k in 1:length(axes)) {
       tab <- tableau[order(tableau[,k,drop=FALSE]),k,drop=FALSE]
       colnames(tab)="coord"

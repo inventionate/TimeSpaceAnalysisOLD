@@ -15,12 +15,27 @@
 # © Fabian Mundt
 
 # Funktion
-ggplaceschronologies <- function(data, id = "all",
-    map, weekday = "all", timepattern = TRUE,
-    distinct_places = FALSE, timepattern_graph = FALSE,
-    print_prop_duration = FALSE, legends = FALSE,
-    structure = FALSE) {
-    plot_title <- "Orte Chronologie"
+#' Title
+#'
+#' @param data
+#' @param id
+#' @param map
+#' @param weekday
+#' @param timepattern
+#' @param distinct_places
+#' @param timepattern_graph
+#' @param print_prop_duration
+#' @param legends
+#' @param structure
+#'
+#' @return
+#' @export
+#'
+#' @examples
+fviz_places_chronology <- function(data, id = "all", map, weekday = "all", timepattern = TRUE, distinct_places = FALSE,
+    # timepattern_graph = FALSE,
+    print_prop_duration = FALSE, legends = FALSE, structure = FALSE, title = "Orte Chronologie") {
+    plot_title <- title
 
     # Datensatz Orte Chronologien
     # aufbereiten
@@ -187,34 +202,34 @@ ggplaceschronologies <- function(data, id = "all",
         }
     }
 
-    # Allgemeine Übersicht über die
-    # Zeitmuster
-    if (timepattern_graph) {
-        # Datensatz für den eines allgemeinen
-        # Zeitprofils (identisch zu den
-        # Fragebogenmustern) aufebreiten.  Es
-        # wird ein Datensatz mit day (num),
-        # activity (fac) und prop_duration (num)
-        # benötigt.
-        data_pc_zm_sum <- data_pc_zm[c("questionnaire_id",
-            "date", "prop_duration", "activity")] %>%
-            # Tagesformat anpassen
-        mutate(day = as.numeric(mapvalues(date,
-            c("Montag", "Dienstag", "Mittwoch",
-                "Donnerstag", "Freitag",
-                "Samstag", "Sonnatg"), c(1,
-                2, 3, 4, 5, 6, 7), warn_missing = FALSE))) %>%
-            arrange(questionnaire_id, day,
-                desc(activity))
-
-        # todo Die momentane Lösung ermöglicht
-        # eine schnelle Übersicht über die
-        # Zeitprofile, ähnlich der facet_wrap
-        # Variante für alle chorischen
-        # Wegeprofile. Eventuell kann das
-        # ausgebaut werden.
-        plot_pc <- ggtimepattern(data_pc_zm_sum)
-    }
+    # # Allgemeine Übersicht über die
+    # # Zeitmuster
+    # if (timepattern_graph) {
+    #     # Datensatz für den eines allgemeinen
+    #     # Zeitprofils (identisch zu den
+    #     # Fragebogenmustern) aufebreiten.  Es
+    #     # wird ein Datensatz mit day (num),
+    #     # activity (fac) und prop_duration (num)
+    #     # benötigt.
+    #     data_pc_zm_sum <- data_pc_zm[c("questionnaire_id",
+    #         "date", "prop_duration", "activity")] %>%
+    #         # Tagesformat anpassen
+    #     mutate(day = as.numeric(mapvalues(date,
+    #         c("Montag", "Dienstag", "Mittwoch",
+    #             "Donnerstag", "Freitag",
+    #             "Samstag", "Sonnatg"), c(1,
+    #             2, 3, 4, 5, 6, 7), warn_missing = FALSE))) %>%
+    #         arrange(questionnaire_id, day,
+    #             desc(activity))
+    #
+    #     # todo Die momentane Lösung ermöglicht
+    #     # eine schnelle Übersicht über die
+    #     # Zeitprofile, ähnlich der facet_wrap
+    #     # Variante für alle chorischen
+    #     # Wegeprofile. Eventuell kann das
+    #     # ausgebaut werden.
+    #     plot_pc <- ggtimepattern(data_pc_zm_sum)
+    # }
 
     # Legenden Zurückgeben
     if (legends)

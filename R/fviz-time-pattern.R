@@ -5,7 +5,19 @@
 # enthält.  Copyright © Fabian Mundt
 
 # Funktion
-ggtimepattern <- function(data, ncol = 3) {
+#' Title
+#'
+#' @param data
+#' @param ncol
+#'
+#' @return
+#' @export
+#'
+#' @examples
+fviz_time_pattern <- function(data, ncol = 3) {
+
+    data <- get_time_pattern(data)
+
     p <- ggplot(data, aes(x = day, y = prop_duration)) +
       geom_area(aes(fill = activity), position = "fill") +
     scale_x_continuous(breaks = c(1:7), labels = c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")) +

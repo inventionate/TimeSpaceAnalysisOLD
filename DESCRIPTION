@@ -1,6 +1,7 @@
 Package: TimeSpaceAnalysis
 Type: Package
-Title: Statistical tools for time space analysis (GDA approaches, time pattern analysis, place chronologies).
+Title: Statistical tools for time space analysis (GDA approaches, time pattern
+    analysis, place chronologies).
 Version: 0.1
 Date: 2016-01-15
 Author: Fabian Mundt
@@ -8,7 +9,7 @@ Maintainer: Fabian Mundt <f.mundt@inventionate.de>
 Description: See above.
 License: Proprietary
 LazyData: TRUE
-Imports:
+Depends:
     plyr,
     tidyr,
     dplyr,
@@ -33,3 +34,35 @@ Imports:
 Suggests:
     explor,
     pander
+Collate:
+    'db-load.R'
+    'db-save.R'
+    'dim-desc.R'
+    'eigenvalue.R'
+    'facto-summarize.R'
+    'fviz-hcpc.R'
+    'print.factoextra.R'
+    'get-mfa.R'
+    'fviz-mfa.R'
+    'fviz-places-chronology.R'
+    'fviz-sphmfa.R'
+    'fviz-spmca.R'
+    'fviz-spmfa.R'
+    'fviz-time-pattern.R'
+    'get-pca.R'
+    'get-places-chronology.R'
+    'get-time-pattern.R'
+    'plot.spHMFA.R'
+    'plot.spMCA.R'
+    'plot.spMFA.R'
+    'print.spHMFA.R'
+    'print.spMCA.R'
+    'print.spMFA.R'
+    'spCA.R'
+    'spHCPC.R'
+    'spHMFA.R'
+    'spMCA.R'
+    'spMFA.R'
+    'spPCA.R'
+    'utilities.R'
+RoxygenNote: 5.0.1
