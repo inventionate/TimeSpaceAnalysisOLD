@@ -1,14 +1,12 @@
-# db_save Funktion Bereinigte und
-# sortierte Daten in eine remote
-# Datenbank speichern.  remote_db_path:
-# (string) Dateipfad zur SQLite
-# Datenbank.  source_df: (dplyr)
-# data_frame, tbl, die als
-# Quelldatenbank dient.
-# Copyright © 2015 Fabian Mundt
-
-
-# Funktion
+#' Saves data into a SQLite database.
+#'
+#' @param remote_db_path
+#' @param source_df
+#'
+#' @return SQLite database file.
+#' @export
+#'
+#' @examples
 db_save <- function(remote_db_path, source_df) {
     # Vorhandene Datenbank löschen
     if (file.exists(remote_db_path)) {

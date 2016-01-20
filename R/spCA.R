@@ -1,25 +1,47 @@
-#' Perform "Specific Correspondance Analysis"
+#' Performs a specific Principal Component Analysis
 #'
 #' @param X
+#' @param scale.unit
 #' @param ncp
-#' @param row.sup
-#' @param col.sup
+#' @param ind.sup
 #' @param quanti.sup
+#' @param structuring.factors
 #' @param quali.sup
+#' @param row.w
+#' @param col.w
 #' @param graph
 #' @param axes
-#' @param row.w
-#' @param excl
 #'
-#' @return Returns a list with CA results.
+#' @return Returns a list of sPCA results.
 #' @export
 #'
 #' @examples
-spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, quali.sup=NULL, graph = TRUE, axes=c(1,2), row.w=NULL, excl=NULL){
+sPCA <- function (X, scale.unit = TRUE, ncp = 5, ind.sup = NULL, quanti.sup = NULL, structuring.factors = NULL,
+                 quali.sup = NULL, row.w = NULL, col.w = NULL, graph = TRUE, axes = c(1, 2))
+{
+     # moy.p <- function(V, poids) {
+     #     res <- sum(V * poids)/sum(poids)
+     # }
+     #
+  moy.ptab <- function(V, poids) {
+    #        res <- colSums(V * (poids/sum(poids)))
+    as.vector(crossprod(poids/sum(poids),as.matrix(V)))
+  }
 
+  #    ec <- function(V, poids) {
+  #        res <- sqrt(sum(V^2 * poids)/sum(poids))
+  #    }
+
+  ec.tab <- function(V, poids) {
+    #        res <- sqrt(colSums(V^2 * poids)/sum(poids))
+    ecart.type <- sqrt(as.vector(crossprod(poids/sum(poids),as.matrix(V^2))))
+    ecart.type[ecart.type <= 1e-16] <- 1
+    return(ecart.type)
+  }
   # fct.eta2 <- function(vec,x,weights) {
-  # res <- summary(lm(x~vec,weights=weights,na.action=na.omit))$r.squared
+  # res <- summary(lm(x~vec,weights=weights))$r.squared
   # }
+
   fct.eta2 <- function(vec,x,weights) {   ## pb avec les poids
     VB <- function(xx) {
       return(sum((colSums((tt*xx)*weights)^2)/ni))
@@ -29,158 +51,251 @@ spCA <- function (X, ncp = 5, row.sup = NULL, col.sup = NULL, quanti.sup=NULL, q
     unlist(lapply(as.data.frame(x),VB))/colSums(x^2*weights)
   }
 
-  if (is.table(X)) X <- as.data.frame.matrix(X)
-  if (is.null(rownames(X))) rownames(X) <- 1:nrow(X)
-  if (is.null(colnames(X))) colnames(X) <- colnames(X, do.NULL = FALSE,prefix="V")
   X <- as.data.frame(X)
   X <- droplevels(X)
-  #    for (j in 1:ncol(X)) if (colnames(X)[j]=="") colnames(X)[j] = paste("V",j,sep="")
-  #    for (j in 1:nrow(X)) if (is.null(rownames(X)[j])) rownames(X)[j] = paste("row",j,sep="")
+  if (any(is.na(X))) {
+    warning("Missing values are imputed by the mean of the variable: you should use the imputePCA function of the missMDA package")
+    if (is.null(quali.sup))
+      X[is.na(X)] = matrix(colMeans(X,na.rm=TRUE),ncol=ncol(X),nrow=nrow(X),byrow=TRUE)[is.na(X)]
+    else for (j in (1:ncol(X))[-quali.sup]) X[, j] <- replace(X[, j], is.na(X[, j]), mean(X[, j], na.rm = TRUE))
+  }
   Xtot <- X
+  if (!is.null(quali.sup))
+    X <- X[, -quali.sup,drop=FALSE]
   if (any(!sapply(X, is.numeric))) {
     auxi = NULL
-    for (j in (1:ncol(X))[!((1:ncol(X))%in%quali.sup)]) if (!is.numeric(X[,j])) auxi = c(auxi,colnames(X)[j])
-    if (!is.null(auxi)) stop(paste("\nThe following variables are not quantitative: ", auxi))
+    for (j in 1:ncol(X)) if (!is.numeric(X[, j]))
+      auxi = c(auxi, colnames(X)[j])
+    stop(paste("\nThe following variables are not quantitative: ", auxi))
   }
-  if (!inherits(X, "data.frame")) stop("X is not a data.frame")
-  if (!is.null(row.sup)) X <- as.data.frame(X[-row.sup,])
-  if ((!is.null(col.sup))||(!is.null(quanti.sup))||(!is.null(quali.sup))) X <- as.data.frame(X[,-c(col.sup,quanti.sup,quali.sup)])
-  ### 3 lignes rajout�es
-  if (is.null(row.w)) row.w = rep(1,nrow(X))
+  todelete <- c(quali.sup, quanti.sup)
+  if (!is.null(todelete)) X <- Xtot[, -todelete,drop=FALSE]
+  if (!is.null(ind.sup)) {
+    X.ind.sup <- X[ind.sup, , drop = FALSE]
+    X <- X[-ind.sup, , drop = FALSE]
+  }
+  ncp <- min(ncp, nrow(X) - 1, ncol(X))
+  if (is.null(row.w)) row.w <- rep(1, nrow(X))
   row.w.init <- row.w
-  if (length(row.w)!=nrow(X)) stop("length of vector row.w should be the number of active rows")
-  total <- sum(X*row.w)
-  F <- as.matrix(X)*(row.w/total)
-  marge.col <- colSums(F)
-  marge.row <- rowSums(F)
-  ncp <- min(ncp, (nrow(X) - 1), (ncol(X) - 1))
-  Tc <- t(t(F/marge.row)/marge.col) - 1
-  # @info Specific MCA Erweiterungen, die ermöglichen Antwortmodalitäten auszuklammern.
-  if(!is.null(excl)) marge.col[excl] <- 1e-15
-  tmp <- svd.triplet(Tc, row.w = marge.row, col.w = marge.col,ncp=ncp)
-  if(!is.null(excl)) marge.col[excl] <- 0
+  row.w <- row.w/sum(row.w)
+  if (is.null(col.w)) col.w <- rep(1, ncol(X))
+  centre <- moy.ptab(X,row.w)
+  data <- X
+  X <- t(t(as.matrix(X))-centre)
+  if (is.null(attributes(X)$row.names)) rownames(X) <- rownames(data)
+  if (is.null(attributes(X)$names)) colnames(X) <- colnames(data)
+  if (scale.unit) {
+    ecart.type <- ec.tab(X,row.w)
+    X <- t(t(X)/ecart.type)
+  }
+  else ecart.type <- rep(1, length(centre))
+  dist2.ind <- rowSums(X^2*sqrt(col.w))
+  dist2.ind <- as.vector(tcrossprod(as.matrix(X^2*sqrt(col.w)),t(rep(1,ncol(X)))))
+  dist2.var <- as.vector(crossprod(rep(1,nrow(X)),as.matrix(X^2*row.w)))
+  res.call <- list(row.w = (row.w/sum(row.w)), col.w = col.w,
+                   scale.unit = scale.unit, ncp = ncp, centre = centre,
+                   ecart.type = ecart.type, X = Xtot, row.w.init = row.w.init,call=match.call())
+  tmp <- svd.triplet(X, row.w = row.w, col.w = col.w,ncp=ncp)
+  # @info sMCA Adaption
+  # Das Gewicht der ausgeklammerten Kategorien auf 0 setzen.
+  col.w[col.w == 1e-15 ] <- 0
   eig <- tmp$vs^2
   vp <- as.data.frame(matrix(NA, length(eig), 3))
-  rownames(vp) <- paste("dim", 1:length(eig))
-  colnames(vp) <- c("eigenvalue", "percentage of variance", "cumulative percentage of variance")
+  rownames(vp) <- paste("comp", 1:length(eig))
+  colnames(vp) <- c("eigenvalue", "percentage of variance",
+                    "cumulative percentage of variance")
   vp[, "eigenvalue"] <- eig
-  vp[, "percentage of variance"] <- (eig/sum(eig))*100
+  vp[, "percentage of variance"] <- (eig/sum(eig)) * 100
   vp[, "cumulative percentage of variance"] <- cumsum(vp[, "percentage of variance"])
   V <- tmp$V
   U <- tmp$U
-  eig <- eig[1:ncol(U)]
-  coord.col <- t(t(V)*sqrt(eig))
-  coord.row <- t(t(U)*sqrt(eig))
-  dist2.col <- colSums(Tc^2*marge.row)
-  contrib.col <- t(t(coord.col^2*marge.col)/eig)
-  cos2.col <- coord.col^2/dist2.col
-  colnames(coord.col) <- colnames(contrib.col) <- colnames(cos2.col) <- paste("Dim", 1:length(eig))
-  rownames(coord.col) <- rownames(contrib.col) <- rownames(cos2.col) <- attributes(X)$names
-  dist2.row <- rowSums(t(t(Tc^2)*marge.col))
-  contrib.row <- t(t(coord.row^2*marge.row)/eig)
-  cos2.row <- coord.row^2/dist2.row
-  colnames(coord.row) <- colnames(contrib.row) <- colnames(cos2.row) <- paste("Dim", 1:length(eig))
-  rownames(coord.row) <- rownames(contrib.row) <- rownames(cos2.row) <- attributes(X)$row.names
-  inertia.row = marge.row*dist2.row
-  inertia.col = marge.col*dist2.col
-  names(inertia.col) <- attributes(coord.col)$row.names
-  names(inertia.row) <- attributes(coord.row)$row.names
-
-  #    res.call <- list(X = X, marge.col = marge.col, marge.row = marge.row, ncp = ncp, row.w=row.w,call=sys.calls()[[1]],Xtot=Xtot,N=sum(row.w*rowSums(X)))
-  res.call <- list(X = X, marge.col = marge.col, marge.row = marge.row, excl = excl, ncp = ncp, row.w=row.w,call=match.call(),Xtot=Xtot,N=sum(row.w*rowSums(X)))
-  res.col <- list(coord = as.matrix(coord.col[, 1:ncp]), contrib = as.matrix(contrib.col[, 1:ncp] * 100), cos2 = as.matrix(cos2.col[, 1:ncp]), inertia=inertia.col)
-  res.row <- list(coord = coord.row[, 1:ncp], contrib = contrib.row[, 1:ncp] * 100, cos2 = cos2.row[, 1:ncp], inertia=inertia.row)
-  res <- list(eig = vp, call = res.call, row = res.row, col = res.col, svd = tmp)
-  if (!is.null(row.sup)){
-    X.row.sup <- as.data.frame(Xtot[row.sup,])
-    if ((!is.null(col.sup))||(!is.null(quanti.sup))||(!is.null(quali.sup))) X.row.sup <- as.data.frame(X.row.sup[,-c(col.sup,quanti.sup,quali.sup)])
-    somme.row <- rowSums(X.row.sup)
-    X.row.sup <- X.row.sup/somme.row
-    coord.row.sup <- crossprod(t(as.matrix(X.row.sup)),V)
-    # modif
-    dist2.row <- rowSums(t((t(X.row.sup)-marge.col)^2/marge.col))
-    #dist2.row <- rowSums(sweep(sweep(X.row.sup,2,marge.col,FUN="-")^2,2,1/marge.col,FUN="*"))
-    cos2.row.sup <- coord.row.sup^2/dist2.row
-    coord.row.sup <- coord.row.sup[, 1:ncp,drop=FALSE]
-    cos2.row.sup <- cos2.row.sup[, 1:ncp,drop=FALSE]
-    colnames(coord.row.sup) <- colnames(cos2.row.sup) <- paste("Dim", 1:ncp)
-    rownames(coord.row.sup) <- rownames(cos2.row.sup) <- rownames(X.row.sup)
-    res.row.sup <- list(coord = coord.row.sup, cos2 = cos2.row.sup)
-    res$row.sup <- res.row.sup
-    res$call$row.sup <- row.sup
+  eig <- eig[1:ncp]
+  coord.ind <- t(t(as.matrix(U))*sqrt(eig))
+  coord.var <- t(t(as.matrix(V))*sqrt(eig))
+  contrib.var <- t(t(coord.var^2)/eig)*col.w
+  dist2 <- dist2.var
+  cor.var <- coord.var/sqrt(dist2)
+  cos2.var <- cor.var^2
+  rownames(coord.var) <- rownames(cos2.var) <- rownames(cor.var) <- rownames(contrib.var) <- colnames(X)
+  colnames(coord.var) <- colnames(cos2.var) <- colnames(cor.var) <- colnames(contrib.var) <- paste("Dim",
+                                                                                                   c(1:ncol(V)), sep = ".")
+  res.var <- list(coord = coord.var[, 1:ncp], cor = cor.var[,
+                                                            1:ncp], cos2 = cos2.var[, 1:ncp], contrib = contrib.var[,
+                                                                                                                    1:ncp] * 100)
+  dist2 <- dist2.ind
+  cos2.ind <- coord.ind^2/dist2
+  contrib.ind <- t(t(coord.ind^2*row.w/sum(row.w))/eig)
+  rownames(coord.ind) <- rownames(cos2.ind) <- rownames(contrib.ind) <- names(dist2) <- rownames(X)
+  colnames(coord.ind) <- colnames(cos2.ind) <- colnames(contrib.ind) <- paste("Dim",
+                                                                              c(1:ncol(U)), sep = ".")
+  res.ind <- list(coord = coord.ind[, 1:ncp,drop=FALSE], cos2 = cos2.ind[,
+                                                                         1:ncp,drop=FALSE], contrib = contrib.ind[, 1:ncp,drop=FALSE] * 100, dist = sqrt(dist2))
+  res <- list(eig = vp, var = res.var, ind = res.ind, svd = tmp)
+  if (!is.null(ind.sup)) {
+    if (is.null(ecart.type)) ecart.type <- rep(1, length(centre))
+    X.ind.sup <- t(t(as.matrix(X.ind.sup))-centre)
+    X.ind.sup <- t(t(X.ind.sup)/ecart.type)
+    coord.ind.sup <- t(t(X.ind.sup)*col.w)
+    coord.ind.sup <- crossprod(t(coord.ind.sup),tmp$V)
+    dist2 <- rowSums(t(t(X.ind.sup^2)*col.w))
+    cos2.ind.sup <- coord.ind.sup^2/dist2
+    coord.ind.sup <- coord.ind.sup[, 1:ncp, drop = F]
+    cos2.ind.sup <- cos2.ind.sup[, 1:ncp, drop = F]
+    colnames(coord.ind.sup) <- colnames(cos2.ind.sup) <- paste("Dim",  c(1:ncp), sep = ".")
+    rownames(coord.ind.sup) <- rownames(cos2.ind.sup) <- names(dist2) <- rownames(X.ind.sup)
+    res.ind.sup <- list(coord = coord.ind.sup, cos2 = cos2.ind.sup, dist = sqrt(dist2))
+    res$ind.sup = res.ind.sup
+    res.call$ind.sup = ind.sup
   }
-  if (!is.null(col.sup)){
-    X.col.sup <- as.data.frame(Xtot[,col.sup])
-    if (!is.null(row.sup)) X.col.sup <- as.data.frame(X.col.sup[-row.sup,])
-    ## 1 ligne rajout�e
-    X.col.sup <- X.col.sup*row.w
-    colnames(X.col.sup) <- colnames(Xtot)[col.sup]
-    somme.col <- colSums(X.col.sup)
-    X.col.sup <- t(t(X.col.sup)/somme.col)
-    coord.col.sup <- as.data.frame(crossprod(as.matrix(X.col.sup),U))
-
-    dist2.col <- colSums((X.col.sup-marge.row)^2/marge.row)
-    cos2.col.sup <- coord.col.sup^2/dist2.col
-    coord.col.sup <- as.matrix(coord.col.sup[,1:ncp,drop=FALSE])
-    cos2.col.sup <- cos2.col.sup[,1:ncp,drop=FALSE]
-    colnames(coord.col.sup) <- colnames(cos2.col.sup) <- paste("Dim", 1:ncp)
-    rownames(coord.col.sup) <- rownames(cos2.col.sup) <- colnames(X.col.sup)
-    res.col.sup <- list(coord = coord.col.sup, cos2 = cos2.col.sup)
-    res$col.sup <- res.col.sup
-    res$call$col.sup <- col.sup
-  }
-  ## Ajout variable quanti supp.
   if (!is.null(quanti.sup)) {
-    coord.quanti.sup <- matrix(NA, length(quanti.sup), ncp)
-    if (is.null(row.sup)) coord.quanti.sup <- cov.wt(cbind.data.frame(res$row$coord,Xtot[,quanti.sup,drop=FALSE]),cor=TRUE,wt=marge.row,method="ML")$cor[-(1:ncp),1:ncp,drop=FALSE]
-    else coord.quanti.sup <- cov.wt(cbind.data.frame(res$row$coord,Xtot[-row.sup,quanti.sup,drop=FALSE]),wt=marge.row,cor=TRUE,method="ML")$cor[-(1:ncp),1:ncp,drop=FALSE]
-    dimnames(coord.quanti.sup) <- list(colnames(Xtot)[quanti.sup], paste("Dim", 1:ncp, sep = "."))
-    res$quanti.sup$coord <- coord.quanti.sup
-    res$quanti.sup$cos2 <- coord.quanti.sup^2
-    res$call$quanti.sup <- quanti.sup
+    X.quanti.sup <- as.data.frame(Xtot[, quanti.sup,drop=FALSE])
+    if (!is.null(ind.sup)) X.quanti.sup <- as.data.frame(X.quanti.sup[-ind.sup, ,drop=FALSE])
+    colnames(X.quanti.sup) <- colnames(Xtot)[quanti.sup]
+    res.call$quanti.sup = X.quanti.sup
+    centre.sup <- moy.ptab(X.quanti.sup,row.w)
+    X.quanti.sup <- t(t(as.matrix(X.quanti.sup))-centre.sup)
+    if (scale.unit) {
+      ecart.type.sup <- ec.tab(X.quanti.sup, row.w)
+      X.quanti.sup <- t(t(X.quanti.sup)/ecart.type.sup)
+    }
+    coord.vcs <- t(X.quanti.sup*row.w)
+    coord.vcs <- crossprod(t(coord.vcs),tmp$U)
+    col.w.vcs <- rep(1, ncol(coord.vcs))
+    cor.vcs <- matrix(NA, ncol(X.quanti.sup), ncol(tmp$U))
+    dist2 <- as.vector(crossprod(rep(1,nrow(X.quanti.sup)),as.matrix(X.quanti.sup^2*row.w)))
+    cor.vcs <- coord.vcs/sqrt(dist2)
+    cos2.vcs <- cor.vcs^2
+    colnames(coord.vcs) <- colnames(cor.vcs) <- colnames(cos2.vcs) <- paste("Dim", c(1:ncol(cor.vcs)), sep = ".")
+    rownames(coord.vcs) <- rownames(cor.vcs) <- rownames(cos2.vcs) <- colnames(Xtot)[quanti.sup]
+    res.quanti.sup <- list(coord = coord.vcs[, 1:ncp, drop=FALSE], cor = cor.vcs[, 1:ncp, drop=FALSE], cos2 = cos2.vcs[, 1:ncp, drop=FALSE])
+    res$quanti.sup = res.quanti.sup
   }
-  ## Ajout variable quali supp.
   if (!is.null(quali.sup)) {
-    res$quali.sup$coord <- NULL
-    if (!is.null(row.sup)) {
-      for (j in 1:length(quali.sup)) res$quali.sup$coord <- rbind.data.frame(res$quali.sup$coord,sweep(sapply(as.data.frame(sweep(res$row$coord,1,marge.row,FUN="*")),tapply,Xtot[-row.sup,quali.sup[j]],sum), 1, tapply(marge.row,Xtot[-row.sup,quali.sup[j]],sum),FUN="/"))
-    } else {
-      for (j in 1:length(quali.sup)) res$quali.sup$coord <- rbind.data.frame(res$quali.sup$coord,sweep(sapply(as.data.frame(sweep(res$row$coord,1,marge.row,FUN="*")),tapply,Xtot[,quali.sup[j]],sum), 1, tapply(marge.row,Xtot[,quali.sup[j]],sum),FUN="/"))
+    X.quali.sup <- as.data.frame(Xtot[, quali.sup,drop=FALSE])
+    if (!is.null(ind.sup)) X.quali.sup <- as.data.frame(X.quali.sup[-ind.sup,,drop=FALSE])
+    colnames(X.quali.sup) <- colnames(Xtot)[quali.sup]
+    nombre <- modalite <- NULL
+
+    # eta2 <- matrix(NA, length(quali.sup), ncp)
+    # if (ncp>1){
+    # for (i in 1:ncp)  eta2[, i] <- unlist(lapply(X.quali.sup,fct.eta2,res$ind$coord[,i,drop=FALSE],weights=row.w))
+    # } else eta2 <- unlist(lapply(X.quali.sup,fct.eta2,res$ind$coord,weights=row.w))
+    # eta2 <- as.matrix(eta2,ncol=ncp)
+    # colnames(eta2) = paste("Dim", 1:ncp)
+    # rownames(eta2) = colnames(X.quali.sup)
+
+
+    # @info Hier umfrangreiche Möglichkeiten einer an (M)ANOVA Verfahren angelehnten Strukturierten Datenanalyse integrieren,
+    # wie es auch bei der sMCA Funktion gemacht wurde (vgl. Robette GDAtools und Le Roux/Rouanet 2004: 268).
+
+    if (ncp>1) {
+      # @info Strukturierte Datenanalyse, die sich an (M)ANOVA Verfahren anlehnt.
+      # Der Algorithmus ist eine Adaption aus Nicolas Robettes GDAtools "varsup" Funktion.
+      v_n <- sum(row.w)
+      v_var <- Xtot[quali.sup]
+
+      # Varianzen für die einzelnen Variablen berechnen
+      v_vrc_g <- NULL
+      v_wi_g <- v_be_g <- v_tot <- matrix(nrow = ncol(v_var), ncol = ncp)
+      for(i in 1:ncol(v_var)) {
+        v_FK <- colSums(row.w*(dichotom(as.data.frame(factor(v_var[[i]])),out='numeric')))/v_n
+        v_v <- factor(v_var[[i]])
+        v_wt <- row.w
+        v_ind <- res$ind$coord
+        v_coord <- aggregate(v_wt*v_ind,list(v_v),sum)[,-1]/v_n/v_FK
+        v_vrc <- aggregate(v_wt*v_ind*v_ind,list(v_v),sum)[,-1]/v_n/v_FK-v_coord*v_coord
+        v_vrc_g <- rbind(v_vrc_g, round(v_vrc, 6))
+        for(j in 1:ncp) v_coord[,j] <- v_coord[,j]/res$svd$vs[j]
+        v_cos2 <- v_coord*v_coord/((1/v_FK)-1)
+        v_weight = v_n * v_FK
+        names(v_weight) <- levels(v_v)
+        rownames(v_coord) <- levels(v_v)
+        rownames(v_cos2) <- levels(v_v)
+        # within variance
+        v_wi <- apply(v_vrc,2,weighted.mean,w=v_weight)
+        v_wi_g[i,] <- round(v_wi, 6)
+        # between variance
+        v_be <- res$eig[[1]][1:ncp] - v_wi
+        v_be_g[i,] <- round(v_be, 6)
+        # total variance
+        v_tot[i,] <- round(res$eig[[1]][1:ncp], 6)
+      }
+      # modality variance
+      mod_names <- colnames(Xtot[,structuring.factors[[3]]])
+      v_vrc_g <- v_vrc_g[structuring.factors[[3]],]
+      colnames(v_vrc_g) = paste("Dim", 1:ncp)
+      rownames(v_vrc_g) = mod_names
+      # within variance
+      v_wi_g <- as.data.frame(v_wi_g)[c(structuring.factors[[1]]),]
+      colnames(v_wi_g) = paste("Dim", 1:ncp)
+      rownames(v_wi_g) = colnames(Xtot[structuring.factors[[2]]])
+      # between variance
+      v_be_g <- as.data.frame(v_be_g)[c(structuring.factors[[1]]),]
+      colnames(v_be_g) = paste("Dim", 1:ncp)
+      rownames(v_be_g) = colnames(Xtot[structuring.factors[[2]]])
+      # total variance
+      v_tot <- as.data.frame(v_tot)[c(structuring.factors[[1]]),]
+      colnames(v_tot) = paste("Dim", 1:ncp)
+      rownames(v_tot) = colnames(Xtot[structuring.factors[[2]]])
+      # eta2
+      eta2 <- as.data.frame(t(sapply(X.quali.sup,fct.eta2,res$ind$coord,weights=row.w)))[c(structuring.factors[[1]]),]
+      colnames(eta2) = paste("Dim", 1:ncp)
+      rownames(eta2) = colnames(Xtot[structuring.factors[[2]]])
     }
-    rownames(res$quali.sup$coord) <- paste(rep(colnames(Xtot)[quali.sup],lapply(Xtot[,quali.sup,drop=FALSE],nlevels)) , unlist(lapply(Xtot[,quali.sup,drop=FALSE],levels)),sep=".")
-
-    if (!is.null(row.sup)) Zqs <- tab.disjonctif(Xtot[-row.sup,quali.sup])
-    else Zqs <- tab.disjonctif(Xtot[,quali.sup])
-    Nj <- colSums(Zqs * row.w)
-    Nj <- colSums(Zqs * marge.row)*total
-    if (total>1) coef <- sqrt(Nj * ((total - 1)/(total - Nj)))
-    else coef <- sqrt(Nj)
-    res$quali.sup$v.test <- res$quali.sup$coord*coef
-
-    eta2 = matrix(NA, length(quali.sup), ncp)
-    # if (is.null(row.sup)) {
-    # for (i in 1:ncp)  eta2[, i] <- unlist(lapply(as.data.frame(Xtot[, quali.sup]),fct.eta2,res$row$coord[,i],weights=marge.row))
-    # } else {
-    # for (i in 1:ncp)  eta2[, i] <- unlist(lapply(as.data.frame(Xtot[-row.sup, quali.sup]),fct.eta2,res$row$coord[,i],weights=marge.row))
-    # }
-
-    if (is.null(row.sup)) {
-      eta2 <- sapply(as.data.frame(Xtot[, quali.sup,drop=FALSE]),fct.eta2,res$row$coord,weights=marge.row)
-    } else {
-      eta2 <- sapply(as.data.frame(Xtot[-row.sup, quali.sup,drop=FALSE]),fct.eta2,res$row$coord,weights=marge.row)
+    else {
+      warning("Bitte mehr als eine Dimension nutzen! Die eindimensionale Varianzberechnung ist noch nicht implementiert.")
+      eta2 <- as.matrix(sapply(X.quali.sup,fct.eta2,res$ind$coord,weights=row.w),ncol=ncp)
+      colnames(eta2) = paste("Dim", 1:ncp)
+      rownames(eta2) = colnames(X.quali.sup)
     }
-    eta2 <- t(as.matrix(eta2,ncol=ncp))
-    colnames(eta2) = paste("Dim", 1:ncp)
-    rownames(eta2) = colnames(Xtot)[quali.sup]
 
-    res$quali.sup$eta2 <- eta2
-    res$call$quali.sup <- quali.sup
+    for (i in 1:ncol(X.quali.sup)) {
+      var <- as.factor(X.quali.sup[, i])
+      n.mod <- nlevels(var)
+      modalite <- c(modalite, n.mod)
+      bary <- matrix(NA, n.mod, ncol(X))
+      for (j in 1:n.mod) {
+        ind <- levels(var)[j]
+        #                bary[j, ] <- apply(data[which(var == ind), ], 2, moy.p, row.w[which(var == ind)])
+        bary[j, ] <- moy.ptab(data[which(var == ind), ], row.w[which(var == ind)])
+        ### modif Avril 2011
+        ##                nombre <- c(nombre, length(var[which(var == ind)]))
+        nombre <- c(nombre, sum(row.w.init[which(var == ind)]))
+      }
+      colnames(bary) <- colnames(X)
+      if ((levels(var)[1] %in% (1:nrow(X))) | (levels(var)[1] %in% c("y", "Y", "n", "N"))) row.names(bary) <- paste(colnames(X.quali.sup)[i], as.character(levels(var)))
+      else row.names(bary) <- as.character(levels(var))
+      if (i == 1)  barycentre <- as.data.frame(bary)
+      else barycentre <- rbind(barycentre, as.data.frame(bary))
+    }
+    bary <- t(t(as.matrix(barycentre))-centre)
+    if (!is.null(ecart.type)) bary <- t(t(bary)/ecart.type)
+    #        bary <- as.matrix(sweep(as.matrix(barycentre), 2, centre, FUN = "-"))
+    #        if (!is.null(ecart.type)) bary <- as.matrix(sweep(as.matrix(bary), 2, ecart.type, FUN = "/"))
+    dist2 <- rowSums(t(t(bary^2)*col.w))
+    coord.barycentre <- t(t(bary)*col.w)
+    coord.barycentre <- crossprod(t(coord.barycentre),tmp$V)
+    colnames(coord.barycentre) <- paste("Dim", 1:ncol(coord.barycentre), sep = ".")
+    cos2.bary.sup <- coord.barycentre^2/dist2
+    vtest <- t(t(coord.barycentre)/sqrt(eig))
+    if (sum(row.w.init)>1) vtest <- vtest*sqrt(nombre/((sum(row.w.init) - nombre)/(sum(row.w.init) - 1)))
+    else vtest <- vtest*sqrt(nombre)
+    cos2.bary.sup <- cos2.bary.sup[, 1:ncp, drop=FALSE]
+    coord.barycentre <- coord.barycentre[, 1:ncp, drop=FALSE]
+    vtest <- vtest[, 1:ncp, drop=FALSE]
+    dimnames(cos2.bary.sup) <- dimnames(vtest) <- dimnames(coord.barycentre)
+    names(dist2) <- rownames(coord.barycentre)
+    # @info Strukturierte Datenanalyse Anpassungen
+    res.quali.sup <- list(coord = coord.barycentre, cos2 = cos2.bary.sup, v.test = vtest, dist = sqrt(dist2), eta2=eta2, variance = v_vrc_g, within = v_wi_g, between = v_be_g, total = v_tot)
+    call.quali.sup <- list(quali.sup = X.quali.sup, modalite = modalite, nombre = nombre, barycentre = barycentre, numero = quali.sup)
+    res$quali.sup = res.quali.sup
+    res.call$quali.sup = call.quali.sup
   }
-
-  class(res) <- c("CA", "list")
+  res$call = res.call
+  class(res) <- c("PCA", "list ")
   if (graph & (ncp>1)) {
-    plot(res,axes=axes)
-    if (!is.null(quanti.sup)) plot(res, choix="quanti.sup",axes=axes,new.plot=TRUE)
+    plot.PCA(res, choix = "ind", axes = axes,new.plot=TRUE)
+    plot.PCA(res, choix = "var", axes = axes,new.plot=TRUE,shadowtext=TRUE)
   }
   return(res)
 }

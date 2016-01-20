@@ -11,6 +11,7 @@ License: Proprietary
 LazyData: TRUE
 Depends:
     plyr,
+    readr,
     tidyr,
     dplyr,
     httr,
@@ -34,35 +35,4 @@ Depends:
 Suggests:
     explor,
     pander
-Collate:
-    'db-load.R'
-    'db-save.R'
-    'dimdesc.R'
-    'eigenvalue.R'
-    'facto-summarize.R'
-    'fviz-hcpc.R'
-    'print.factoextra.R'
-    'get-mfa.R'
-    'fviz-mfa.R'
-    'fviz-places-chronology.R'
-    'fviz-sphmfa.R'
-    'fviz-spmca.R'
-    'fviz-spmfa.R'
-    'fviz-time-pattern.R'
-    'get-pca.R'
-    'get-places-chronology.R'
-    'get-time-pattern.R'
-    'plot.spHMFA.R'
-    'plot.spMCA.R'
-    'plot.spMFA.R'
-    'print.spHMFA.R'
-    'print.spMCA.R'
-    'print.spMFA.R'
-    'spCA.R'
-    'spHCPC.R'
-    'spHMFA.R'
-    'spMCA.R'
-    'spMFA.R'
-    'spPCA.R'
-    'utilities.R'
 RoxygenNote: 5.0.1
