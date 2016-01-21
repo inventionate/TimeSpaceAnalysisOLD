@@ -3,7 +3,7 @@ Statistical tools for socio-analysis of social time-spaces. Includes GDA approac
 
 ## Installation
 
-```
+``` r
 install.packages("devtools")
 devtools::install_github("inventionate/TimeSpaceAnalysis")
 ```
