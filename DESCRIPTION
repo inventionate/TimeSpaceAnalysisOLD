@@ -27,12 +27,32 @@ Depends:
     ggrepel,
     ggthemes,
     ggmap,
-    factoextra,
     GDAtools,
     FactoMineR,
     missMDA,
     Hmisc
 Suggests:
+    factoextra,
     explor,
     pander
 RoxygenNote: 5.0.1
+Collate:
+    'db-load.R'
+    'db-save.R'
+    'get-places-chronology.R'
+    'get-time-pattern.R'
+    'plot-places-chronology.R'
+    'plot-time-pattern.R'
+    'plot.sHMFA.R'
+    'plot.sMCA.R'
+    'plot.sMFA.R'
+    'print.sHMFA.R'
+    'print.sMCA.R'
+    'print.sMFA.R'
+    'sCA.R'
+    'sHCPC.R'
+    'sHMFA.R'
+    'sMCA.R'
+    'sMFA.R'
+    'sPCA.R'
+    'specific-dimdesc.R'

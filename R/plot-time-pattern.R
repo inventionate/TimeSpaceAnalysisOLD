@@ -1,3 +1,5 @@
+#' @include get-time-pattern.R
+NULL
 #' Plot ingle or multiple time pattern.
 #'
 #' @param data

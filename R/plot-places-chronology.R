@@ -1,3 +1,5 @@
+#' @include get-places-chronology.R
+NULL
 #' Plot single or multiple places chronologies in different scales.
 #'
 #' @param data
