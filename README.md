@@ -1,5 +1,5 @@
 # TimeSpaceAnalysis
-Statistical tools for socio-analysis of social time-spaces. Includes GDA approaches, time pattern analysis, place chronologies.
+Tools for socio-analysis of social time-spaces. Includes GDA approaches (based on [FactoMineR](http://factominer.free.fr)), time pattern analysis, place chronologies.
 
 ## Installation
 
