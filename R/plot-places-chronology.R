@@ -102,7 +102,7 @@ plot_places_chronology <- function(data, id = "all", map, weekday = "all", timep
     ggrepel::geom_label_repel(aes(fill = start_time, size = duration), colour = "white", fontface = "bold", show.legend = FALSE, alpha = 0.85, force = force_repel) +
     # Verdopplung der breaks nötig, weil zwei Wochen beobachtet wurden.
     scale_size(range = size_range, breaks = c(0, 8, 16, 24, 32, 40, 48), labels = c("0h", "8h", "16h", "24h", "32h", "40h", "48h"), name = "Dauer") +
-    scale_fill_gradient2(low = "#7f7f7f", mid = "#ffd932", high = "#7f7f7f", name = "Startzeit", midpoint = 12,
+    scale_fill_gradient2(low = "#7f7f7f", mid = "#ffd932", high = "#d13131", name = "Startzeit", midpoint = 12,
                          breaks = c(0, 6, 12, 18, 24), labels = c("0 Uhr", "6 Uhr", "12 Uhr", "18 Uhr", "24 Uhr")) +
     theme(plot.title = element_text(lineheight = 1, face = "bold", size = 25), legend.position = "bottom",
           legend.text = element_text(size = 15), legend.title = element_text(face = "bold", size = 17, family = "Myriad Pro"),

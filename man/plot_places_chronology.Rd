@@ -5,12 +5,14 @@
 \title{Plot single or multiple places chronologies in different scales.}
 \usage{
 plot_places_chronology(data, id = "all", map, weekday = "all",
-  timepattern = TRUE, distinct_places = FALSE,
+  timepattern = TRUE, distinct_places = FALSE, size_range = c(3, 15),
+  shape_path = 1, colour_path = "black", size_path = 2,
+  alpha_path = 0.75, linetype_path = "solid", force_repel = 1,
   print_prop_duration = FALSE, legends = FALSE, structure = FALSE,
   title = "Orte Chronologie")
 }
 \arguments{
-\item{structure}{}
+\item{title}{}
 }
 \description{
 Plot single or multiple places chronologies in different scales.
