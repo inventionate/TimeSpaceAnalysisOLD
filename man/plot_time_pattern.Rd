@@ -2,14 +2,23 @@
 % Please edit documentation in R/plot-time-pattern.R
 \name{plot_time_pattern}
 \alias{plot_time_pattern}
-\title{Plot ingle or multiple time pattern.}
+\title{Plot single or multiple time pattern.}
 \usage{
 plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE)
 }
 \arguments{
-\item{ncol}{}
+\item{data}{data frame which contains time pattern data.}
+
+\item{id}{vector which contains questionnaire ids.}
+
+\item{ncol}{number of cols, if there are multiple plots (facets).}
+
+\item{reshape_data}{whether reshape data or not.}
+}
+\value{
+ggplot2 visualization of time pattern data.
 }
 \description{
-Plot ingle or multiple time pattern.
+Plot single or multiple time pattern.
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-places-chronology.R
 \name{plot_places_chronology}
 \alias{plot_places_chronology}
-\title{Plot single or multiple places chronologies in different scales.}
+\title{Plot single or multiple place chronologies in different scales.}
 \usage{
 plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   size_range = c(3, 15), shape_path = 1, colour_path = "black",
@@ -13,17 +13,17 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   unique_places = FALSE)
 }
 \arguments{
-\item{data}{a data frame in correct form (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
+\item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
 
-\item{id}{the ID to plot.}
+\item{id}{vector, which contains questionnaire ids. Choosa "all" to compute all ids.}
 
-\item{weekday}{specify the weekday to plot.}
+\item{weekday}{vactor, which contains the weekday to plot.}
 
 \item{map}{a ggmap map object.}
 
 \item{size_range}{specify the size for visualizatipn of duration.}
 
-\item{shape_path}{specify the shape of the path line. Higher values result in 'rounder' paths.}
+\item{shape_path}{specify the shape of the path line. Higher values result in smoother paths.}
 
 \item{colour_path}{sepcify the path line colour.}
 
@@ -43,15 +43,22 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 
 \item{title}{title of the plot.}
 
+\item{axis_label}{show or hide axis labels (boolean).}
+
 \item{xlim}{specify plot x limits.}
 
 \item{ylim}{spcify plot y limits.}
 
-\item{time_pattern}{whether to plot or not to plot time pattern graph.}
+\item{graph}{whether to plot or not to plot the praph (boolean).}
 
-\item{axis_labels}{show or hide axis labels (boolean).}
+\item{ncol}{number of cols, if there are multiple plots (facets).}
+
+\item{unique_places}{plot only unique places. Useful to visualize place related overall structure.}
+}
+\value{
+ggplot2 visualization of place chronology data.
 }
 \description{
-Plot single or multiple places chronologies in different scales.
+Plot single or multiple place chronologies in different scales.
 }
 

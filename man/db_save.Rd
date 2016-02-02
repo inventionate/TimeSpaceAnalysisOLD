@@ -7,7 +7,9 @@
 db_save(remote_db_path, source_df)
 }
 \arguments{
-\item{source_df}{}
+\item{remote_db_path}{path to the remote database (SQLite).}
+
+\item{source_df}{source data frame (should be a dplyr tbl object).}
 }
 \value{
 SQLite database file.

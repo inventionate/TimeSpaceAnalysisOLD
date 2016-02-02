@@ -7,15 +7,12 @@
 db_load(remote_db_path)
 }
 \arguments{
-\item{remote_db_path}{}
+\item{remote_db_path}{path to the remote database (SQLite).}
 }
 \value{
 The SQLite database.
 }
 \description{
 Save data frame as SQLite table.
-}
-\examples{
-db_load('/path/to/database.sqlite')
 }
 

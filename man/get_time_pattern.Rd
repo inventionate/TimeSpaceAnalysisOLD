@@ -7,7 +7,12 @@
 get_time_pattern(data, id = "all", reshape_data = TRUE)
 }
 \arguments{
-\item{data}{}
+\item{data}{data frame which contains time pattern data.}
+
+\item{id}{vector which contains questionnaire ids.}
+
+\item{reshape_data}{whether reshape data or not.
+Use this option if your data is column wise concentration (e. g. "mo_seminar")}
 }
 \value{
 reshaped data frame for further visualization.
