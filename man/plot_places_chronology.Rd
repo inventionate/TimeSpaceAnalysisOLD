@@ -4,15 +4,52 @@
 \alias{plot_places_chronology}
 \title{Plot single or multiple places chronologies in different scales.}
 \usage{
-plot_places_chronology(data, id = "all", map, weekday = "all",
-  timepattern = TRUE, distinct_places = FALSE, size_range = c(3, 15),
-  shape_path = 1, colour_path = "black", size_path = 2,
-  alpha_path = 0.75, linetype_path = "solid", force_repel = 1,
-  print_prop_duration = FALSE, legends = FALSE, structure = FALSE,
-  title = "Orte Chronologie")
+plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
+  size_range = c(3, 15), shape_path = 1, colour_path = "black",
+  size_path = 2, alpha_path = 0.75, linetype_path = "solid",
+  force_repel = 1, legend = FALSE, structure = FALSE,
+  map_extent = "panel", title = "Orte Chronologie", axis_label = FALSE,
+  xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
+  unique_places = FALSE)
 }
 \arguments{
-\item{title}{}
+\item{data}{a data frame in correct form (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
+
+\item{id}{the ID to plot.}
+
+\item{weekday}{specify the weekday to plot.}
+
+\item{map}{a ggmap map object.}
+
+\item{size_range}{specify the size for visualizatipn of duration.}
+
+\item{shape_path}{specify the shape of the path line. Higher values result in 'rounder' paths.}
+
+\item{colour_path}{sepcify the path line colour.}
+
+\item{size_path}{specify the path line size.}
+
+\item{alpha_path}{specify the path line alpha value [0:1].}
+
+\item{linetype_path}{specify the linetype of the path line.}
+
+\item{force_repel}{specify how heavy the repel algorithmn should be.}
+
+\item{legend}{show or hide legends (boolean).}
+
+\item{structure}{show or hide map background (boolean).}
+
+\item{map_extent}{how much of the plot should the map take up? "normal", "device", or "panel" (default).}
+
+\item{title}{title of the plot.}
+
+\item{xlim}{specify plot x limits.}
+
+\item{ylim}{spcify plot y limits.}
+
+\item{time_pattern}{whether to plot or not to plot time pattern graph.}
+
+\item{axis_labels}{show or hide axis labels (boolean).}
 }
 \description{
 Plot single or multiple places chronologies in different scales.

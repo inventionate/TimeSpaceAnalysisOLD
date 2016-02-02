@@ -4,7 +4,7 @@
 \alias{get_time_pattern}
 \title{Reshape time pattern data.}
 \usage{
-get_time_pattern(data)
+get_time_pattern(data, id = "all", reshape_data = TRUE)
 }
 \arguments{
 \item{data}{}

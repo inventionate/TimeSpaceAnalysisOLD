@@ -30,7 +30,8 @@ Depends:
     GDAtools,
     FactoMineR,
     missMDA,
-    Hmisc
+    Hmisc,
+    RColorBrewer
 Suggests:
     factoextra,
     explor,
@@ -39,8 +40,11 @@ RoxygenNote: 5.0.1
 Collate:
     'db-load.R'
     'db-save.R'
+    'extract-legend.R'
+    'get-places-chronology-time-pattern.R'
     'get-places-chronology.R'
     'get-time-pattern.R'
+    'plot-places-chronology-time-pattern.R'
     'plot-places-chronology.R'
     'plot-time-pattern.R'
     'plot.sHMFA.R'

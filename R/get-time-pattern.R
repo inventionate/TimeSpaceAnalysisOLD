@@ -6,17 +6,30 @@
 #' @export
 #'
 #' @examples
-get_time_pattern <- function(data) {
+get_time_pattern <- function(data, id = "all", reshape_data = TRUE) {
+  
   # Check NA
   na_exist <- nrow(data) > nrow(na.omit(data))
   if( na_exist ) warning("There are NAs. They will be omitted!")
-  data_time_pattern <- na.omit(data) %>%
-    gather(activity, duration, mo_veranstaltungen:so_schlafen, -questionnaire_id) %>%
-    separate(activity, c("day", "activity"), sep ="_") %>%
-    mutate(day = ifelse(day == "mo", 1, ifelse(day == "di", 2, ifelse(day == "mi", 3, ifelse(day == "do", 4, ifelse(day == "fr", 5, ifelse(day == "sa", 6, 7))))))) %>%
-    mutate(activity = factor(activity, levels = c("veranstaltungen", "zwischenzeit", "selbststudium", "fahrzeit", "arbeitszeit", "freizeit", "schlafen"))) %>%
-    group_by(questionnaire_id, day) %>%
-    mutate(prop_duration = duration / sum(duration)) %>%
-    arrange(questionnaire_id, day, desc(activity))
+  
+  # Filter ID
+  if (id[[1]] != "all") data_tp <- filter(na.omit(data), questionnaire_id %in% id)
+  else data_tp <- na.omit(data)
+  
+  if(reshape_data) {
+    data_time_pattern <- data_tp %>%
+      gather(activity, duration, mo_veranstaltungen:so_schlafen, -questionnaire_id) %>%
+      separate(activity, c("day", "activity"), sep ="_") %>%
+      mutate(day = ifelse(day == "mo", 1, ifelse(day == "di", 2, ifelse(day == "mi", 3, ifelse(day == "do", 4, ifelse(day == "fr", 5, ifelse(day == "sa", 6, 7))))))) %>%
+      mutate(activity = factor(activity, levels = c("veranstaltungen", "zwischenzeit", "selbststudium", "fahrzeit", "arbeitszeit", "freizeit", "schlafen"))) %>%
+      group_by(questionnaire_id, day) %>%
+      mutate(prop_duration = duration / sum(duration)) %>%
+      arrange(questionnaire_id, day, desc(activity))
+  } else {
+    data_time_pattern <- data_tp %>%
+      ungroup() %>%
+      mutate(day = ifelse(day == "Montag", 1, ifelse(day == "Dienstag", 2, ifelse(day == "Mittwoch", 3, ifelse(day == "Donnerstag", 4, ifelse(day == "Freitag", 5, ifelse(day == "Samstag", 6, 7)))))))
+  }
+  
   return(data_time_pattern)
 }

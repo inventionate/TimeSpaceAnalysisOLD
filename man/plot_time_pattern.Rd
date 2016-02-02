@@ -4,7 +4,7 @@
 \alias{plot_time_pattern}
 \title{Plot ingle or multiple time pattern.}
 \usage{
-plot_time_pattern(data, ncol = 3)
+plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE)
 }
 \arguments{
 \item{ncol}{}

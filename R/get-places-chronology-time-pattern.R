@@ -1,0 +1,50 @@
+get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all") {
+  
+  # Relevante Variablen auswählen
+  data <- data %>%
+    select(questionnaire_id, date, day, duration, activity) %>%
+    as.data.frame() %>%
+    mutate(activity = factor(activity))
+  
+
+  
+  # Leeren Datensatz hinzufügen, um vergleichbare Ausgangsbedingungen zu schaffen.
+  # D. h., jeder Person wird eine vergleichbare Aktivität mit der Länge Null hinzugefügt.
+  # Für jede ID an jedem Tag Eine Aktivität mit prop_duration 0 erzeugen
+  activities <- levels(data$activity)
+  
+  data_scaffold <- data %>%
+    group_by(questionnaire_id, day) %>% 
+    distinct() %>%
+    na.omit()
+  
+  data_zero_duration_activites <- NULL
+  for(i in 1:length(activities)) 
+  {
+    data_zero_duration_activites <- bind_rows(data_zero_duration_activites, data_scaffold %>% mutate(duration = 0, activity = activities[i]))
+  }
+  
+  data_pc_zm <- data <- bind_rows(data, data_zero_duration_activites)
+  
+  # Nach ID filtern
+  # Es darf dein NA Auschluss durchgeführt werden, weil sonst die Fahrzeit verloren geht!
+  if(id[[1]] != "all") data_pc_zm <- data %>% filter(questionnaire_id %in% id)
+  
+  if(weekday[[1]] != "all") data_pc_zm <- filter(data_pc_zm, day %in% weekday)
+  
+  # Berechnung der Dauer für eine durchschnittliche Woche (nicht pro Woche)
+  data_pc_zm <- data_pc_zm %>%
+    group_by(questionnaire_id, day) %>%
+    mutate(prop_duration = duration/sum(duration)) %>%
+    ungroup() %>% 
+    group_by(questionnaire_id, day, activity) %>% 
+    mutate(prop_duration = sum(prop_duration)) %>%
+    distinct() %>%
+    arrange(questionnaire_id, date, activity) %>%
+    ungroup() %>%
+    # Festlegen der Reihenfolge der Levels und orden der Daten.
+    mutate(activity = factor(activity, levels = c("Schlafen", "Freizeit", "Fahrzeit", "Arbeitszeit", "Selbststudium", "Lerngruppe", "Lehrveranstaltung"))) %>%
+    arrange(activity)
+  
+  return(data_pc_zm)
+}
