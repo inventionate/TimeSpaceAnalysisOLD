@@ -22,19 +22,20 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
 
     # Tagesauswahl definieren
     if (weekday[[1]] != "all") {
-      # Prozentuale Verteilung der Aktivitäten
-      if(print_prop_duration) {
-        print(data_pc_zm %>%
-                select(questionnaire_id, activity, prop_duration) %>%
-                mutate(prop_duration =  round(prop_duration * 100, 2)) %>%
-                arrange(questionnaire_id) %>%
-                group_by(questionnaire_id, activity) %>%
-                spread(questionnaire_id, prop_duration) %>%
-                as_data_frame())
-      }
-
       # Farbpalette festlegen
       colours = rev(RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_pc_zm$activity)))
+      
+      # Prozentuale Verteilung der Aktivitäten
+      if(print_prop_duration) {
+        data_pc_zm %>%
+          select(questionnaire_id, activity, prop_duration) %>%
+          mutate(prop_duration =  round(prop_duration * 100, 2)) %>%
+          arrange(questionnaire_id) %>%
+          group_by(questionnaire_id, activity) %>%
+          spread(questionnaire_id, prop_duration) %>%
+          as_data_frame() %>%
+          print(n = nrow(.))
+      }
 
       # Plotten der Zeitmuster
       plot_pc_zm <- ggplot2::ggplot(data_pc_zm, aes(x = day, y = prop_duration)) +

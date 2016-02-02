@@ -4,7 +4,8 @@
 \alias{plot_time_pattern}
 \title{Plot single or multiple time pattern.}
 \usage{
-plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE)
+plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE,
+  print_prop_duration = TRUE)
 }
 \arguments{
 \item{data}{data frame which contains time pattern data.}
@@ -14,6 +15,8 @@ plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE)
 \item{ncol}{number of cols, if there are multiple plots (facets).}
 
 \item{reshape_data}{whether reshape data or not.}
+
+\item{print_prop_duration}{whether to print or not to print prop duration data.}
 }
 \value{
 ggplot2 visualization of time pattern data.

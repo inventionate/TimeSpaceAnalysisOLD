@@ -11,14 +11,14 @@
 #'
 #' @examples
 get_places_chronology <- function(data, id = "all", weekday = "all", title, shape_path) {
-
+  
   # Datensatz aufbereiten
   data_places_chronology <- data %>%
     as.data.frame() %>%
     mutate(start_time = hours(start_time)) %>%
     filter(address != "") %>%
     #  Dauer an einem Ort berechnen
-    group_by(day, place) %>%
+    group_by(questionnaire_id, day, place) %>%
     mutate(place_duration = sum(duration))
 
   # Anzahl der zu plottenden Fragebögen IDs.

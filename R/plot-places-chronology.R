@@ -23,6 +23,7 @@ NULL
 #' @param graph whether to plot or not to plot the praph (boolean).
 #' @param ncol number of cols, if there are multiple plots (facets).
 #' @param unique_places plot only unique places. Useful to visualize place related overall structure.
+#' @param print_place_duration print place overall duration (hours).
 #'
 #' @return ggplot2 visualization of place chronology data.
 #' @export
@@ -30,10 +31,22 @@ NULL
 #' @examples
 plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL, size_range = c(3,15), shape_path = 1, colour_path = "black", size_path = 2,
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
-                                   title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE) {
+                                   title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
+                                   print_place_duration = FALSE) {
 
   # Datensatz aufbereiten.
   data_pc <- get_places_chronology(data, id, weekday, title, shape_path)
+  
+  if(print_place_duration) {
+    data_pc$data_unique_places_overall %>%
+      select(questionnaire_id, place, place_duration) %>%
+      mutate(place_duration =  round(place_duration, 2)) %>%
+      arrange(questionnaire_id) %>%
+      group_by(questionnaire_id, place) %>%
+      spread(questionnaire_id, place_duration) %>%
+      print(n = nrow(.))
+  }
+  
 
   # Prüfen, ob Struktur oder Karte geplottet werden soll
   if (structure) {

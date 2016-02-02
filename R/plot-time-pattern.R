@@ -6,17 +6,31 @@ NULL
 #' @param ncol number of cols, if there are multiple plots (facets).
 #' @param id vector which contains questionnaire ids.
 #' @param reshape_data whether reshape data or not.
+#' @param print_prop_duration whether to print or not to print prop duration data.
 #'
 #' @return ggplot2 visualization of time pattern data.
 #' @export
 #'
 #' @examples
-plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE) {
+plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE) {
 
     data <- get_time_pattern(data, id, reshape_data)
-
+    
     if(reshape_data) colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
     else colours <-  rev(RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity)))
+    
+    if(print_prop_duration) {
+      data %>%
+        mutate(day = mapvalues(day, c(1:7), c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))) %>%
+        select(questionnaire_id, day, activity, prop_duration) %>%
+        mutate(prop_duration =  round(prop_duration * 100, 2)) %>%
+        arrange(questionnaire_id) %>%
+        group_by(questionnaire_id, day, activity) %>%
+        spread(questionnaire_id, prop_duration)  %>%
+        print(n = nrow(.))
+    }
+    
+    
 
     p <- ggplot(data, aes(x = day, y = prop_duration)) +
       geom_area(aes(fill = activity), position = "fill") +
