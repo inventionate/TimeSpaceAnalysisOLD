@@ -23,6 +23,7 @@ NULL
 #' @param graph whether to plot or not to plot the praph (boolean).
 #' @param ncol number of cols, if there are multiple plots (facets).
 #' @param unique_places plot only unique places. Useful to visualize place related overall structure.
+#' @param activity_duration_overall wheter plot activities per week or for all weeks at once (boolean).
 #' @param print_place_duration print place overall duration (hours).
 #'
 #' @return ggplot2 visualization of place chronology data.
@@ -32,7 +33,7 @@ NULL
 plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL, size_range = c(3,15), shape_path = 1, colour_path = "black", size_path = 2,
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
                                    title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
-                                   print_place_duration = FALSE) {
+                                   print_place_duration = FALSE, activity_duration_overall = TRUE) {
 
   # Datensatz aufbereiten.
   data_pc <- get_places_chronology(data, id, weekday, title, shape_path)
@@ -49,9 +50,9 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   
 
   # Prüfen, ob Struktur oder Karte geplottet werden soll
-  if (structure) {
+  if(structure) {
     # Strukturmuster berechnen.
-    plot_pc <- ggplot2::ggplot(data_pc$data_places_chronology, aes(x = lon, y = lat, label = activity)) #+
+    plot_pc <- ggplot2::ggplot(data_pc$data_places_chronology, aes(x = lon, y = lat, label = activity)) 
     # Dichte in Form der Größe des Orts abbilden (einfacher zu verstehen und genauer).
     # geom_density_2d(aes(alpha = 0.2), colour = "black", bins = 15) +
     # stat_density_2d(aes(alpha = ..level..), bins = 15, geom = "polygon")
@@ -79,8 +80,13 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
       geom_label(data = data_pc$data_unique_places, aes(label = place, size = place_duration), colour = "white", fontface = "bold", fill = "black", show.legend = TRUE)
   }
   if(!unique_places) {
-    plot_pc <- plot_pc +
-      ggrepel::geom_label_repel(aes(fill = start_time, size = duration), colour = "white", fontface = "bold", show.legend = FALSE, alpha = 0.85, force = force_repel)
+    if(!activity_duration_overall) {
+      plot_pc <- plot_pc +
+        ggrepel::geom_label_repel(aes(fill = start_time, size = duration), colour = "white", fontface = "bold", show.legend = FALSE, alpha = 0.85, force = force_repel)
+    } else {
+      plot_pc <- plot_pc +
+        ggrepel::geom_label_repel(data = data_pc$data_unique_activities, aes(label = activity, fill = start_time_average, size = activity_duration_overall), colour = "white", fontface = "bold", show.legend = FALSE, alpha = 0.85, force = force_repel)
+    }
   }
   # Verdopplung der breaks nötig, weil zwei Wochen beobachtet wurden.
   if(unique_places) {

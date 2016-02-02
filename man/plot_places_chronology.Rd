@@ -10,7 +10,8 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   force_repel = 1, legend = FALSE, structure = FALSE,
   map_extent = "panel", title = "Orte Chronologie", axis_label = FALSE,
   xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
-  unique_places = FALSE, print_place_duration = FALSE)
+  unique_places = FALSE, print_place_duration = FALSE,
+  activity_duration_overall = TRUE)
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
@@ -56,6 +57,8 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 \item{unique_places}{plot only unique places. Useful to visualize place related overall structure.}
 
 \item{print_place_duration}{print place overall duration (hours).}
+
+\item{activity_duration_overall}{wheter plot activities per week or for all weeks at once (boolean).}
 }
 \value{
 ggplot2 visualization of place chronology data.

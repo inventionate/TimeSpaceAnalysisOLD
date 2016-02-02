@@ -36,6 +36,15 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
     title <- paste(title, as.character(weekday))
   }
 
+  # Datensatz für Gesamtaktivitäten
+  data_unique_activities <- data_places_chronology %>%
+    ungroup() %>%
+    group_by(questionnaire_id, day, place, activity) %>%
+    mutate(activity_duration_overall = sum(duration),
+           start_time_average = mean(start_time)) %>%
+    select(-date, -prop_duration, -duration, -place_duration, -start_time) %>%
+    distinct()
+  
   # Datensatz mit besuchten Orten und deren Häufigfkeit erstellen.
   data_unique_places_count <- data_places_chronology %>%
     count(place) %>%
@@ -49,10 +58,11 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
 
   # Datensatz mit besuchten Orten erstellen (ohne Berücksichtugung der Dauer).
   data_unique_places_overall <- data_unique_places %>%
+    ungroup() %>%
     group_by(questionnaire_id, place) %>%
     mutate(place_duration = sum(place_duration)) %>%
     distinct()
-
+  
   # Pfade hübscher machen, indem eine Kurve berechnet wird.
   plot.new()
   coord_curved_path <- as.data.frame(xspline(data_places_chronology$lon, data_places_chronology$lat, shape = shape_path, draw = FALSE))
@@ -63,5 +73,6 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
               data_unique_places = data_unique_places,
               coord_curved_path = coord_curved_path,
               data_unique_places_overall = data_unique_places_overall,
+              data_unique_activities = data_unique_activities,
               title = title))
 }
