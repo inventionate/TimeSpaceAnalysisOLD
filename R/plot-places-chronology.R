@@ -25,6 +25,7 @@ NULL
 #' @param unique_places plot only unique places. Useful to visualize place related overall structure.
 #' @param activity_duration_overall wheter plot activities per week or for all weeks at once (boolean).
 #' @param print_place_duration print place overall duration (hours).
+#' @param facet_scales should Scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y").
 #'
 #' @return ggplot2 visualization of place chronology data.
 #' @export
@@ -33,7 +34,7 @@ NULL
 plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL, size_range = c(3,15), shape_path = 1, colour_path = "black", size_path = 2,
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
                                    title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
-                                   print_place_duration = FALSE, activity_duration_overall = TRUE) {
+                                   print_place_duration = FALSE, activity_duration_overall = TRUE, facet_scales = "fixed") {
 
   # Datensatz aufbereiten.
   data_pc <- get_places_chronology(data, id, weekday, title, shape_path)
@@ -107,11 +108,11 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
 
   if(!axis_label) plot_pc <- plot_pc + theme(axis.title = element_blank(), axis.text = element_blank(), axis.ticks = element_blank())
 
+  if(length(id) > 1 | id[[1]] == "all") plot_pc <- plot_pc + facet_wrap(~questionnaire_id, ncol = ncol, scales = facet_scales)
+  
   if(!is.null(xlim)) plot_pc <- plot_pc + scale_x_continuous(limits = xlim)
-
+  
   if(!is.null(ylim)) plot_pc <- plot_pc + scale_y_continuous(limits = ylim)
-
-  if(length(id) > 1 | id[[1]] == "all") plot_pc <- plot_pc + facet_wrap(~questionnaire_id, ncol = ncol, scales = "free")
 
   # Plotten
   if(graph) print(plot_pc)

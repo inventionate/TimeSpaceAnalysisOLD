@@ -11,7 +11,7 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   map_extent = "panel", title = "Orte Chronologie", axis_label = FALSE,
   xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
   unique_places = FALSE, print_place_duration = FALSE,
-  activity_duration_overall = TRUE)
+  activity_duration_overall = TRUE, facet_scales = "fixed")
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
@@ -59,6 +59,8 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 \item{print_place_duration}{print place overall duration (hours).}
 
 \item{activity_duration_overall}{wheter plot activities per week or for all weeks at once (boolean).}
+
+\item{facet_scales}{should Scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y").}
 }
 \value{
 ggplot2 visualization of place chronology data.
