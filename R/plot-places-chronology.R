@@ -65,7 +65,7 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   }
 
   # Grafische Elemente hinzufügen
-  if(id[[1]] == "all") {
+  if(id[[1]] == "all" | length(id) > 1) {
     plot_pc <- plot_pc +
       geom_path(data = data_pc$data_places_chronology, aes(label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
   } else {
