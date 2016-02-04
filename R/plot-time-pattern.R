@@ -36,11 +36,12 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
       geom_area(aes(fill = activity), position = "fill") +
       geom_vline(xintercept = c(1:7), linetype = "dotted", colour = "white") +
       scale_x_continuous(breaks = c(1:7), labels = c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")) +
-      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%")) +
+      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%")) 
       # scale_fill_brewer(name = "Tätigkeiten", labels = c("Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit",
       #                                                     "Arbeitszeit", "Freizeit", "Schlafen"), palette = "Spectral") +
-      scale_fill_manual(name = "Tätigkeiten", values = colours) +
-      theme_bw() +
+    if(reshape_data) p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
+    else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=TRUE))
+    p <- p + theme_bw() +
     # ggtitle(paste('Zeitmuster
     # ID', test$questionnaire_id))
       theme(axis.title = element_blank(), plot.title = element_text(face = "bold", size = 23), text = element_text(family = "Myriad Pro"),
