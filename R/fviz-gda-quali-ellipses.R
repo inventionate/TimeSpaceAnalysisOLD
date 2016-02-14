@@ -33,6 +33,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
     mutate(count = n()) %>%
     ungroup()
   coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(mean))
+  size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
+  coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)
   # Plot
   if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid")
   if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid")
@@ -44,8 +46,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   }
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
   if(facet) p <- p + geom_point(data = coord_ind_quali %>% distinct(), aes(x = Dim.1, y = Dim.2, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha.point)
-  p <- p + scale_size_continuous(range = c(1, max(coord_ind_quali$count))) +
-    geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), shape = 18, size = 7, inherit.aes = FALSE)
+  p <- p + scale_size_continuous(range = c(1, 7)) +
+    geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali, size = size), shape = 18, inherit.aes = FALSE)
   if(path_mean & !facet) {
     p <- p + geom_path(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2), linetype = path.linetype)
   } else {
