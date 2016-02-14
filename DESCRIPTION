@@ -31,16 +31,23 @@ Depends:
     FactoMineR,
     missMDA,
     Hmisc,
-    RColorBrewer
-Suggests:
+    RColorBrewer,
     factoextra,
-    explor,
     pander
+Suggests:
+    explor
 RoxygenNote: 5.0.1
 Collate:
+    'add-theme.R'
     'db-load.R'
     'db-save.R'
+    'get-index-mod.R'
+    'excl-mfa-group.R'
     'extract-legend.R'
+    'utilities.R'
+    'fviz-gda-conc-ellipse.R'
+    'fviz-gda-quali-ellipses.R'
+    'gda-optimise-df.R'
     'get-places-chronology-time-pattern.R'
     'get-places-chronology.R'
     'get-time-pattern.R'
@@ -58,5 +65,5 @@ Collate:
     'sHMFA.R'
     'sMCA.R'
     'sMFA.R'
-    'spCA.R'
+    'sPCA.R'
     'specific-dimdesc.R'
