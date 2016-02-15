@@ -10,13 +10,15 @@ NULL
 #' @param path_mean plot mean point path (boolean). Only possible if facet is FALSE.
 #' @param alpha.point opacity of mean points.
 #' @param path.linetype linetype of mean point path.
+#' @param scale_mean_points scale mean point size in respect of the group size (boolean).
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
 #'
 #' @examples
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
-                                   facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid") {
+                                   facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid",
+                                   scale_mean_points = TRUE) {
   # Variable bestimmen
   df_source <- data.frame(allgemeine_angaben, df_var_quali)
   var_quali <- df_source %>%
@@ -46,8 +48,9 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   }
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
   if(facet) p <- p + geom_point(data = coord_ind_quali %>% distinct(), aes(x = Dim.1, y = Dim.2, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha.point)
-  p <- p + scale_size_continuous(range = c(1, 7)) +
-    geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali, size = size), shape = 18, inherit.aes = FALSE)
+  p <- p + scale_size_continuous(range = c(1, 7))
+  if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali, size = size), shape = 18, inherit.aes = FALSE)
+  else  p <- p + geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), shape = 18, size = 7, inherit.aes = FALSE)
   if(path_mean & !facet) {
     p <- p + geom_path(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2), linetype = path.linetype)
   } else {

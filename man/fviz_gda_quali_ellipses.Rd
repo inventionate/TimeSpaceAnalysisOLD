@@ -6,7 +6,7 @@
 \usage{
 fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali var ellipses", facet = TRUE, path_mean = FALSE,
-  alpha.point = 0.75, path.linetype = "solid")
+  alpha.point = 0.75, path.linetype = "solid", scale_mean_points = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -24,6 +24,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 \item{alpha.point}{opacity of mean points.}
 
 \item{path.linetype}{linetype of mean point path.}
+
+\item{scale_mean_points}{scale mean point size in respect of the group size (boolean).}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.
