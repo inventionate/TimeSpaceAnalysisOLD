@@ -47,6 +47,7 @@ Collate:
     'utilities.R'
     'fviz-gda-conc-ellipse.R'
     'fviz-gda-quali-ellipses.R'
+    'fviz-gda-var-axis.R'
     'gda-optimise-df.R'
     'get-places-chronology-time-pattern.R'
     'get-places-chronology.R'
