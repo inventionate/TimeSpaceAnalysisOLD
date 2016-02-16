@@ -131,6 +131,13 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
   ## Main program ##
   ##################
 
+  if(is.null(excl)) {
+    return(FactoMineR::MCA(X = X, ncp = ncp, ind.sup = ind.sup, quanti.sup = quanti.sup,
+                           quali.sup = quali.sup, graph = graph, level.ventil = level.ventil,
+                           axes = axes, row.w = row.w, method = method,
+                           na.method = na.method, tab.disj = tab.disj))
+  }
+
   if (is.null(rownames(X))) rownames(X) <- 1:nrow(X)
   if (is.null(colnames(X))) colnames(X) <- colnames(X, do.NULL = FALSE,prefix="V")
   X <- as.data.frame(X)

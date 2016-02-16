@@ -4,7 +4,7 @@
 \alias{fviz_gda_var_axis}
 \title{Visualize specific contributing modalities.}
 \usage{
-fviz_gda_var_axis(res_gda, axis = "Dim.1", contrib = 20,
+fviz_gda_var_axis(res_gda, axis = 1, contrib = 20,
   title = "GDA axis contribution 20")
 }
 \arguments{

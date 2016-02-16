@@ -269,7 +269,8 @@ sHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   clust <- as.factor(clust)
   ## Add 2014-07-08
   if (kk<Inf){
-    if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")){
+    # @info sHCPC Anpassungen
+    if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMCA") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")){
       if (is.null(res.sauv$call$ind.sup)) data.clust <- cbind.data.frame(res.sauv$call$X, clust=cla$cluster)
       else data.clust <- cbind.data.frame(res.sauv$call$X[-res.sauv$call$ind.sup, ], clust=cla$cluster)
     } else {
@@ -288,7 +289,7 @@ sHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
     }
   } else {
     X <- cbind.data.frame(X,clust)
-    if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) data.clust <- cbind.data.frame(res.sauv$call$X[rownames(t$res$call$X),], clust)
+    if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMCA") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) data.clust <- cbind.data.frame(res.sauv$call$X[rownames(t$res$call$X),], clust)
     if (inherits(res.sauv, "data.frame")) data.clust <- cbind.data.frame(res.sauv[rownames(X),], clust)
     #  if (inherits(res.sauv, "data.frame")) data.clust <- X cbind.data.frame(res.sauv$call$X[rownames(t$res$call$X),], clust)
     if (inherits(res.sauv, "numeric")) data.clust <- X
@@ -297,7 +298,7 @@ sHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
       if (cluster.CA=="columns") data.clust <- cbind.data.frame(t(res.sauv$call$Xtot[,rownames(t$res$call$X)]),clust)
     }
   }
-  if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) data.clust <- data.clust[rownames(res.sauv$ind$coord),]
+  if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMCA") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) data.clust <- data.clust[rownames(res.sauv$ind$coord),]
   if (inherits(res.sauv, "CA")&(cluster.CA=="row")) data.clust <- data.clust[rownames(res.sauv$row$coord),]
   if (inherits(res.sauv, "CA")&(cluster.CA=="columns")) data.clust <- data.clust[rownames(res.sauv$col$coord),]
   if (inherits(res.sauv, "data.frame")) data.clust <- data.clust[rownames(res.sauv),]
@@ -306,7 +307,7 @@ sHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   else desc.var <- descfreq(data.clust[,-which(sapply(data.clust,is.factor))], data.clust[,ncol(data.clust)], proba = proba)
   if (kk==Inf) desc.axe <- catdes(X, ncol(X), proba = proba)
   if (inherits(res.sauv, "data.frame")) tabInd <- cbind.data.frame(res.sauv,data.clust[,ncol(data.clust)])
-  if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) tabInd <- cbind.data.frame(res.sauv$ind$coord,data.clust[rownames(res.sauv$ind$coord),ncol(data.clust)])
+  if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMCA") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) tabInd <- cbind.data.frame(res.sauv$ind$coord,data.clust[rownames(res.sauv$ind$coord),ncol(data.clust)])
   #  if (inherits(res.sauv, "CA")&(cluster.CA=="rows")) tabInd <- cbind.data.frame(res.sauv$row$coord,data.clust[,ncol(data.clust)])
   #  if (inherits(res.sauv, "CA")&(cluster.CA=="columns")) tabInd <- cbind.data.frame(res.sauv$col$coord,data.clust[,ncol(data.clust)])
   if (inherits(res.sauv, "CA")&(cluster.CA=="rows")) tabInd <- cbind.data.frame(res.sauv$row$coord,data.clust[rownames(res.sauv$row$coord),ncol(data.clust)])

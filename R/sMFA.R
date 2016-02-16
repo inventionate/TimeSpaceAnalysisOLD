@@ -45,6 +45,13 @@ sMFA <- function (base, group, type = rep("s",length(group)), excl = NULL, ind.s
   ## Main program ##
   ##################
 
+  if(is.null(excl)) {
+    return(FactoMineR::MFA(base = base, group = group, type = type, ind.sup = ind.sup,
+                           ncp = ncp, name.group = name.group, num.group.sup = num.group.sup,
+                           graph = graph, weight.col.mfa = weight.col.mfa, row.w = row.w,
+                           axes = axes, tab.comp = tab.comp))
+  }
+
   if (!is.null(tab.comp)){
     if (!is.null(weight.col.mfa)) stop("Weightings on the variables are not allowed with the tab.comp argument")
     if (!is.null(ind.sup)) stop("Supplementary individuals are not allowed with tab.comp")

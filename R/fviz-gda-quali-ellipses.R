@@ -18,12 +18,19 @@ NULL
 #' @examples
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
                                    facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid",
-                                   scale_mean_points = TRUE) {
+                                   scale_mean_points = TRUE, hcpc = FALSE) {
   # Variable bestimmen
-  df_source <- data.frame(allgemeine_angaben, df_var_quali)
-  var_quali <- df_source %>%
-    select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
-    filter(questionnaire_id %in% rownames(res_gda$call$X))
+  if(hcpc) {
+    var_quali <- data.frame(hcpc_studienalltag$data.clust) %>%
+      add_rownames() %>%
+      select(questionnaire_id = rowname, var_quali = clust)
+
+  } else {
+    df_source <- data.frame(allgemeine_angaben, df_var_quali)
+    var_quali <- df_source %>%
+      select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
+      filter(questionnaire_id %in% rownames(res_gda$call$X))
+  }
   # Auf fehlende Werte prüfen
   exclude_na <- which(is.na(var_quali[,2]))
   # Datensätze zusammenstellen

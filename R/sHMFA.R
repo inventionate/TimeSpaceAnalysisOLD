@@ -15,6 +15,11 @@
 #' @examples
 sHMFA<-function (X, H, type = rep("s", length(H[[1]])), excl = NULL, ncp = 5, graph = TRUE, axes=c(1,2), name.group = NULL) {
 
+  if(is.null(excl)) {
+    return(FactoMineR::HMFA(X = X, H = H, type = type, ncp = ncp, graph = graph,
+                            axes = axes, name.group = name.group))
+  }
+
   # @info sMFA Anapssung
   # Gesamtliste für auszuschließende Modalitäten erstellen
   ind.grpe <- group.mod <- ind.col <- 0

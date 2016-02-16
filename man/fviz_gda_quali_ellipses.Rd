@@ -6,7 +6,8 @@
 \usage{
 fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali var ellipses", facet = TRUE, path_mean = FALSE,
-  alpha.point = 0.75, path.linetype = "solid", scale_mean_points = TRUE)
+  alpha.point = 0.75, path.linetype = "solid", scale_mean_points = TRUE,
+  hcpc = FALSE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
