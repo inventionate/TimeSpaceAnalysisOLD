@@ -18,8 +18,8 @@ NULL
 #'
 #' @examples
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
-                                   facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid",
-                                   scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2) {
+                                    facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid",
+                                    scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2) {
   # Variable bestimmen
   if(hcpc) {
     var_quali <- data.frame(hcpc_studienalltag$data.clust) %>%
@@ -35,8 +35,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   # Auf fehlende Werte prüfen
   exclude_na <- which(is.na(var_quali[,2]))
   # Datensätze zusammenstellen
-  if(length(exclude_na) == 0) df_source_na <- data.frame(res_gda$ind$coord[, c(1:2)], var_quali = var_quali[,2])
-  else df_source_na <- data.frame(res_gda$ind$coord[, c(1:2)], var_quali = var_quali[,2])[-exclude_na,]
+  if(length(exclude_na) == 0) df_source_na <- data.frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = var_quali[,2])
+  else df_source_na <- data.frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = var_quali[,2])[-exclude_na,]
 
   coord_ind_quali <- df_source_na %>%
     group_by(Dim.1, Dim.2, var_quali) %>%
