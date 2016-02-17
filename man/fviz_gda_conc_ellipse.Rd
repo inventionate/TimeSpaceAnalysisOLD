@@ -5,7 +5,7 @@
 \title{Title}
 \usage{
 fviz_gda_conc_ellipse(res_gda, level = 0.95, alpha = 0.1,
-  colour = "black", linetype = "dashed")
+  colour = "black", linetype = "dashed", axes = 1:2)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -17,6 +17,8 @@ fviz_gda_conc_ellipse(res_gda, level = 0.95, alpha = 0.1,
 \item{colour}{ellipse fill colour.}
 
 \item{linetype}{ellipse edge linetype.}
+
+\item{axes}{the GDA dimensions to plot.}
 }
 \value{
 ggplot2 GDA visualisation with concentration ellipse.

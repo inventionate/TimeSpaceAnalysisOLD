@@ -11,6 +11,7 @@ NULL
 #' @param alpha.point opacity of mean points.
 #' @param path.linetype linetype of mean point path.
 #' @param scale_mean_points scale mean point size in respect of the group size (boolean).
+#' @param axes the GDA dimensions to plot.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -18,7 +19,7 @@ NULL
 #' @examples
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
                                    facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid",
-                                   scale_mean_points = TRUE, hcpc = FALSE) {
+                                   scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2) {
   # Variable bestimmen
   if(hcpc) {
     var_quali <- data.frame(hcpc_studienalltag$data.clust) %>%
@@ -45,8 +46,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
   coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)
   # Plot
-  if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid")
-  if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid")
+  if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
 
   # ALlgemeine Konzentrationsellipse hinzufügen
   if(!path_mean) {

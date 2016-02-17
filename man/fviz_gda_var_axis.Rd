@@ -5,7 +5,7 @@
 \title{Visualize specific contributing modalities.}
 \usage{
 fviz_gda_var_axis(res_gda, axis = 1, contrib = 20,
-  title = "GDA axis contribution 20")
+  title = "GDA axis contribution 20", axes = 1:2)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
@@ -15,6 +15,8 @@ fviz_gda_var_axis(res_gda, axis = 1, contrib = 20,
 \item{contrib}{count of modalities to plot.}
 
 \item{title}{plot title.}
+
+\item{axes}{the GDA dimensions to plot.}
 }
 \value{
 ggplot2 visualization containing selected modalities.
