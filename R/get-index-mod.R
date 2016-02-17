@@ -9,6 +9,6 @@
 #' @examples
 get_index_mod <- function(df_gda, pattern = "Fehlender Wert") {
   res <- sort(as.numeric(c(which(grepl(pattern, colnames(dichotom(df_gda)))))))
-  if(nrow(data.frame(res))) res <- NULL
+  if(nrow(data.frame(res)) == 0) res <- NULL
   return(res)
 }

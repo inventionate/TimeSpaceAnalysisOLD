@@ -49,6 +49,7 @@ Collate:
     'fviz-gda-quali-ellipses.R'
     'fviz-gda-var-axis.R'
     'gda-optimise-df.R'
+    'get-mfa-mod-group-id.R'
     'get-places-chronology-time-pattern.R'
     'get-places-chronology.R'
     'get-time-pattern.R'
