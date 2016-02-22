@@ -66,7 +66,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
     p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, segments = 100, inherit.aes = FALSE) +
       stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), geom ="path", type = "norm", alpha = 1, linetype = "solid", segments = 100, inherit.aes = FALSE)
   }
-  p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
+  if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
   if(facet) p <- p + facet_wrap(~var_quali)
   p <- p + add_theme() + ggtitle(title)
   return(p)
