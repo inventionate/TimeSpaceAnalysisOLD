@@ -12,6 +12,7 @@ NULL
 #' @param path.linetype linetype of mean point path.
 #' @param scale_mean_points scale mean point size in respect of the group size (boolean).
 #' @param axes the GDA dimensions to plot.
+#' @param palette Colour brewer scale.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -19,7 +20,7 @@ NULL
 #' @examples
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
                                     facet = TRUE, path_mean = FALSE, alpha.point = 0.75, path.linetype = "solid",
-                                    scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2) {
+                                    scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1") {
   # Variable bestimmen
   if(hcpc) {
     var_quali <- data.frame(hcpc_studienalltag$data.clust) %>%
@@ -65,7 +66,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
     p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, segments = 100, inherit.aes = FALSE) +
       stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), geom ="path", type = "norm", alpha = 1, linetype = "solid", segments = 100, inherit.aes = FALSE)
   }
-  p <- p + scale_colour_brewer(palette = "Set1") + scale_fill_brewer(palette = "Set1")
+  p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
   if(facet) p <- p + facet_wrap(~var_quali)
   p <- p + add_theme() + ggtitle(title)
   return(p)

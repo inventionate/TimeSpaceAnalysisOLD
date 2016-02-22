@@ -7,7 +7,7 @@
 fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali var ellipses", facet = TRUE, path_mean = FALSE,
   alpha.point = 0.75, path.linetype = "solid", scale_mean_points = TRUE,
-  hcpc = FALSE, axes = 1:2)
+  hcpc = FALSE, axes = 1:2, palette = "Set1")
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -29,6 +29,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 \item{scale_mean_points}{scale mean point size in respect of the group size (boolean).}
 
 \item{axes}{the GDA dimensions to plot.}
+
+\item{palette}{Colour brewer scale.}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.
