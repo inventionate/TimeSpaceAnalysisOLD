@@ -18,7 +18,10 @@ plot_time_pattern_series <- function(data_tp)
     geom_line(data = data_ts[[2]], aes(x = day, y = avg_duration, group = zeitmuster, colour = zeitmuster),
               inherit.aes = FALSE, size = 2) + scale_colour_discrete(name = "Zeitmuster") +
     theme_minimal() + scale_x_discrete(name="Wochentage") +
-    scale_y_continuous(name="Dauer (in Stunden)") + ggtitle("Time pattern profiles (kml3d results)")
+    scale_y_continuous(name="Dauer (in Stunden)") +
+    + theme(plot.title = element_text(face = "bold", size = 17), text = element_text(family = "Myriad Pro"),
+            legend.text = element_text(size = 10), legend.title = element_text(face = "bold", size = 17)) +
+    ggtitle("Time pattern profiles (kml3d results)")
 
   return(p)
 }
