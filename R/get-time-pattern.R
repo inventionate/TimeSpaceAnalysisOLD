@@ -27,7 +27,8 @@ get_time_pattern <- function(data, id = "all", reshape_data = TRUE) {
       mutate(activity = factor(activity, levels = c("veranstaltungen", "zwischenzeit", "selbststudium", "fahrzeit", "arbeitszeit", "freizeit", "schlafen"))) %>%
       group_by(questionnaire_id, day) %>%
       mutate(prop_duration = duration / sum(duration)) %>%
-      arrange(questionnaire_id, day, desc(activity))
+      arrange(questionnaire_id, day, desc(activity)) %>%
+      ungroup()
   } else {
     data_time_pattern <- data_tp %>%
       ungroup() %>%
