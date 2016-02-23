@@ -14,9 +14,11 @@ plot_time_pattern_series <- function(data_tp)
 
   # Zeitserien plotten
   p <- ggplot(data_ts[[1]], aes(x = day, y = duration, group = questionnaire_id)) +
-    geom_line() + facet_wrap(~activity) +
-    geom_line(data = data_ts[[2]], aes(x = day, y = avg_duration,
-                                       group = zeitmuster, colour = zeitmuster),
-              inherit.aes = FALSE, size = 2) + theme_minimal()
+    geom_line(alpha = 0.5) + facet_wrap(~activity) +
+    geom_line(data = data_ts[[2]], aes(x = day, y = avg_duration, group = zeitmuster, colour = zeitmuster),
+              inherit.aes = FALSE, size = 2) + scale_colour_discrete(name = "Zeitmuster") +
+    theme_minimal() + scale_x_discrete(name="Wochentage") +
+    scale_y_continuous(name="Dauer (in Stunden)") + ggtitle("Time pattern profiles (kml3d results)")
+
   return(p)
 }

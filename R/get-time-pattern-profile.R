@@ -21,8 +21,8 @@ get_time_pattern_profile <- function(data_tp, id = "all")
 
   # Prozentuale Durchschnittswerte berechnen
   data_series_average_prop <- data_ts[[2]] %>%
-    mutate(day = ifelse(day == "Montag", 1, ifelse(day == "Dienstag", 2, ifelse(day == "Mittwoch", 3, ifelse(day == "Donnerstag", 4, ifelse(day == "Freitag", 5, ifelse(day == "Samstag", 6, 7))))))) %>%
-    mutate(activity = factor(activity, levels = c("veranstaltungen", "zwischenzeit", "selbststudium", "fahrzeit", "arbeitszeit", "freizeit", "schlafen"))) %>%
+    mutate(day = ifelse(day == "Mo", 1, ifelse(day == "Di", 2, ifelse(day == "Mi", 3, ifelse(day == "Do", 4, ifelse(day == "Fr", 5, ifelse(day == "Sa", 6, 7))))))) %>%
+    mutate(activity = factor(activity, levels = c("Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen"))) %>%
     group_by(zeitmuster, day) %>%
     mutate(prop_avg_duration = avg_duration / sum(avg_duration)) %>%
     arrange(zeitmuster, day, desc(activity)) %>%
