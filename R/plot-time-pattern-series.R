@@ -21,7 +21,7 @@ plot_time_pattern_series <- function(data_tp, alpha = 0.3, palette = "Set1")
               inherit.aes = FALSE, size = 2) +
     scale_colour_brewer(palette = palette, name = "Zeitmuster", labels = data_ts[[3]]) +
     theme_minimal() + scale_x_discrete(name="Wochentage") +
-    scale_y_continuous(name="Dauer (in Stunden)") +
+    scale_y_continuous(limits = c(0,24), breaks = c(0, 4, 8, 12, 16, 20, 24), name="Dauer (in Stunden)")
     theme(plot.title = element_text(face = "bold", size = 17), text = element_text(family = "Myriad Pro"),
             legend.title = element_text(face = "bold"), strip.text = element_text(face = "bold", size = 10)) +
     ggtitle("Time pattern profiles (kml3d results)")
