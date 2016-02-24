@@ -23,7 +23,7 @@ get_time_pattern_series <- function(data_tp)
 
   # Durchschnittsprofile berechnen
   data_series_average <- data_series %>% select(-questionnaire_id) %>%
-    group_by(zeitmuster, day, activity) %>%
+    group_by(zeitmuster, day, activity) %>% na.omit() %>%
     summarise(avg_duration = mean(duration)) %>%
     ungroup()
 
