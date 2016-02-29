@@ -4,10 +4,14 @@
 \alias{plot_time_pattern_series}
 \title{Plot time pattern series data.}
 \usage{
-plot_time_pattern_series(data_tp)
+plot_time_pattern_series(data_tp, alpha = 0.3, palette = "Set1")
 }
 \arguments{
 \item{data_tp}{data frame including questionnaire_id, kml3d results and time pattern data.}
+
+\item{alpha}{opacity of the time pattern lines.}
+
+\item{palette}{colour of average time pattern lines.}
 }
 \value{
 ggplot2 time pattern series plot.

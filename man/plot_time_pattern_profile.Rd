@@ -4,12 +4,16 @@
 \alias{plot_time_pattern_profile}
 \title{Plot average time pattern profiles.}
 \usage{
-plot_time_pattern_profile(data_tp, id = "all")
+plot_time_pattern_profile(data_tp, id = "all", ncol = 2, fluid = FALSE)
 }
 \arguments{
 \item{data_tp}{data frame containing questionnaire_id, kml3d results and time pattern data.}
 
 \item{id}{time pattern to plot.}
+
+\item{ncol}{facet columns.}
+
+\item{fluid}{should be static bars or fluid lines visualized (boolean).}
 }
 \value{
 ggplot2 avgerage time pattern profile plot.

@@ -5,7 +5,7 @@
 \title{Plot single or multiple time pattern.}
 \usage{
 plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE,
-  print_prop_duration = TRUE)
+  print_prop_duration = TRUE, fluid = FALSE)
 }
 \arguments{
 \item{data}{data frame which contains time pattern data.}
@@ -16,7 +16,9 @@ plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE,
 
 \item{reshape_data}{whether reshape data or not.}
 
-\item{print_prop_duration}{whether to print or not to print prop duration data.}
+\item{print_prop_duration}{whether to print or not to print prop duration data (boolean).}
+
+\item{fluid}{should be static bars or fluid lines visualized (boolean).}
 }
 \value{
 ggplot2 visualization of time pattern data.
