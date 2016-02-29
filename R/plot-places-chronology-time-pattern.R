@@ -24,7 +24,7 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
     if (weekday[[1]] != "all") {
       # Farbpalette festlegen
       colours = rev(RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_pc_zm$activity)))
-      
+
       # Prozentuale Verteilung der Aktivitäten
       if(print_prop_duration) {
         data_pc_zm %>%
@@ -56,7 +56,7 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
 
     } else {
       # Allgemeines Zeitmuster plotten.
-      plot_pc_zm <- plot_time_pattern(data_pc_zm, id = id, reshape_data = FALSE)
+      plot_pc_zm <- plot_time_pattern(data_pc_zm, id = id, reshape_data = FALSE, ncol = ncol)
     }
 
   if(graph) print(plot_pc_zm)
