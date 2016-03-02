@@ -1,3 +1,4 @@
+#' @include utilities.R
 #' @include get-time-pattern.R
 NULL
 #' Plot single or multiple time pattern.
@@ -14,12 +15,14 @@ NULL
 #'
 #' @examples
 plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE, fluid = FALSE) {
+  # Add Myriad Pro font family
+  .add_fonts()
 
-    data <- get_time_pattern(data, id, reshape_data)
-    
+  data <- get_time_pattern(data, id, reshape_data)
+
     if(reshape_data) colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
     else colours <-  rev(RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity)))
-    
+
     if(print_prop_duration) {
       data %>%
         mutate(day = mapvalues(day, c(1:7), c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))) %>%
@@ -30,12 +33,12 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
         spread(questionnaire_id, prop_duration)  %>%
         print(n = nrow(.))
     }
-    
-    p <- ggplot(data, aes(x = day, y = prop_duration)) 
+
+    p <- ggplot(data, aes(x = day, y = prop_duration))
     if(fluid) p <- p + geom_area(aes(fill = activity), position = "fill") + geom_vline(xintercept = c(1:7), linetype = "dotted", colour = "white")
     else p <- p + geom_bar(aes(fill = activity), position = "fill", stat = "identity", width = 1) + geom_vline(xintercept = c(1.5:6.5), linetype = "solid", colour = "white", size = 0.75)
     p <- p + scale_x_continuous(breaks = c(1:7), labels = c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")) +
-      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%")) 
+      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%"))
       # scale_fill_brewer(name = "Tätigkeiten", labels = c("Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit",
       #                                                     "Arbeitszeit", "Freizeit", "Schlafen"), palette = "Spectral") +
     if(reshape_data) p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)

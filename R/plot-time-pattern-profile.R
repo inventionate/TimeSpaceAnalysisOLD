@@ -1,3 +1,4 @@
+#' @include utilities.R
 #' @include get-time-pattern-profile.R
 NULL
 #' Plot average time pattern profiles.
@@ -13,6 +14,8 @@ NULL
 #' @examples
 plot_time_pattern_profile <- function(data_tp, id = "all", ncol = 2, fluid = FALSE)
 {
+  # Add Myriad Pro font family
+  .add_fonts()
 
   data_tsp <- get_time_pattern_profile(data_tp, id)
 

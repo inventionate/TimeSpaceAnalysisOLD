@@ -1,3 +1,5 @@
+#' @include utilities.R
+NULL
 #' Visualize specific contributing modalities.
 #'
 #' @param res_gda GDA result data frame.
@@ -11,13 +13,17 @@
 #'
 #' @examples
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = 20, title = "GDA axis contribution 20", axes = 1:2) {
+
+  # Add Myriad Pro font family
+  .add_fonts()
+
   # Check GDA algorithm
   if(inherits(res_gda, c("MCA", "sMCA"))) df <- res_gda$var$contrib
   if(inherits(res_gda, c("MFA", "sMFA"))) df <- res_gda$quali.var$contrib
 
   # Auswahl festlegen
   axis <- df %>%
-    data.frame %>% select(Dim = matches(paste0("Dim.",axis))) %>% add_rownames() %>%
+    data.frame %>% select(Dim = matches(paste0("^Dim.", axis, "$"))) %>% add_rownames() %>%
     arrange(desc(Dim)) %>% slice(1:contrib) %>%
     select(rowname) %>% data.frame
 

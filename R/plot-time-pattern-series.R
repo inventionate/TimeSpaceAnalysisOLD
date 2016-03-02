@@ -1,3 +1,4 @@
+#' @include utilities.R
 #' @include get-time-pattern-series.R
 NULL
 #' Plot time pattern series data.
@@ -10,8 +11,10 @@ NULL
 #' @export
 #'
 #' @examples
-plot_time_pattern_series <- function(data_tp, alpha = 0.3, palette = "Set1")
-{
+plot_time_pattern_series <- function(data_tp, alpha = 0.3, palette = "Set1") {
+  # Add Myriad Pro font family
+  .add_fonts()
+
   data_ts <- get_time_pattern_series(data_tp)
 
   # Zeitserien plotten

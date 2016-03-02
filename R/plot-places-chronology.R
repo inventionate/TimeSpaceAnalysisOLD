@@ -1,3 +1,4 @@
+#' @include utilities.R
 #' @include get-places-chronology.R
 NULL
 #' Plot single or multiple place chronologies in different scales.
@@ -36,6 +37,8 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
                                    title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
                                    print_place_duration = FALSE, activity_duration_overall = TRUE, facet_scales = "fixed", point_padding = unit(1e-06, "lines")) {
+  # Add Myriad Pro font family
+  .add_fonts()
 
   # Datensatz aufbereiten.
   data_pc <- get_places_chronology(data, id, weekday, title, shape_path)

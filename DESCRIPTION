@@ -23,6 +23,7 @@ Depends:
     grid,
     gridExtra,
     showtext,
+    sysfonts,
     ggplot2,
     ggrepel,
     ggthemes,

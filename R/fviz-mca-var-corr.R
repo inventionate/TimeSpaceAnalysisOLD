@@ -1,3 +1,5 @@
+#' @include utilities.R
+NULL
 #' Visualize MCA variable correlation square.
 #'
 #' @param X MCA result.
@@ -16,6 +18,9 @@
 #' @examples
 fviz_mca_var_corr <- function(X,  axes = c(1,2), geom=c("point", "text"), labelsize = 4, pointsize = 2,
                               invisible = NULL, labels = TRUE, repel = TRUE, select = list(name = NULL, eta2 = NULL)) {
+
+  # Add Myriad Pro font family
+  .add_fonts()
 
   vars <- get_mca_var_corr(X, axes = axes)
 
