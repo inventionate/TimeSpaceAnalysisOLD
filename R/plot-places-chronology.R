@@ -106,7 +106,7 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
     theme(plot.title = element_text(lineheight = 1, face = "bold", size = 25), legend.position = "bottom", text = element_text(family = "Myriad Pro"),
           legend.text = element_text(size = 10), legend.title = element_text(face = "bold", size = 12, family = "Myriad Pro"), legend.box = "horizontal") +
     scale_alpha_continuous(range = c(0.2, 0.3), guide = FALSE) +
-    ggtitle(data_pc$plot_title)
+    ggtitle(data_pc$title)
 
   if(!legend) plot_pc <- plot_pc + theme(legend.position = "none")
 
