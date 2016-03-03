@@ -155,7 +155,7 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
   for (j in 1:ncol(X)) {
     if (sum(niveau %in% levels(X[, j])) != nlevels(X[, j])) levels(X[, j]) = paste(attributes(X)$names[j], levels(X[, j]), sep = "_")
   }
-
+  
   nonact <- c(quanti.sup,quali.sup)
   if (!is.null(nonact)) act <- (1:ncol(X))[-nonact]
   else act <- (1:ncol(X))
@@ -243,7 +243,9 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
     indice <- indice + 1
     Xact = X[ind.act,act ,drop=FALSE]
   }
+  
   if (!is.null(quali.sup)) {
+    # Hier werden die passiven Variablen mit den entsprechenden Namen versehen. Sie werden in der sCA berechnet und per Index identifiziert.
     names(res.mca)[indice] <- "quali.sup"
     names(res.mca$quali.sup) <- c("coord", "cos2")
     if (tolower(method)=="burt"){
@@ -251,7 +253,7 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
       res.mca$quali.sup$cos2 <- res.mca$quali.sup$coord^2/auxil2
     }
   }
-
+  
   if (!is.null(ind.sup)) Z = Z[ind.act, ]
   Nj <- colSums(Z * row.w)
   N <- sum(Nj)/(ncol(X) - length(quali.sup) - length(quanti.sup))
@@ -274,7 +276,7 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
     eta2 <- CTR[attributes(Xact)$names,,drop=FALSE]
     res.mca$var$eta2 <- eta2
   }
-
+  
   if (!is.null(quali.sup)) {
     if (!is.null(ind.sup)) Zqs = Zqs[ind.act, ]
     Nj <- colSums(Zqs * row.w)
@@ -344,6 +346,8 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
     res.mca$quali.sup$eta2 <- eta2
   }
 
+  
+  
   if (!is.null(quanti.sup)) {
     U <- res.mca$svd$U
     coord.quanti.sup <- matrix(NA, ncol(X.quanti.sup), ncp)

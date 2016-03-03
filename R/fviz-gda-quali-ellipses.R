@@ -13,6 +13,7 @@ NULL
 #' @param scale_mean_points scale mean point size in respect of the group size (boolean).
 #' @param axes the GDA dimensions to plot.
 #' @param palette Colour brewer scale.
+#' @param hcpc add ellipses to HCPC results (boolean).
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -31,10 +32,11 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
       select(questionnaire_id = rowname, var_quali = clust)
 
   } else {
+    var_names <- rownames(res_gda$call$X)
     df_source <- data.frame(allgemeine_angaben, df_var_quali)
     var_quali <- df_source %>%
       select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
-      filter(questionnaire_id %in% rownames(res_gda$call$X))
+      filter(questionnaire_id %in% var_names)
   }
   # Auf fehlende Werte prüfen
   exclude_na <- which(is.na(var_quali[,2]))
@@ -53,10 +55,10 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
   if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
 
-  # ALlgemeine Konzentrationsellipse hinzufügen
+  # ALlgemeine Konzentrationsellipse hinzufügen (level = 86,47% nach Le Roux/Rouanet 2010: 69, da es sich um eine 2-dimesnionale Konzentrationsellipse handelt)
   if(!path_mean) {
-    p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="polygon", level = 0.95, type = "norm", alpha = 0.1, colour = "black") +
-      stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="path", type = "norm", alpha = 1, colour = "black", linetype = "dashed", segments = 100)
+    p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black") +
+      stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="path", type = "norm", alpha = 1, level = 0.8647, colour = "black", linetype = "dashed", segments = 100)
   }
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
   if(facet) p <- p + geom_point(data = coord_ind_quali %>% distinct(), aes(x = Dim.1, y = Dim.2, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha.point)
@@ -66,8 +68,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   if(path_mean & !facet) {
     p <- p + geom_path(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2), linetype = path.linetype)
   } else {
-    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, segments = 100, inherit.aes = FALSE) +
-      stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), geom ="path", type = "norm", alpha = 1, linetype = "solid", segments = 100, inherit.aes = FALSE)
+    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, segments = 100, level = 0.8647, inherit.aes = FALSE) +
+      stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), geom ="path", type = "norm", alpha = 1, linetype = "solid", segments = 100, level = 0.8647, inherit.aes = FALSE)
   }
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
   if(facet) p <- p + facet_wrap(~var_quali)

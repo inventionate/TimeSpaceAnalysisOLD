@@ -28,6 +28,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 
 \item{scale_mean_points}{scale mean point size in respect of the group size (boolean).}
 
+\item{hcpc}{add ellipses to HCPC results (boolean).}
+
 \item{axes}{the GDA dimensions to plot.}
 
 \item{palette}{Colour brewer scale.}
