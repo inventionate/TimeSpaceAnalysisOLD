@@ -56,21 +56,14 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
 
   # ALlgemeine Konzentrationsellipse hinzufügen (level = 86,47% nach Le Roux/Rouanet 2010: 69, da es sich um eine 2-dimesnionale Konzentrationsellipse handelt)
-  if(!path_mean) {
-    p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black") +
-      stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="path", type = "norm", alpha = 1, level = 0.8647, colour = "black", linetype = "dashed", segments = 100)
-  }
+  if(!path_mean) p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = Dim.1, y = Dim.2), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 100)
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
   if(facet) p <- p + geom_point(data = coord_ind_quali %>% distinct(), aes(x = Dim.1, y = Dim.2, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha.point)
   p <- p + scale_size_continuous(range = c(1, 7))
   if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali, size = size), shape = 18, inherit.aes = FALSE)
   else  p <- p + geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), shape = 18, size = 7, inherit.aes = FALSE)
-  if(path_mean & !facet) {
-    p <- p + geom_path(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2), linetype = path.linetype)
-  } else {
-    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, segments = 100, level = 0.8647, inherit.aes = FALSE) +
-      stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), geom ="path", type = "norm", alpha = 1, linetype = "solid", segments = 100, level = 0.8647, inherit.aes = FALSE)
-  }
+  if(path_mean & !facet) p <- p + geom_path(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2), linetype = path.linetype)
+  else p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = "solid", segments = 100, level = 0.8647, inherit.aes = FALSE)
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
   if(facet) p <- p + facet_wrap(~var_quali)
   p <- p + add_theme() + ggtitle(title)

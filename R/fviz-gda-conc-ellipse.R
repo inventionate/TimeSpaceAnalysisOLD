@@ -23,10 +23,7 @@ fviz_gda_conc_ellipse <- function(res_gda, level = 0.95, alpha = 0.1, colour = "
 
   p <- p + stat_ellipse(data = .count_distinct_ind(res_gda, axes), aes(x = Dim.1, y = Dim.2),
                         geom ="polygon", level = level, type = "norm",
-                        alpha = alpha, colour = colour) +
-    stat_ellipse(data = .count_distinct_ind(res_gda, axes), aes(x = Dim.1, y = Dim.2),
-                 geom ="path", type = "norm", alpha = 1, level = level,
-                 colour = colour, linetype = linetype, segments = 100) +
+                        alpha = alpha, colour = colour, linetype = linetype) +
     geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(),
                aes(x = Dim.1, y = Dim.2, size = count), inherit.aes = FALSE) +
     scale_size_continuous(range = c(1, max(.count_distinct_ind(res_gda)$count))) +
