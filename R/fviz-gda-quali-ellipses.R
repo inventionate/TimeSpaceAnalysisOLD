@@ -63,7 +63,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
   if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali, size = size), shape = 18, inherit.aes = FALSE)
   else  p <- p + geom_point(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2, colour = var_quali), shape = 18, size = 7, inherit.aes = FALSE)
   if(path_mean & !facet) p <- p + geom_path(data = coord_mean_quali, aes(x = Dim.1, y = Dim.2), linetype = path.linetype)
-  else p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = "solid", segments = 100, level = 0.8647, inherit.aes = FALSE)
+  else p <- p + stat_ellipse(data = coord_ind_quali, aes(x = Dim.1, y = Dim.2, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = "solid", segments = 100, level = 0.8647, inherit.aes = FALSE)
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
   if(facet) p <- p + facet_wrap(~var_quali)
   p <- p + add_theme() + ggtitle(title)
