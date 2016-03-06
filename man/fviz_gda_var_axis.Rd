@@ -4,19 +4,24 @@
 \alias{fviz_gda_var_axis}
 \title{Visualize specific contributing modalities.}
 \usage{
-fviz_gda_var_axis(res_gda, axis = 1, contrib = 20,
-  title = "GDA axis contribution 20", axes = 1:2)
+fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
+  title = "GDA axis contribution 20", axes = 1:2, groups = FALSE,
+  textsize = 4, colour_palette = "Dark2", group_shape = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
 
 \item{axis}{dimension to be filtered.}
 
-\item{contrib}{count of modalities to plot.}
+\item{contrib}{"auto" calculates the optimal modalities to show (based on the basic criterion). Otherwise define an amount of modalities to plot.}
 
 \item{title}{plot title.}
 
 \item{axes}{the GDA dimensions to plot.}
+
+\item{groups}{group specific colours and shapes (MFA only).}
+
+\item{textsize}{size of the labels.}
 }
 \value{
 ggplot2 visualization containing selected modalities.

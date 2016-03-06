@@ -4,14 +4,10 @@
 \alias{get_mfa_mod_group_id}
 \title{Extract the corresponding group id of MFA variable categories.}
 \usage{
-get_mfa_mod_group_id(res_mfa, df_mfa, groups_mfa, axes = 1:2, contrib = 25)
+get_mfa_mod_group_id(res_mfa, axes = 1:2, contrib = 25)
 }
 \arguments{
 \item{res_mfa}{MFA result.}
-
-\item{df_mfa}{MFA input data frame-}
-
-\item{groups_mfa}{MFA input group definition.}
 
 \item{axes}{select axes to extract.}
 
