@@ -16,7 +16,7 @@ NULL
 #' @export
 #'
 #' @examples
-fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis contribution 20", axes = 1:2, groups = FALSE, 
+fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2, groups = FALSE,
                               textsize = 4, colour_palette = "Dark2", group_shape = TRUE) {
 
   # Add Myriad Pro font family
@@ -24,15 +24,15 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
 
   # Calculate contribution criterion (Le Roux & Rouanet 2004: 372)
   criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)) - length(get_index_mod(res_gda$call$X)))
-  
+
   # Check GDA algorithm
   if(inherits(res_gda, c("MCA", "sMCA"))) df <- res_gda$var$contrib
   if(inherits(res_gda, c("MFA", "sMFA"))) df <- res_gda$quali.var$contrib
 
   # Auswahl festlegen
-  modalities <- df %>% data.frame %>% select(ctr = matches(paste0("^Dim.", axis, "$"))) %>% add_rownames() %>% 
-    arrange(desc(ctr)) 
-  
+  modalities <- df %>% data.frame %>% select(ctr = matches(paste0("^Dim.", axis, "$"))) %>% add_rownames() %>%
+    arrange(desc(ctr))
+
   if(contrib == "auto") modalities <- modalities %>% filter(ctr > criterion) %>% select(rowname) %>% data.frame
   else modalities <- modalities %>% slice(1:contrib) %>% select(rowname) %>% data.frame
 
@@ -54,12 +54,12 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
     }
   }
   p <- p + add_theme() + ggtitle(title)
-  
+
   if(groups) {
     p <- p + scale_colour_brewer(name = "Gruppen", palette = colour_palette, labels = res_gda$call$name.group, type = "qualitative")
     if(group_shape) p <- p + scale_shape_discrete(name = "Gruppen", labels = res_gda$call$name.group, solid = TRUE)
     p <- p + theme(legend.position = "bottom")
-  } 
-  
+  }
+
   return(p)
 }
