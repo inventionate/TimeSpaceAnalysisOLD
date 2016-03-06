@@ -5,8 +5,8 @@
 \title{Visualize specific contributing modalities.}
 \usage{
 fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
-  title = "GDA axis contribution 20", axes = 1:2, groups = FALSE,
-  textsize = 4, colour_palette = "Dark2", group_shape = TRUE)
+  title = "GDA axis high contribution modalities", axes = 1:2,
+  groups = NULL, textsize = 4, colour_palette = "Dark2")
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
@@ -19,9 +19,11 @@ fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
 
 \item{axes}{the GDA dimensions to plot.}
 
-\item{groups}{group specific colours and shapes (MFA only).}
+\item{groups}{MFA group specific colours ("c"), shapes ("s") or both ("b").}
 
 \item{textsize}{size of the labels.}
+
+\item{colour_palette}{Specify colour brewer palette.}
 }
 \value{
 ggplot2 visualization containing selected modalities.

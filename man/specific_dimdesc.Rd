@@ -4,10 +4,11 @@
 \alias{specific_dimdesc}
 \title{Dimension description of specific component analysis.}
 \usage{
-specific_dimdesc(res, axes = 1:3, proba = 0.05)
+specific_dimdesc(res, axes = 1:3, proba = 0.05,
+  pattern = "Fehlender Wert|kann ich nicht sagen")
 }
 \arguments{
-\item{proba}{}
+\item{pattern}{}
 }
 \value{
 list of representative kategories and modalities.

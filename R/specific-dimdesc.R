@@ -3,12 +3,13 @@
 #' @param res
 #' @param axes
 #' @param proba
+#' @param pattern
 #'
 #' @return list of representative kategories and modalities.
 #' @export
 #'
 #' @examples
-specific_dimdesc <- function (res, axes = 1:3, proba = 0.05)
+specific_dimdesc <- function (res, axes = 1:3, proba = 0.05, pattern = "Fehlender Wert|kann ich nicht sagen")
 {
   if (!inherits(res, "PCA") & !inherits(res, "CA") & !inherits(res, "MCA") & !inherits(res, "sMCA") & !inherits(res,
                                                                                        "MFA") & !inherits(res, "sMFA") & !inherits(res, "HMFA") & !inherits(res, "DMFA") &  !inherits(res, "FAMD") & !inherits(res, "HMFA") & !inherits(res, "sHMFA"))
@@ -66,8 +67,11 @@ specific_dimdesc <- function (res, axes = 1:3, proba = 0.05)
     for (k in 1:length(axes)) {
       if (!is.null(ind.supp)) tableau = cbind.data.frame(res$ind$coord[, axes[k],drop=FALSE], res$call$X[-ind.supp, ])
       else tableau = cbind.data.frame(res$ind$coord[, axes[k],drop=FALSE], res$call$X)
+      # @info Hinzufügen der fehlenden Werte, damit die FactoMineR Funktion diese bearbeiten kann
+      for (j in length(axes):ncol(tableau)) tableau[,j] <- replace(tableau[,j], which(grepl(pattern, tableau[,j])), NA)
+      # View(tableau)
       #            result[[k]] <- condes(tableau, 1, proba = proba)
-      result[[k]] <- condes(tableau, 1, proba = proba, weights=res$call$row.w.init)
+      result[[k]] <- specific_condes(tableau, 1, proba = proba, weights=res$call$row.w.init)
     }
   }
   return(result)
