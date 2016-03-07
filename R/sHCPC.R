@@ -16,6 +16,7 @@
 #' @param cluster.CA
 #' @param kk
 #' @param ...
+#' @param pattern 
 #'
 #' @return Returns a list of sHCPC results.
 #' @export
@@ -24,7 +25,7 @@
 sHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
                   max = NULL, metric = "euclidean", method = "ward", order = TRUE,
                   graph.scale = "inertia", nb.par = 5, graph = TRUE, proba = 0.05,cluster.CA="rows",
-                  kk=Inf,...)
+                  kk=Inf, pattern = "Fehlender Wert|kann ich nicht sagen",...)
 {
   auto.cut.tree = function(res, min, max, metric, method, weight=NULL,cla=NULL,...) {
     if (order) {
@@ -304,9 +305,11 @@ sHCPC <- function (res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   if (inherits(res.sauv, "CA")&(cluster.CA=="columns")) data.clust <- data.clust[rownames(res.sauv$col$coord),]
   if (inherits(res.sauv, "data.frame")) data.clust <- data.clust[rownames(res.sauv),]
   if (vec) data.clust <- as.data.frame(data.clust[, -2])
-  if (!inherits(res.sauv, "CA")&!(vec)) desc.var <- catdes(data.clust, ncol(data.clust), proba = proba)
+  # @info Fehlende Werte kennzeichnen, damit sie ausgeschlossen werden.
+  for (j in 1:ncol(data.clust)) data.clust[,j] <- replace(data.clust[,j], which(grepl(pattern, data.clust[,j])), NA)
+  if (!inherits(res.sauv, "CA")&!(vec)) desc.var <- specific_catdes(data.clust, ncol(data.clust), proba = proba)
   else desc.var <- descfreq(data.clust[,-which(sapply(data.clust,is.factor))], data.clust[,ncol(data.clust)], proba = proba)
-  if (kk==Inf) desc.axe <- catdes(X, ncol(X), proba = proba)
+  if (kk==Inf) desc.axe <- specific_catdes(X, ncol(X), proba = proba)
   if (inherits(res.sauv, "data.frame")) tabInd <- cbind.data.frame(res.sauv,data.clust[,ncol(data.clust)])
   if (inherits(res.sauv, "PCA") | inherits(res.sauv, "MCA") | inherits(res.sauv,"MFA") | inherits(res.sauv, "HMFA") | inherits(res.sauv, "FAMD") | inherits(res.sauv, "sMCA") | inherits(res.sauv, "sMFA") | inherits(res.sauv, "sHMFA")) tabInd <- cbind.data.frame(res.sauv$ind$coord,data.clust[rownames(res.sauv$ind$coord),ncol(data.clust)])
   #  if (inherits(res.sauv, "CA")&(cluster.CA=="rows")) tabInd <- cbind.data.frame(res.sauv$row$coord,data.clust[,ncol(data.clust)])
