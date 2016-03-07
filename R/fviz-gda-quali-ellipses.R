@@ -27,7 +27,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
 
   # Variable bestimmen
   if(hcpc) {
-    var_quali <- data.frame(hcpc_studienalltag$data.clust) %>%
+    var_quali <- data.frame(df_var_quali$data.clust) %>%
       add_rownames() %>%
       select(questionnaire_id = rowname, var_quali = clust)
 
