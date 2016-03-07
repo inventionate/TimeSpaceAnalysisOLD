@@ -34,7 +34,8 @@ Depends:
     Hmisc,
     RColorBrewer,
     factoextra,
-    pander
+    pander,
+    RSQLite
 Suggests:
     explor
 RoxygenNote: 5.0.1
