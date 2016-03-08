@@ -24,7 +24,9 @@ get_time_pattern <- function(data, id = "all", reshape_data = TRUE) {
       gather(activity, duration, mo_veranstaltungen:so_schlafen, -questionnaire_id) %>%
       separate(activity, c("day", "activity"), sep ="_") %>%
       mutate(day = ifelse(day == "mo", 1, ifelse(day == "di", 2, ifelse(day == "mi", 3, ifelse(day == "do", 4, ifelse(day == "fr", 5, ifelse(day == "sa", 6, 7))))))) %>%
-      mutate(activity = factor(activity, levels = c("veranstaltungen", "zwischenzeit", "selbststudium", "fahrzeit", "arbeitszeit", "freizeit", "schlafen"))) %>%
+      mutate(activity = mapvalues(activity,
+                                  c("veranstaltungen", "zwischenzeit", "selbststudium", "arbeitszeit", "fahrzeit", "freizeit", "schlafen"),
+                                  c("Lehrveranstaltung", "Zwischenzeit", "Selbststudium", "Arbeitszeit", "Fahrzeit", "Freizeit", "Schlafen"))) %>%
       group_by(questionnaire_id, day) %>%
       mutate(prop_duration = duration / sum(duration)) %>%
       arrange(questionnaire_id, day, desc(activity)) %>%

@@ -2,7 +2,7 @@ Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time space analysis (GDA approaches, time pattern
     analysis, place chronologies).
-Version: 0.4.5
+Version: 0.4.6
 Date: 2016-02-24
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
@@ -40,6 +40,8 @@ Suggests:
     explor
 RoxygenNote: 5.0.1
 Collate:
+    'get-path-coord.R'
+    'add-path.R'
     'add-theme.R'
     'db-load.R'
     'db-save.R'
@@ -49,6 +51,7 @@ Collate:
     'utilities.R'
     'fviz-gda-conc-ellipse.R'
     'fviz-gda-quali-ellipses.R'
+    'fviz-gda-structure.R'
     'get-mfa-mod-group-id.R'
     'fviz-gda-var-axis.R'
     'fviz-mca-var-corr.R'
