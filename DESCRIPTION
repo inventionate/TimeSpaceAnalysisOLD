@@ -79,6 +79,7 @@ Collate:
     'sMCA.R'
     'sMFA.R'
     'sPCA.R'
+    'specific-catdes.R'
     'specific-condes.R'
     'specific-dimdesc.R'
     'supvar-stats.R'

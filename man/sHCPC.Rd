@@ -7,10 +7,11 @@
 sHCPC(res, nb.clust = 0, consol = TRUE, iter.max = 10, min = 3,
   max = NULL, metric = "euclidean", method = "ward", order = TRUE,
   graph.scale = "inertia", nb.par = 5, graph = TRUE, proba = 0.05,
-  cluster.CA = "rows", kk = Inf, ...)
+  cluster.CA = "rows", kk = Inf,
+  pattern = "Fehlender Wert|kann ich nicht sagen", ...)
 }
 \arguments{
-\item{...}{}
+\item{pattern}{}
 }
 \value{
 Returns a list of sHCPC results.
