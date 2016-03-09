@@ -4,14 +4,10 @@
 \alias{get_mfa_mod_group_id}
 \title{Extract the corresponding group id of MFA variable categories.}
 \usage{
-get_mfa_mod_group_id(res_mfa, axes = 1:2, contrib = 25)
+get_mfa_mod_group_id(res_mfa)
 }
 \arguments{
 \item{res_mfa}{MFA result.}
-
-\item{axes}{select axes to extract.}
-
-\item{contrib}{select contrib level to extract.}
 }
 \value{
 vector containing group ids in MFA result order.

@@ -40,16 +40,19 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   if(inherits(res_gda, c("MFA", "sMFA"))) {
     if(!is.null(groups)) {
       # Identify groups and modality coordinates.
-      group_id <- factor(get_mfa_mod_group_id(res_gda, contrib = nrow(modalities)))
-      modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% add_rownames() %>% filter(rowname %in% modalities$rowname)
+      group_id <- get_mfa_mod_group_id(res_gda)
+      modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% add_rownames %>% filter(rowname %in% modalities$rowname)
+      # Add group ids
+      modalities_coord <- left_join(modalities_coord, group_id, by = c("rowname" = "mod")) %>% data.frame
+      
       # Plot group specific modalities
       p <- fviz_mfa_quali_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes, pointsize = 0)
-      if(groups == "b") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = group_id, shape = group_id), size = 3)
-      if(groups == "c") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = group_id), shape = 17, size = 3)
-      if(groups == "s") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = group_id), colour = "black", size = 3)
+      if(groups == "b") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", shape = "group_id"), size = 3)
+      if(groups == "c") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id"), shape = 17, size = 3)
+      if(groups == "s") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group_id"), colour = "black", size = 3)
       if(groups %in% c("c", "b")) {
         p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]),
-                                                                              colour = group_id, label = factor(modalities_coord$rowname)),
+                                                                              colour = "group_id", label = factor(modalities_coord$rowname)),
                                           size = textsize, show.legend = FALSE)
       }
       if(groups == "s") {
