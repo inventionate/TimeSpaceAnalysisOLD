@@ -14,5 +14,4 @@ add_theme <- function(font_family = "Myriad Pro") {
           # panel.grid.minor=element_blank(),
           # panel.grid.major=element_blank(),
           legend.position = "none")
-
 }
