@@ -21,11 +21,10 @@
 fviz_gda_structure <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali structure effects", mean.alpha = 0.75,
                                path.linetype = "solid", path.size = 1, path.colour = NULL, scale_mean_points = TRUE, axes = 1:2,
                                palette = "Set1", mod_names = NULL, mod_level_order = NULL, path.alpha = 0.7) {
-  # @todo die Ellipsenfunktion darun ergänzen, keinen allgemeinen Pfad zu zeichnen, sondern spezifisch je nach Variablenkreuzung.
-  # Man müsste dann spezifizieren "connect = age" oder "connect = gender", wobei standard NULL ist. D. h., der Crossmode wird
-  # erst aktiviert, sobald eine spezielle Connection kommt. Dazu benötigt man dann auch die Option "arrow" inkl. Richtung.
-  # Inhaltlich muss dass über mehrere Pfad geoms gemacht werden, die in Abhängigkeit von der connect Option generiert werden
-  # (eventuelle mit Schleife). Im Fall age X gender wären es einemal ein path_geom und das zweite mal vier.
+
+  # Add Myriad Pro font family
+  .add_fonts()
+
   df_source <- data.frame(allgemeine_angaben, df_var_quali)
   var_quali <- df_source %>%
     select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
