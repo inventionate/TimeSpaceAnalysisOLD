@@ -19,7 +19,7 @@ designate_axes <- function (x = NULL, y = NULL, designation = c("left", "right")
   } else {
     list(
       annotate("text", x = x, y = -y, label = designation[1], size = size, fontface = "bold.italic", family = "Myriad Pro", angle = 90),
-      annotate("text", x = x, y = y, label = designation[1], size = size, fontface = "bold.italic", family = "Myriad Pro", angle = 90)
+      annotate("text", x = x, y = y, label = designation[2], size = size, fontface = "bold.italic", family = "Myriad Pro", angle = 90)
     )
   }
 }
