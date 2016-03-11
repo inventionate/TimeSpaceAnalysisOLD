@@ -20,7 +20,7 @@
 #' @examples
 fviz_gda_structure <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali structure effects", mean.alpha = 0.75,
                                path.linetype = "solid", path.size = 1, path.colour = NULL, scale_mean_points = TRUE, axes = 1:2,
-                               palette = "Set1", mod_names = NULL, mod_level_order = NULL) {
+                               palette = "Set1", mod_names = NULL, mod_level_order = NULL, path.alpha = 0.7) {
   # @todo die Ellipsenfunktion darun ergänzen, keinen allgemeinen Pfad zu zeichnen, sondern spezifisch je nach Variablenkreuzung.
   # Man müsste dann spezifizieren "connect = age" oder "connect = gender", wobei standard NULL ist. D. h., der Crossmode wird
   # erst aktiviert, sobald eine spezielle Connection kommt. Dazu benötigt man dann auch die Option "arrow" inkl. Richtung.
@@ -61,9 +61,9 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali_name, title = "M
       if(scale_mean_points) p <- p + geom_point(data = mean_mod_coord, aes(x = Dim.1, y = Dim.2, size = size), shape = 18, alpha = mean.alpha, inherit.aes = FALSE, colour = path.colour[i])
       else  p <- p + geom_point(data = mean_mod_coord, aes(x = Dim.1, y = Dim.2), shape = 18, size = 4, alpha = mean.alpha, inherit.aes = FALSE, colour = path.colour[i])
       # Punkte beschriften
-      p <- p + geom_text(data = mean_mod_coord, aes(x = Dim.1, y = Dim.2, label = var_quali), size = 4, alpha = mean.alpha, inherit.aes = FALSE, colour = path.colour[i])
+      p <- p + ggrepel::geom_text_repel(data = mean_mod_coord, aes(x = Dim.1, y = Dim.2, label = var_quali), size = 4, alpha = mean.alpha, inherit.aes = FALSE, colour = path.colour[i], family = "Myriad Pro")
       # Pfad plotten
-      p <- p + geom_path(data = mean_mod_coord, aes(x = Dim.1, y = Dim.2), arrow = arrow(), linetype = path.linetype, size = path.size, colour = path.colour[i])
+      p <- p + geom_path(data = mean_mod_coord, aes(x = Dim.1, y = Dim.2), arrow = arrow(), linetype = path.linetype, size = path.size, colour = path.colour[i], alpha = path.alpha)
     }
   }
 

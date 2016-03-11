@@ -8,7 +8,7 @@ fviz_gda_structure(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali structure effects", mean.alpha = 0.75,
   path.linetype = "solid", path.size = 1, path.colour = NULL,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1",
-  mod_names = NULL, mod_level_order = NULL)
+  mod_names = NULL, mod_level_order = NULL, path.alpha = 0.7)
 }
 \arguments{
 \item{res_gda}{GDA result.}
