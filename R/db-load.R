@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-db_load <- function(remote_db_path, copy = TRUE) {
+db_load <- function(remote_db_path, copy = FALSE) {
   # Vorhandene Datenbank löschen
   if (file.exists(remote_db_path))
   {
