@@ -2,19 +2,21 @@
 % Please edit documentation in R/db-load.R
 \name{db_load}
 \alias{db_load}
-\title{Save data frame as SQLite table.}
+\title{Load data frame form a SQLite database.}
 \usage{
-db_load(remote_db_path, copy = TRUE)
+db_load(remote_db_path, copy = FALSE, convert_encoding = FALSE)
 }
 \arguments{
 \item{remote_db_path}{path to the remote database (SQLite).}
 
 \item{copy}{copy bring data into an R (boolean).}
+
+\item{convert_encoding}{convert data encoding. Windows only. copy have to be TRUE  (boolean).}
 }
 \value{
-The SQLite database.
+The SQLite data tables.
 }
 \description{
-Save data frame as SQLite table.
+Load data frame form a SQLite database.
 }
 
