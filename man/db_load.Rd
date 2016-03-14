@@ -4,10 +4,12 @@
 \alias{db_load}
 \title{Save data frame as SQLite table.}
 \usage{
-db_load(remote_db_path)
+db_load(remote_db_path, copy = TRUE)
 }
 \arguments{
 \item{remote_db_path}{path to the remote database (SQLite).}
+
+\item{copy}{copy bring data into an R (boolean).}
 }
 \value{
 The SQLite database.
