@@ -3,7 +3,7 @@ NULL
 #' Title
 #'
 #' @param res_gda GDA result.
-#' @param level ellipse level (default 0.95\%).
+#' @param level ellipse level (default 86.47\%).
 #' @param alpha opacity level (default 0.1).
 #' @param colour ellipse fill colour.
 #' @param linetype ellipse edge linetype.
