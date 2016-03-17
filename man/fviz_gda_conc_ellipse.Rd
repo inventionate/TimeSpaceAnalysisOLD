@@ -4,13 +4,13 @@
 \alias{fviz_gda_conc_ellipse}
 \title{Title}
 \usage{
-fviz_gda_conc_ellipse(res_gda, level = 0.95, alpha = 0.1,
+fviz_gda_conc_ellipse(res_gda, level = 0.8647, alpha = 0.1,
   colour = "black", linetype = "dashed", axes = 1:2)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
-\item{level}{ellipse level (default 0.95\%).}
+\item{level}{ellipse level (default 86.47\%).}
 
 \item{alpha}{opacity level (default 0.1).}
 
