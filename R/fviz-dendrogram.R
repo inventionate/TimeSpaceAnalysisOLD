@@ -15,6 +15,9 @@
 #' @examples
 fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed") {
 
+  # Add Myriad Pro font family
+  .add_fonts()
+
   if(is.null(palette)) palette <- RColorBrewer::brewer.pal(name = "Set1", n = cluster)
 
   dend <- res_hcpc$call$t$tree %>%
@@ -32,5 +35,14 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
       coord_polar(theta = "x")
   }
 
+  p <- p + theme_minimal() + ylab("Level Index") +
+    theme(text = element_text(family = "Myriad Pro"),
+          title = element_text(face = "bold", size = 17),
+          strip.text = element_text(size = 16),
+          panel.grid.minor=element_blank(),
+          panel.grid.major=element_blank(),
+          legend.position = "none",
+          axis.title.x = element_blank(),
+          axis.text.x	= element_blank())
   return(p)
 }
