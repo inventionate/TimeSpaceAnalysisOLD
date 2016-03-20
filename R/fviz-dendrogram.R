@@ -14,7 +14,8 @@
 #'
 #' @examples
 fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed") {
-  if(is.null(palette)) palette <- RColorBrewer::brewer.pal(name="Set1", n = cluster)
+
+  if(is.null(palette)) palette <- RColorBrewer::brewer.pal(name = "Set1", n = cluster)
 
   dend <- res_hcpc$call$t$tree %>%
     as.dendrogram %>%
@@ -31,6 +32,5 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
       coord_polar(theta = "x")
   }
 
-  print(p)
-
+  return(p)
 }
