@@ -21,7 +21,7 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
   if(is.null(palette)) palette <- RColorBrewer::brewer.pal(name = "Set1", n = cluster)
 
   dend <- res_hcpc$call$t$tree %>%
-    as.dendrogram %>%
+    as.dendrogram %>% 
     set("branches_k_color", k = cluster, palette) %>%
     set("branches_lwd", 0.5) %>%
     set("leaves_pch", 20) %>%
