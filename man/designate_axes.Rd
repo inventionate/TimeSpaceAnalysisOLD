@@ -4,8 +4,8 @@
 \alias{designate_axes}
 \title{Designate axes parts.}
 \usage{
-designate_axes(x = NULL, y = NULL, designation = c("left", "right"),
-  rotate = FALSE, size = 5)
+designate_axes(x = NULL, y = NULL, designation = c("left/bottom",
+  "right/top"), rotate = FALSE, size = 5)
 }
 \arguments{
 \item{x}{coordinate of the axes designation. The value will automatically mirrored.}
