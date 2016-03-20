@@ -27,6 +27,7 @@ Depends:
     ggplot2,
     ggrepel,
     ggthemes,
+    ggdendro,
     ggmap,
     GDAtools,
     FactoMineR,
