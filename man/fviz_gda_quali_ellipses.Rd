@@ -5,9 +5,9 @@
 \title{Title}
 \usage{
 fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
-  title = "MCA quali var ellipses", facet = TRUE, path_mean = FALSE,
-  alpha.point = 0.75, path.linetype = "solid", scale_mean_points = TRUE,
-  hcpc = FALSE, axes = 1:2, palette = "Set1")
+  title = "MCA quali var ellipses", facet = TRUE, alpha.point = 0.75,
+  path.linetype = "solid", scale_mean_points = TRUE, hcpc = FALSE,
+  axes = 1:2, palette = "Set1")
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -20,8 +20,6 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 
 \item{facet}{whether facet ellipses or not (boolean).}
 
-\item{path_mean}{plot mean point path (boolean). Only possible if facet is FALSE.}
-
 \item{alpha.point}{opacity of mean points.}
 
 \item{path.linetype}{linetype of mean point path.}
@@ -33,6 +31,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 \item{axes}{the GDA dimensions to plot.}
 
 \item{palette}{Colour brewer scale.}
+
+\item{path_mean}{plot mean point path (boolean). Only possible if facet is FALSE.}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.

@@ -55,6 +55,8 @@ Collate:
     'utilities.R'
     'fviz-gda-conc-ellipse.R'
     'fviz-gda-quali-ellipses.R'
+    'supvar-stats.R'
+    'fviz-gda-quali-supvar.R'
     'fviz-gda-structure.R'
     'get-mfa-mod-group-id.R'
     'fviz-gda-var-axis.R'
@@ -86,4 +88,3 @@ Collate:
     'specific-catdes.R'
     'specific-condes.R'
     'specific-dimdesc.R'
-    'supvar-stats.R'
