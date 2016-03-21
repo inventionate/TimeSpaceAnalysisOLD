@@ -14,6 +14,8 @@ NULL
 #' @param scale_point scale points by weight (boolean).
 #' @param scale_text scale text by weight (boolean).
 #' @param na_exclude handle missing data (boolean).
+#' @param size_point define point size.
+#' @param size_text define text size.
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
@@ -21,7 +23,9 @@ NULL
 #' @examples
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
-                               scale_text = FALSE, size_text = 3, palette = "Set1", na_exclude = TRUE) {
+                               scale_text = FALSE, size_text = 3, palette = "Set1", na_exclude = TRUE)
+{
+
   # Add Myriad Pro font family
   .add_fonts()
 

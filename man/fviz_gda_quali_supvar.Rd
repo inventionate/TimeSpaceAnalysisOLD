@@ -6,8 +6,8 @@
 \usage{
 fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali var structure", path = FALSE, linetype = "solid",
-  scale_point = TRUE, axes = 1:2, scale_text = FALSE, palette = "Set1",
-  na_exclude = TRUE)
+  axes = 1:2, scale_point = TRUE, size_point = 3, scale_text = FALSE,
+  size_text = 3, palette = "Set1", na_exclude = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -22,11 +22,15 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali_name,
 
 \item{linetype}{specify path linetype.}
 
-\item{scale_point}{scale points by weight (boolean).}
-
 \item{axes}{which axes should be plotted.}
 
+\item{scale_point}{scale points by weight (boolean).}
+
+\item{size_point}{define point size.}
+
 \item{scale_text}{scale text by weight (boolean).}
+
+\item{size_text}{define text size.}
 
 \item{palette}{RColorBrewer palette.}
 
