@@ -17,8 +17,8 @@ designate_axes <- function (x = NULL, y = NULL, designation = c("left/bottom", "
 
   if(!rotate) {
     list(
-      annotate("text", x = x[1], y = -y[1], label = designation[1], size = 5, fontface = "bold.italic", family = "Myriad Pro"),
-      annotate("text", x = x[2], y = -y[1], label = designation[2], size = 5, fontface = "bold.italic", family = "Myriad Pro")
+      annotate("text", x = x[1], y = -y[1], label = designation[1], size = size, fontface = "bold.italic", family = "Myriad Pro"),
+      annotate("text", x = x[2], y = -y[1], label = designation[2], size = size, fontface = "bold.italic", family = "Myriad Pro")
     )
   } else {
     list(
