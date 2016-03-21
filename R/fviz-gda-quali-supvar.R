@@ -47,6 +47,9 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title =
   # Spaltennamen anpassen
   colnames(supvar) <- c("rowname", "weight", "Dim.1", "Dim.2")
 
+  # Reihenfolge der Zeilen an die Faktorenlevels anpassen
+  supvar <- supvar %>% slice(match(levels(df_var_quali$var_quali_name), rowname))
+
   # Plot
   if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_var(res_gda, label = "none", invisible = "var", axes.linetype = "solid", axes = axes)
   if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_quali_var(res_gda, label = "none", invisible = "var", axes.linetype = "solid", axes = axes)
