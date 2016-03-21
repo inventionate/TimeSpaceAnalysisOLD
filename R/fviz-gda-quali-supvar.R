@@ -48,8 +48,9 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title =
   colnames(supvar) <- c("rowname", "weight", "Dim.1", "Dim.2")
 
   # Reihenfolge der Zeilen an die Faktorenlevels anpassen
-  order_levels <- df_var_quali %>% select(which(names(df_var_quali) %in% var_quali_name))
-  order_levels <- levels(order_levels[,1])
+  order_levels <- df_var_quali %>% data.frame %>% select(which(names(data.frame(df_var_quali)) %in% var_quali_name))
+  
+  order_levels <- levels(factor(order_levels[,1]))
     
   supvar <- supvar %>% slice(match(order_levels, rowname))
 
@@ -68,8 +69,8 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title =
   else p <- p + geom_point(data = supvar, aes(x = Dim.1, y = Dim.2, colour = rowname), size = size_point, shape = 17, inherit.aes = FALSE)
 
   # Beschriftung hinzufügen
-  if(scale_text) p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, size = weight, label = rowname))
-  else p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, label = rowname), size = size_text)
+  if(scale_text) p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, size = weight, label = rowname), point.padding = unit(0.5, "lines"))
+  else p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, label = rowname), size = size_text, point.padding = unit(0.5, "lines"))
 
   # Farbpalette wählen
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
