@@ -20,8 +20,8 @@ NULL
 #'
 #' @examples
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var structure",
-                               path = FALSE, linetype = "solid", scale_point = TRUE, axes = 1:2,
-                               scale_text = FALSE,palette = "Set1", na_exclude = TRUE) {
+                               path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
+                               scale_text = FALSE, size_text = 3, palette = "Set1", na_exclude = TRUE) {
   # Add Myriad Pro font family
   .add_fonts()
 
@@ -55,11 +55,11 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title =
 
   # Punkte plotten
   if(scale_point) p <- p + geom_point(data = supvar, aes(x = Dim.1, y = Dim.2, size = weight, colour = rowname), shape = 17, inherit.aes = FALSE)
-  else p <- p + geom_point(data = supvar, aes(x = Dim.1, y = Dim.2, colour = rowname), size = 3, shape = 17, inherit.aes = FALSE)
+  else p <- p + geom_point(data = supvar, aes(x = Dim.1, y = Dim.2, colour = rowname), size = size_point, shape = 17, inherit.aes = FALSE)
 
   # Beschriftung hinzufügen
   if(scale_text) p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, size = weight, label = rowname))
-  else p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, label = rowname))
+  else p <- p + ggrepel::geom_text_repel(data = supvar, aes(x = Dim.1, y = Dim.2, label = rowname), size = size_text)
 
   # Farbpalette wählen
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
