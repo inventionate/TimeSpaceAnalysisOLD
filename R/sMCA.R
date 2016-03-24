@@ -369,7 +369,6 @@ sMCA <- function (X, ncp = 5, excl = NULL, ind.sup = NULL, quanti.sup = NULL, qu
   res.mca$var$contrib <- res.mca$var$contrib[-excl,]
   res.mca$var$cos2 <- res.mca$var$cos2[-excl,]
   res.mca$var$v.test <- res.mca$var$v.test[-excl,]
-  res.mca$var$eta2 <- res.mca$var$eta2[-excl,]
 
   # @info modif.rates der Ausgabe hinzufügen
   data.mrate <- modif.rate(res.mca)

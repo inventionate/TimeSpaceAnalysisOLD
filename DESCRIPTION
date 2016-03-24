@@ -51,6 +51,7 @@ Collate:
     'get-index-mod.R'
     'excl-mfa-group.R'
     'extract-legend.R'
+    'fviz-barplot.R'
     'fviz-dendrogram.R'
     'utilities.R'
     'fviz-gda-conc-ellipse.R'
