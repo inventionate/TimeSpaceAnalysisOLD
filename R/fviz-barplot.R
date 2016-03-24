@@ -19,7 +19,7 @@
 #' @param ylim y-axis range.
 #' @param xlim y-axis range.
 #'
-#' @return
+#' @return ggplot2 barplot.
 #' @export
 #'
 #' @examples
@@ -84,5 +84,5 @@ fviz_barplot <- function(dfname,xlab="", ylab="", sort=FALSE, relative=FALSE, la
     o <- o + xlab(bquote(paste(.(toString(xlab))," (n = ",.(n),")")))
     o <- o + theme(axis.title.x= element_text(vjust=-0.3))
   }
-  o
+  return(o)
 }

@@ -47,6 +47,9 @@ fviz_barplot(dfname, xlab = "", ylab = "", sort = FALSE,
 
 \item{xlim}{y-axis range.}
 }
+\value{
+ggplot2 barplot.
+}
 \description{
 Visualize a barplot.
 }
