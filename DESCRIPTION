@@ -74,6 +74,3 @@ Collate:
     'plot-time-pattern-profile.R'
     'plot-time-pattern-series.R'
     'plot-time-pattern.R'
-    'plot.sHMFA.R'
-    'print.sHMFA.R'
-    'sHMFA.R'
