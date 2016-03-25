@@ -21,7 +21,7 @@
 #'
 #' @return ggplot2 barplot.
 #' @export
-fviz_barplot <- function(dfname,xlab="", ylab="", sort=FALSE, relative=FALSE, labels=FALSE, labels_inline = TRUE, amount=FALSE, rotate=FALSE, title="",
+plot_barplot <- function(dfname,xlab="", ylab="", sort=FALSE, relative=FALSE, labels=FALSE, labels_inline = TRUE, amount=FALSE, rotate=FALSE, title="",
                          textsize=14, titlesize=1.5*textsize, labelsize=textsize/3, drop=FALSE, digits=0, addsymb="", ylim=NA, xlim=NA){
 
   symbol <<- toString(addsymb)
