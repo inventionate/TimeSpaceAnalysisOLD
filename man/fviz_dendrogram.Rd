@@ -24,6 +24,9 @@ fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
 
 \item{linetype}{hline linetype.}
 }
+\value{
+ggplot2 dendrogram visualization.
+}
 \description{
 Visualize HCPC hclus trees.
 }

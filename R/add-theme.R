@@ -4,8 +4,6 @@
 #'
 #' @return ggplot2 geoms.
 #' @export
-#'
-#' @examples
 add_theme <- function(font_family = "Myriad Pro") {
   theme_minimal() +
     theme(text = element_text(family = font_family),

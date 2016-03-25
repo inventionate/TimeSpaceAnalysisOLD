@@ -11,10 +11,8 @@ NULL
 #' @param colour colour of concat path.
 #' @param size size of concat path.
 #'
-#' @return
+#' @return ggplo2 path geom.
 #' @export
-#'
-#' @examples
 add_path <- function(res_gda_quali, var, var_levels, exclude = NULL, axes = 1:2, linetype = "dashed", colour = "black", size = 1) {
   geom_path(data = get_path_coord(res_gda_quali, var, var_levels, exclude), aes_string(paste0("Dim.",axes[1]), paste0("Dim.",axes[2])), linetype = linetype, colour = colour, size = size)
 }

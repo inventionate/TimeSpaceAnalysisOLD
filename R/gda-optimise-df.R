@@ -6,8 +6,6 @@
 #'
 #' @return optimised data frame.
 #' @export
-#'
-#' @examples
 gda_optimise_df <- function(df_name, mod_excl = NA, prop_na_excl = 0.2) {
   # rename_na <- function(values) {
   #   values[is.na(values)] <- "Fehlender Wert"

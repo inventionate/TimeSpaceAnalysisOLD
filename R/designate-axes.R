@@ -8,8 +8,6 @@
 #'
 #' @return ggplot2 annotations.
 #' @export
-#'
-#' @examples
 designate_axes <- function (x = NULL, y = NULL, designation = c("left/bottom", "right/top"), rotate = FALSE, size = 5) {
 
   if(length(x) == 1) x <- c(-x[1], x[1])

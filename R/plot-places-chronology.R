@@ -31,8 +31,6 @@ NULL
 #'
 #' @return ggplot2 visualization of place chronology data.
 #' @export
-#'
-#' @examples
 plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL, size_range = c(3,15), shape_path = 1, colour_path = "black", size_path = 2,
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
                                    title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,

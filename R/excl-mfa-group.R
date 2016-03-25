@@ -8,8 +8,6 @@ NULL
 #'
 #' @return list with MFA group specific exclude indices.
 #' @export
-#'
-#' @examples
 excl_mfa_group <- function(df_mfa, group_mfa, pattern) {
   excl <- list()
   for(i in 1:length(group_mfa)) {
@@ -19,8 +17,8 @@ excl_mfa_group <- function(df_mfa, group_mfa, pattern) {
     if(is.null(tmp)) excl[[i]] <- NA
     else excl[[i]] <- tmp
   }
-  # changing NA to NULL 
+  # changing NA to NULL
   excl <- lapply(excl, function(x) if(is.na(x[1])) NULL else x)
-  
+
   return(excl)
 }

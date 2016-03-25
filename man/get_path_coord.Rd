@@ -15,6 +15,9 @@ get_path_coord(res_gda_quali, var, var_levels = NULL, exclude = NULL)
 
 \item{exclude}{categories to exclude.}
 }
+\value{
+data frame with path coords.
+}
 \description{
 Extract coords of categories to concat.
 }

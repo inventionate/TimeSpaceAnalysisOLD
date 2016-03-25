@@ -12,8 +12,6 @@ NULL
 #'
 #' @return ggplot2 visualization of time pattern data.
 #' @export
-#'
-#' @examples
 plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE, fluid = FALSE) {
   # Add Myriad Pro font family
   .add_fonts()
@@ -27,7 +25,7 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
       # Die Farbe für "Lerngruppen" ändern, da es sich deutlich von "Zwischenzeit" unterscheiden sollte.
       colours[6] <- "#FD5A9D"
     }
-  
+
     if(print_prop_duration) {
       data %>%
         mutate(day = mapvalues(day, c(1:7), c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))) %>%

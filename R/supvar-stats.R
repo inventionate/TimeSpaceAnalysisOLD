@@ -11,8 +11,6 @@
 #' \item{var}{data frame of categories within variances, variance between and within categories and variable square correlation ratio (eta2)}
 #' \item{v.test}{data frame of categories test-values}
 #' @export
-#'
-#' @examples
 supvar_stats <- function(res_gda, df_var_quali, var_quali_name) {
 
 

@@ -15,8 +15,6 @@ NULL
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
-#'
-#' @examples
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2, groups = NULL,
                               textsize = 4, colour_palette = "Dark2") {
   # Add Myriad Pro font family
@@ -44,7 +42,7 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% add_rownames %>% filter(rowname %in% modalities$rowname)
       # Add group ids
       modalities_coord <- left_join(modalities_coord, group_id, by = c("rowname" = "mod")) %>% data.frame
-      
+
       # Plot group specific modalities
       p <- fviz_mfa_quali_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes, pointsize = 0)
       if(groups == "b") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", shape = "group_id"), size = 3)

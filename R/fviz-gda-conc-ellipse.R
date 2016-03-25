@@ -11,8 +11,6 @@ NULL
 #'
 #' @return ggplot2 GDA visualisation with concentration ellipse.
 #' @export
-#'
-#' @examples
 fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour = "black", linetype = "dashed", axes = 1:2) {
 
   # Add Myriad Pro font family

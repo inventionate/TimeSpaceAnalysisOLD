@@ -6,8 +6,6 @@
 #'
 #' @return The SQLite data tables.
 #' @export
-#'
-#' @examples
 db_load <- function(remote_db_path, copy = FALSE, convert_encoding = FALSE) {
   # Vorhandene Datenbank löschen
   if (file.exists(remote_db_path))

@@ -5,8 +5,6 @@
 #'
 #' @return SQLite database file.
 #' @export
-#'
-#' @examples
 db_save <- function(remote_db_path, source_df) {
     # Vorhandene Datenbank löschen
     if (file.exists(remote_db_path)) {

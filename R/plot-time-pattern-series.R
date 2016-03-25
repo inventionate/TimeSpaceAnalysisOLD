@@ -9,8 +9,6 @@ NULL
 #'
 #' @return ggplot2 time pattern series plot.
 #' @export
-#'
-#' @examples
 plot_time_pattern_series <- function(data_tp, alpha = 0.3, palette = "Set1") {
   # Add Myriad Pro font family
   .add_fonts()

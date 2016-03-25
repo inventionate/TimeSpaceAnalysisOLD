@@ -37,6 +37,9 @@ fviz_gda_structure(res_gda, df_var_quali, var_quali_name,
 
 \item{mod_level_order}{order of the crossed modalities.}
 }
+\value{
+ggplot2 visualizsation.
+}
 \description{
 Concat crossed variables.
 }

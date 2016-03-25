@@ -6,8 +6,6 @@ NULL
 #'
 #' @return vector containing group ids in MFA result order.
 #' @export
-#'
-#' @examples
 get_mfa_mod_group_id <- function(res_mfa) {
   group_id <- NULL
   for(g in 1:length(res_mfa$call$group)) {

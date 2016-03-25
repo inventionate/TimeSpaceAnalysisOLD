@@ -5,10 +5,8 @@
 #' @param var_levels variable categories to concat.
 #' @param exclude categories to exclude.
 #'
-#' @return
+#' @return data frame with path coords.
 #' @export
-#'
-#' @examples
 get_path_coord <- function(res_gda_quali, var, var_levels = NULL, exclude = NULL) {
   df_var <- data.frame(res_gda_quali$quali.var$coord) %>% add_rownames() %>% filter(grepl(var, rowname))
   if(!is.null(exclude)) df_var <- df_var %>% filter(!grepl(exclude, rowname))

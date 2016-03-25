@@ -19,8 +19,6 @@ NULL
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
-#'
-#' @examples
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
                                scale_text = FALSE, size_text = 3, palette = "Set1", na_exclude = TRUE)
@@ -49,9 +47,9 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title =
 
   # Reihenfolge der Zeilen an die Faktorenlevels anpassen
   order_levels <- df_var_quali %>% data.frame %>% select(which(names(data.frame(df_var_quali)) %in% var_quali_name))
-  
+
   order_levels <- levels(factor(order_levels[,1]))
-    
+
   supvar <- supvar %>% slice(match(order_levels, rowname))
 
   # Plot

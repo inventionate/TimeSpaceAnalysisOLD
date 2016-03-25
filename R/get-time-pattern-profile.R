@@ -7,8 +7,6 @@ NULL
 #'
 #' @return Reshaped data frame.
 #' @export
-#'
-#' @examples
 get_time_pattern_profile <- function(data_tp, id = "all")
 {
   na_exist <- nrow(data_tp) > nrow(na.omit(data_tp))

@@ -4,8 +4,6 @@
 #'
 #' @return Reshaped data frame.
 #' @export
-#'
-#' @examples
 get_time_pattern_series <- function(data_tp)
 {
 

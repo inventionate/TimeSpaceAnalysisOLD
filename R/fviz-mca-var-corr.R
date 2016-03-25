@@ -14,8 +14,6 @@ NULL
 #'
 #' @return ggplot2 visualization of variable correlation square (variables representation).
 #' @export
-#'
-#' @examples
 fviz_mca_var_corr <- function(X,  axes = c(1,2), geom=c("point", "text"), labelsize = 4, pointsize = 2,
                               invisible = NULL, labels = TRUE, repel = TRUE, select = list(name = NULL, eta2 = NULL)) {
 

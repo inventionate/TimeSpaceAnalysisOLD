@@ -14,8 +14,6 @@ NULL
 #'
 #' @return ggplot2 visualization of place chronology time pattern data.
 #' @export
-#'
-#' @examples
 plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all", graph = TRUE, print_prop_duration = TRUE, legend = TRUE, bar_width = 1, ncol = 3) {
 
   # Add Myriad Pro font family

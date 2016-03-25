@@ -9,10 +9,8 @@
 #' @param pointsize leaves pointsize.
 #' @param linetype hline linetype.
 #'
-#' @return
+#' @return ggplot2 dendrogram visualization.
 #' @export
-#'
-#' @examples
 fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed") {
 
   # Add Myriad Pro font family
@@ -21,7 +19,7 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
   if(is.null(palette)) palette <- RColorBrewer::brewer.pal(name = "Set1", n = cluster)
 
   dend <- res_hcpc$call$t$tree %>%
-    as.dendrogram %>% 
+    as.dendrogram %>%
     set("branches_k_color", k = cluster, palette) %>%
     set("branches_lwd", 0.5) %>%
     set("leaves_pch", 20) %>%

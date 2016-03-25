@@ -6,8 +6,6 @@
 #'
 #' @return reshaped data frame for further visualization.
 #' @export
-#'
-#' @examples
 get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all") {
 
   # Relevante Variablen auswählen

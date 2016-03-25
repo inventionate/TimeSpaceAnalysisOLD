@@ -5,8 +5,6 @@
 #'
 #' @return data frame with MCA varoable names, types, coords and eta2 values.
 #' @export
-#'
-#' @examples
 get_mca_var_corr <- function(res_mca, axes = 1:2)
 {
 

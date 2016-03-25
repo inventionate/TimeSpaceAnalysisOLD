@@ -10,8 +10,6 @@ NULL
 #'
 #' @return ggplot2 avgerage time pattern profile plot.
 #' @export
-#'
-#' @examples
 plot_time_pattern_profile <- function(data_tp, id = "all", ncol = 2, fluid = FALSE)
 {
   # Add Myriad Pro font family

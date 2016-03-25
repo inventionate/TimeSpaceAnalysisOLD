@@ -24,6 +24,9 @@ add_path(res_gda_quali, var, var_levels, exclude = NULL, axes = 1:2,
 
 \item{size}{size of concat path.}
 }
+\value{
+ggplo2 path geom.
+}
 \description{
 Concat the categories of a variable
 }

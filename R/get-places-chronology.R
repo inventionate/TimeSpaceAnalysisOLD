@@ -8,10 +8,8 @@
 #'
 #' @return reshaped data frame for further visualization.
 #' @export
-#'
-#' @examples
 get_places_chronology <- function(data, id = "all", weekday = "all", title, shape_path) {
-  
+
   # Datensatz aufbereiten
   data_places_chronology <- data %>%
     as.data.frame() %>%
@@ -44,7 +42,7 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
            start_time_average = mean(start_time)) %>%
     select(-date, -prop_duration, -duration, -place_duration, -start_time) %>%
     distinct()
-  
+
   # Datensatz mit besuchten Orten und deren Häufigfkeit erstellen.
   data_unique_places_count <- data_places_chronology %>%
     count(place) %>%
@@ -62,7 +60,7 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
     group_by(questionnaire_id, place) %>%
     mutate(place_duration = sum(place_duration)) %>%
     distinct()
-  
+
   # Pfade hübscher machen, indem eine Kurve berechnet wird.
   plot.new()
   coord_curved_path <- as.data.frame(xspline(data_places_chronology$lon, data_places_chronology$lat, shape = shape_path, draw = FALSE))
