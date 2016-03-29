@@ -10,7 +10,7 @@ NULL
 #' @param labels label bars (boolean).
 #' @param labels_inline inline labels (boolean).
 #' @param amount include total amount of observations (boolean).
-#' @param rotate rotate bars (boolean).
+#' @param rotate_x_axis_text rotate bars (boolean).
 #' @param title plot title.
 #' @param textsize sife of axes texts.
 #' @param titlesize title text size.
@@ -23,8 +23,8 @@ NULL
 #'
 #' @return ggplot2 barplot.
 #' @export
-plot_barplot <- function(dfname,xlab="", ylab="", sort=FALSE, relative=FALSE, labels=FALSE, labels_inline = TRUE, amount=FALSE, rotate=FALSE, title="",
-                         textsize=14, titlesize=1.5*textsize, labelsize=textsize/3, drop=FALSE, digits=0, addsymb="", ylim=NA, xlim=NA){
+plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, relative = FALSE, labels = FALSE, labels_inline = TRUE, amount = FALSE, rotate_x_axis_text = FALSE,
+                         textsize = 14, titlesize = 20, labelsize = 12, drop = FALSE, digits = 0, addsymb = "", ylim = NA, xlim = NA){
 
   # Add Myriad Pro font family
   .add_fonts()
@@ -71,8 +71,8 @@ plot_barplot <- function(dfname,xlab="", ylab="", sort=FALSE, relative=FALSE, la
   }
   o <- p
   if(labels) {
-    if(labels_inline) o <- p + geom_text(aes(label = paste(Freq,symbol,sep=""), ymax= Freq, family="Myriad Pro"), vjust = 1.5, size = (labelsize), colour = "white", position = "stack")
-    else o <- p + geom_text(aes(label = paste(Freq,symbol,sep=""), ymax= Freq, family="Myriad Pro"), vjust = -0.5, size = (labelsize), colour = "black", position = "stack")
+    if(labels_inline) o <- p + geom_text(aes(label = paste(Freq,symbol,sep=""), ymax= Freq, family="Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack")
+    else o <- p + geom_text(aes(label = paste(Freq,symbol,sep=""), ymax= Freq, family="Myriad Pro"), vjust = -0.5, size = labelsize, colour = "black", position = "stack")
   }
   if(rotate) {
     o <- o + theme(axis.text.x = element_text(angle = 45, hjust = 1))
