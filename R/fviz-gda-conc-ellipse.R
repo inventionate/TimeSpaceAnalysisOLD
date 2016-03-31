@@ -16,8 +16,8 @@ fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour =
   # Add Myriad Pro font family
   .add_fonts()
 
-  if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
-  if(inherits(res_gda, c("MFA", "sMFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
 
   p <- p + stat_ellipse(data = .count_distinct_ind(res_gda, axes), aes(x = Dim.1, y = Dim.2),
                         geom ="polygon", level = level, type = "norm",

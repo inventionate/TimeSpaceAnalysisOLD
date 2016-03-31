@@ -24,8 +24,8 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)) - length(get_index_mod(res_gda$call$X)))
 
   # Check GDA algorithm
-  if(inherits(res_gda, c("MCA", "sMCA"))) df <- res_gda$var$contrib
-  if(inherits(res_gda, c("MFA", "sMFA"))) df <- res_gda$quali.var$contrib
+  if(inherits(res_gda, c("MCA"))) df <- res_gda$var$contrib
+  if(inherits(res_gda, c("MFA"))) df <- res_gda$quali.var$contrib
 
   # Auswahl festlegen
   modalities <- df %>% data.frame %>% select(ctr = matches(paste0("^Dim.", axis, "$"))) %>% add_rownames() %>%
@@ -34,8 +34,8 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   if(contrib == "auto") modalities <- modalities %>% filter(ctr > criterion) %>% select(rowname) %>% data.frame
   else modalities <- modalities %>% slice(1:contrib) %>% select(rowname) %>% data.frame
 
-  if(inherits(res_gda, c("MCA", "sMCA"))) p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
-  if(inherits(res_gda, c("MFA", "sMFA"))) {
+  if(inherits(res_gda, c("MCA"))) p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MFA"))) {
     if(!is.null(groups)) {
       # Identify groups and modality coordinates.
       group_id <- get_mfa_mod_group_id(res_gda)
