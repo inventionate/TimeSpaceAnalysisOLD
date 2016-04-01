@@ -26,6 +26,8 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
   # Add Myriad Pro font family
   .add_fonts()
 
+  n <- nrow(data.frame(na.omit(dfname)))
+
   if(drop) dfname <- dfname[drop=T]
 
   if(sort) absolute_freq <- as.table(sort(table(dfname)))
@@ -39,15 +41,16 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 
   p <- ggplot(data_freq, aes(var, absolute))+
     geom_bar(stat="identity") +
-    geom_hline(yintercept=0, colour="gray10") +
-    geom_vline(xintercept=0, colour="gray10") +
+    geom_hline(yintercept = 0, colour = "gray10") +
+    geom_vline(xintercept = 0, colour = "gray10") +
     theme_minimal() +
     xlab(xlab) +
     ylab(ylab) +
-    theme(plot.title = element_text(face="bold",vjust=1.5,size = titlesize),
+    ylim(0, n) +
+    theme(plot.title = element_text(face = "bold",vjust = 1.5,size = titlesize),
           text = element_text(size = textsize, family = "Myriad Pro"),
           axis.title.x = element_text(vjust = -0.5),
-          panel.grid.major = element_line(size=0.5, color="gray80", linetype="dashed")) +
+          panel.grid.major = element_line(size = 0.5, color = "gray80", linetype = "dashed")) +
     ggtitle(title)
 
   if(!is.na(xlim[1])) p <- p + xlim(xlim)
@@ -55,19 +58,15 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 
   if(labels_inline) {
     p <- p + geom_text(aes(label = absolute, ymax = absolute, family = "Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
-    geom_text(aes(label = paste("(", relative, "%)",sep=""), ymax = absolute, family = "Myriad Pro"), vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
+    geom_text(aes(label = paste("(", relative, "%)",sep = ""), ymax = absolute, family = "Myriad Pro"), vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
   } else {
     p <- p + geom_text(aes(label = absolute, ymax = absolute, family = "Myriad Pro"), vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
-    geom_text(aes(label = paste("(", relative, "%)",sep=""), ymax = absolute, family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
+    geom_text(aes(label = paste("(", relative, "%)",sep = ""), ymax = absolute, family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
   }
 
   if(rotate_x_axis_text) p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-  if(amount) {
-    n <- nrow(data.frame(na.omit(dfname)))
-    p <- p + xlab(bquote(paste(.(toString(xlab))," (n = ",.(n),")"))) +
-      theme(axis.title.x= element_text(vjust=-0.3))
-  }
+  if(amount) p <- p + xlab(bquote(paste(.(xlab)," (n = ",.(n),")"))) + theme(axis.title.x = element_text(vjust = -0.3))
 
   return(p)
 }
