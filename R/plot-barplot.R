@@ -20,7 +20,7 @@ NULL
 #'
 #' @return ggplot2 barplot.
 #' @export
-plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, labels_inline = TRUE, amount = FALSE, rotate_x_axis_text = FALSE,
+plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, labels_inline = FALSE, amount = FALSE, rotate_x_axis_text = FALSE,
                          textsize = 20, titlesize = 25, labelsize = 8, drop = FALSE, digits = 0, ylim = NA, xlim = NA){
 
   # Add Myriad Pro font family
