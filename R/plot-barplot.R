@@ -6,8 +6,6 @@ NULL
 #' @param xlab x-axis label.
 #' @param ylab y-axis label.
 #' @param sort sort bars (boolean).
-#' @param relative realtive values (boolean).
-#' @param labels label bars (boolean).
 #' @param labels_inline inline labels (boolean).
 #' @param amount include total amount of observations (boolean).
 #' @param rotate_x_axis_text rotate bars (boolean).
@@ -17,75 +15,59 @@ NULL
 #' @param labelsize label text size.
 #' @param drop drop missing data (boolean).
 #' @param digits amount of label value digits.
-#' @param addsymb suffix symbol.
 #' @param ylim y-axis range.
 #' @param xlim y-axis range.
 #'
 #' @return ggplot2 barplot.
 #' @export
-plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, relative = FALSE, labels = FALSE, labels_inline = TRUE, amount = FALSE, rotate_x_axis_text = FALSE,
-                         textsize = 14, titlesize = 20, labelsize = 12, drop = FALSE, digits = 0, addsymb = "", ylim = NA, xlim = NA){
+plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, labels_inline = TRUE, amount = FALSE, rotate_x_axis_text = FALSE,
+                         textsize = 20, titlesize = 25, labelsize = 8, drop = FALSE, digits = 0, ylim = NA, xlim = NA){
 
   # Add Myriad Pro font family
   .add_fonts()
 
-  symbol <<- toString(addsymb)
-  if(drop) {
-    dfname <- dfname[drop=T]
-  }
-  if(sort) {
-    c <- as.table(sort(table(dfname)))
-  }
-  else {
-    c <- table(dfname)
-  }
-  if(relative) {
-    relfreq <- prop.table(c)
-    relfreq <- relfreq*100
-    c <- round(relfreq, digits=digits)
-  }
-  c <- as.data.frame(c)
-  colnames(c)[1] <- "Var1"
-  if(ncol(c)==3){
-    p <- ggplot(data=c, aes_string(x="Var1", y="Freq",fill=names(c[2])))
-  }else{
-    p <- ggplot(data=c, aes(x=Var1, y=Freq))
-  }
-  p <- p + geom_bar(stat="identity")
-  p <- p + geom_hline(yintercept=0, colour="gray10") +
+  if(drop) dfname <- dfname[drop=T]
+
+  if(sort) absolute_freq <- as.table(sort(table(dfname)))
+  else absolute_freq <- table(dfname)
+
+  relative_freq <- as.data.frame(round(prop.table(absolute_freq) * 100, digits = digits))
+
+  data_freq <- data.frame(as.data.frame(absolute_freq), relative_freq[,2])
+
+  colnames(data_freq) <- c("var", "absolute", "relative")
+
+  p <- ggplot(data_freq, aes(var, absolute))+
+    geom_bar(stat="identity") +
+    geom_hline(yintercept=0, colour="gray10") +
     geom_vline(xintercept=0, colour="gray10") +
     theme_minimal() +
-    # theme(panel.grid.major = element_line(size=0.5, color="gray80", linetype="dashed")) +
-    # theme(panel.grid.minor = element_line(size=0.5, color="gray80", linetype="dashed")) +
-    xlab(toString(xlab)) +
-    ylab(toString(ylab)) +
-    ggtitle(toString(title)) +
-    theme(plot.title = element_text(face="bold",vjust=1.5,size=titlesize)) +
-    theme(text = element_text(size=textsize),axis.title.x = element_text(vjust=-0.5)) +
-    theme(text=element_text(family="Myriad Pro"))
-  if(!is.na(xlim[1])){
-    p <- p + xlim(xlim)
+    xlab(xlab) +
+    ylab(ylab) +
+    theme(plot.title = element_text(face="bold",vjust=1.5,size = titlesize),
+          text = element_text(size = textsize, family = "Myriad Pro"),
+          axis.title.x = element_text(vjust = -0.5),
+          panel.grid.major = element_line(size=0.5, color="gray80", linetype="dashed")) +
+    ggtitle(title)
+
+  if(!is.na(xlim[1])) p <- p + xlim(xlim)
+  if(!is.na(ylim[1])) p <- p + ylim(ylim)
+
+  if(labels_inline) {
+    p <- p + geom_text(aes(label = absolute, ymax = absolute, family = "Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
+    geom_text(aes(label = paste("(", relative, "%)",sep=""), ymax = absolute, family = "Myriad Pro"), vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
+  } else {
+    p <- p + geom_text(aes(label = absolute, ymax = absolute, family = "Myriad Pro"), vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
+    geom_text(aes(label = paste("(", relative, "%)",sep=""), ymax = absolute, family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
   }
-  if(!is.na(ylim[1])){
-    p <- p + ylim(ylim)
-  }
-  o <- p
-  if(labels) {
-    if(labels_inline) o <- p + geom_text(aes(label = paste(Freq,symbol,sep=""), ymax= Freq, family="Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack")
-    else o <- p + geom_text(aes(label = paste(Freq,symbol,sep=""), ymax= Freq, family="Myriad Pro"), vjust = -0.5, size = labelsize, colour = "black", position = "stack")
-  }
-  if(rotate) {
-    o <- o + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  }
+
+  if(rotate_x_axis_text) p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
   if(amount) {
-    # Ergänzt den x-Achsentitel um die Fallzahlangabe.
-    if(ncol(c)==3){
-      n <- nrow(na.omit(dfname))
-    }else{
-      n <- nrow(data.frame(na.omit(dfname)))
-    }
-    o <- o + xlab(bquote(paste(.(toString(xlab))," (n = ",.(n),")")))
-    o <- o + theme(axis.title.x= element_text(vjust=-0.3))
+    n <- nrow(data.frame(na.omit(dfname)))
+    p <- p + xlab(bquote(paste(.(toString(xlab))," (n = ",.(n),")"))) +
+      theme(axis.title.x= element_text(vjust=-0.3))
   }
-  return(o)
+
+  return(p)
 }

@@ -4,11 +4,10 @@
 \alias{plot_barplot}
 \title{Visualize a barplot.}
 \usage{
-plot_barplot(dfname, xlab = "", ylab = "", sort = FALSE,
-  relative = FALSE, labels = FALSE, labels_inline = TRUE,
-  amount = FALSE, rotate = FALSE, title = "", textsize = 14,
-  titlesize = 1.5 * textsize, labelsize = textsize/3, drop = FALSE,
-  digits = 0, addsymb = "", ylim = NA, xlim = NA)
+plot_barplot(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
+  labels_inline = TRUE, amount = FALSE, rotate_x_axis_text = FALSE,
+  textsize = 20, titlesize = 25, labelsize = 8, drop = FALSE,
+  digits = 0, ylim = NA, xlim = NA)
 }
 \arguments{
 \item{dfname}{categorical variable.}
@@ -17,19 +16,15 @@ plot_barplot(dfname, xlab = "", ylab = "", sort = FALSE,
 
 \item{ylab}{y-axis label.}
 
+\item{title}{plot title.}
+
 \item{sort}{sort bars (boolean).}
-
-\item{relative}{realtive values (boolean).}
-
-\item{labels}{label bars (boolean).}
 
 \item{labels_inline}{inline labels (boolean).}
 
 \item{amount}{include total amount of observations (boolean).}
 
-\item{rotate}{rotate bars (boolean).}
-
-\item{title}{plot title.}
+\item{rotate_x_axis_text}{rotate bars (boolean).}
 
 \item{textsize}{sife of axes texts.}
 
@@ -40,8 +35,6 @@ plot_barplot(dfname, xlab = "", ylab = "", sort = FALSE,
 \item{drop}{drop missing data (boolean).}
 
 \item{digits}{amount of label value digits.}
-
-\item{addsymb}{suffix symbol.}
 
 \item{ylim}{y-axis range.}
 
