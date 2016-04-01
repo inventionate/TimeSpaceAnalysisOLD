@@ -5,8 +5,8 @@
 \title{Visualize a barplot.}
 \usage{
 plot_barplot(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
-  labels_inline = TRUE, amount = FALSE, rotate_x_axis_text = FALSE,
-  textsize = 20, titlesize = 25, labelsize = 8, drop = FALSE,
+  labels_inline = FALSE, amount = FALSE, rotate_x_axis_text = FALSE,
+  textsize = 20, titlesize = 25, labelsize = 8, include_na = TRUE,
   digits = 0, ylim = NA, xlim = NA)
 }
 \arguments{
@@ -32,7 +32,7 @@ plot_barplot(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 
 \item{labelsize}{label text size.}
 
-\item{drop}{drop missing data (boolean).}
+\item{include_na}{show NAs or not (boolean).}
 
 \item{digits}{amount of label value digits.}
 

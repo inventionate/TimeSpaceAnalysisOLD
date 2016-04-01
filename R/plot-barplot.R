@@ -13,25 +13,25 @@ NULL
 #' @param textsize sife of axes texts.
 #' @param titlesize title text size.
 #' @param labelsize label text size.
-#' @param drop drop missing data (boolean).
 #' @param digits amount of label value digits.
 #' @param ylim y-axis range.
 #' @param xlim y-axis range.
+#' @param include_na show NAs or not (boolean).
 #'
 #' @return ggplot2 barplot.
 #' @export
 plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, labels_inline = FALSE, amount = FALSE, rotate_x_axis_text = FALSE,
-                         textsize = 20, titlesize = 25, labelsize = 8, drop = FALSE, digits = 0, ylim = NA, xlim = NA){
+                         textsize = 20, titlesize = 25, labelsize = 8, include_na = TRUE, digits = 0, ylim = NA, xlim = NA){
 
   # Add Myriad Pro font family
   .add_fonts()
 
   n <- nrow(data.frame(na.omit(dfname)))
 
-  if(drop) dfname <- dfname[drop=T]
-
-  if(sort) absolute_freq <- as.table(sort(table(dfname)))
+  if(include_na) absolute_freq <- table(dfname, useNA = "always")
   else absolute_freq <- table(dfname)
+
+  if(sort) absolute_freq <- as.table(sort(absolute_freq))
 
   relative_freq <- as.data.frame(round(prop.table(absolute_freq) * 100, digits = digits))
 
