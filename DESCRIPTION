@@ -61,6 +61,7 @@ Collate:
     'get-mfa-mod-group-id.R'
     'fviz-gda-var-axis.R'
     'fviz-mca-var-corr.R'
+    'fviz_add_sup_ind.R'
     'gda-optimise-df.R'
     'get-mca-var-corr.R'
     'get-places-chronology-time-pattern.R'
