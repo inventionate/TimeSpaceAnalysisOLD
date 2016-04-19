@@ -12,7 +12,7 @@ NULL
 #' @return ggplot2 visalization of supplementary individuals.
 #' @export
 fviz_add_sup_ind <- function(res_gda, excl = NULL, sup_ind = NULL, colour = "red",
-                             label = NULL, size = 10) {
+                             label = NULL, size = 10, myriad = TRUE) {
 
   # Datensatz vorbereiten
   colnames(sup_ind) <- colnames(res_gda$call$X)
@@ -34,7 +34,7 @@ fviz_add_sup_ind <- function(res_gda, excl = NULL, sup_ind = NULL, colour = "red
   else label_names = label
 
   # Plotten
-  p <- fviz_gda_conc_ellipse(res_gda) +
+  p <- fviz_gda_conc_ellipse(res_gda, myriad = myriad) +
     # geom_point(data = res_sup_ind_coord, aes(Dim.1, Dim.2), size = point_size,
     #            shape = shape, inherit.aes = FALSE, colour = "red") +
     geom_label(data = res_sup_ind_coord, aes(Dim.1, Dim.2), inherit.aes = FALSE,

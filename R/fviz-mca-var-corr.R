@@ -15,10 +15,11 @@ NULL
 #' @return ggplot2 visualization of variable correlation square (variables representation).
 #' @export
 fviz_mca_var_corr <- function(X,  axes = c(1,2), geom=c("point", "text"), labelsize = 4, pointsize = 2,
-                              invisible = NULL, labels = TRUE, repel = TRUE, select = list(name = NULL, eta2 = NULL)) {
+                              invisible = NULL, labels = TRUE, repel = TRUE, select = list(name = NULL, eta2 = NULL),
+                              myriad = TRUE) {
 
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
   vars <- get_mca_var_corr(X, axes = axes)
 

@@ -18,10 +18,10 @@
 #' @export
 fviz_gda_structure <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali structure effects", mean.alpha = 0.75,
                                path.linetype = "solid", path.size = 1, path.colour = NULL, scale_mean_points = TRUE, axes = 1:2,
-                               palette = "Set1", mod_names = NULL, mod_level_order = NULL, path.alpha = 0.7) {
+                               palette = "Set1", mod_names = NULL, mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE) {
 
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
   df_source <- data.frame(allgemeine_angaben, df_var_quali)
   var_quali <- df_source %>%

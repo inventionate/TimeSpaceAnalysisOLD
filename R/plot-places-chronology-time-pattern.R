@@ -14,10 +14,11 @@ NULL
 #'
 #' @return ggplot2 visualization of place chronology time pattern data.
 #' @export
-plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all", graph = TRUE, print_prop_duration = TRUE, legend = TRUE, bar_width = 1, ncol = 3) {
+plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all", graph = TRUE, print_prop_duration = TRUE, legend = TRUE,
+                                                bar_width = 1, ncol = 3, myriad = TRUE) {
 
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
     # Datensatz Zeitmuster
     data_pc_zm <- get_places_chronology_time_pattern(data, id, weekday)

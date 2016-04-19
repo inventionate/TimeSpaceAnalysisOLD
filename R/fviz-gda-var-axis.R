@@ -16,9 +16,9 @@ NULL
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2, groups = NULL,
-                              textsize = 4, colour_palette = "Dark2") {
+                              textsize = 4, colour_palette = "Dark2", myriad = TRUE) {
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
   # Calculate contribution criterion (Le Roux & Rouanet 2004: 372)
   criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)) - length(get_index_mod(res_gda$call$X)))

@@ -12,9 +12,9 @@ NULL
 #'
 #' @return ggplot2 visualization of time pattern data.
 #' @export
-plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE, fluid = FALSE) {
+plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE, fluid = FALSE, myriad = TRUE) {
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
   data <- get_time_pattern(data, id, reshape_data)
 

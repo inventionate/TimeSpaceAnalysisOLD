@@ -19,9 +19,10 @@ NULL
 #' @export
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
                                     facet = TRUE, alpha.point = 0.75, path.linetype = "solid",
-                                    scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1") {
+                                    scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1",
+                                    myriad = TRUE) {
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
   # Variable bestimmen
   if(hcpc) {

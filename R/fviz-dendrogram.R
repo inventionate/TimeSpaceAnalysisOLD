@@ -11,10 +11,10 @@
 #'
 #' @return ggplot2 dendrogram visualization.
 #' @export
-fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed") {
+fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed", myriad = TRUE) {
 
   # Add Myriad Pro font family
-  .add_fonts()
+  if(myriad) .add_fonts()
 
   if(is.null(palette)) palette <- RColorBrewer::brewer.pal(name = "Set1", n = cluster)
 
