@@ -12,7 +12,7 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
   unique_places = FALSE, print_place_duration = FALSE,
   activity_duration_overall = TRUE, facet_scales = "fixed",
-  point_padding = unit(1e-06, "lines"))
+  point_padding = unit(1e-06, "lines"), myriad = TRUE)
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}

@@ -6,7 +6,7 @@
 \usage{
 fviz_mca_var_corr(X, axes = c(1, 2), geom = c("point", "text"),
   labelsize = 4, pointsize = 2, invisible = NULL, labels = TRUE,
-  repel = TRUE, select = list(name = NULL, eta2 = NULL))
+  repel = TRUE, select = list(name = NULL, eta2 = NULL), myriad = TRUE)
 }
 \arguments{
 \item{X}{MCA result.}

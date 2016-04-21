@@ -5,7 +5,7 @@
 \title{Add supplementary individuals.}
 \usage{
 fviz_add_sup_ind(res_gda, excl = NULL, sup_ind = NULL, colour = "red",
-  label = NULL, size = 10)
+  label = NULL, size = 10, myriad = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA results.}

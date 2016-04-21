@@ -4,7 +4,8 @@
 \alias{plot_time_pattern_profile}
 \title{Plot average time pattern profiles.}
 \usage{
-plot_time_pattern_profile(data_tp, id = "all", ncol = 2, fluid = FALSE)
+plot_time_pattern_profile(data_tp, id = "all", ncol = 2, fluid = FALSE,
+  myriad = TRUE)
 }
 \arguments{
 \item{data_tp}{data frame containing questionnaire_id, kml3d results and time pattern data.}

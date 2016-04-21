@@ -5,7 +5,7 @@
 \title{Title}
 \usage{
 fviz_gda_conc_ellipse(res_gda, level = 0.8647, alpha = 0.1,
-  colour = "black", linetype = "dashed", axes = 1:2)
+  colour = "black", linetype = "dashed", axes = 1:2, myriad = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}

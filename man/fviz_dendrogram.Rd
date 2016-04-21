@@ -5,7 +5,8 @@
 \title{Visualize HCPC hclus trees.}
 \usage{
 fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
-  circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed")
+  circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed",
+  myriad = TRUE)
 }
 \arguments{
 \item{res_hcpc}{(s)HCPC results.}

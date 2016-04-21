@@ -6,7 +6,7 @@
 \usage{
 plot_places_chronology_time_pattern(data, id = "all", weekday = "all",
   graph = TRUE, print_prop_duration = TRUE, legend = TRUE,
-  bar_width = 1, ncol = 3)
+  bar_width = 1, ncol = 3, myriad = TRUE)
 }
 \arguments{
 \item{data}{data frame, which contains place chronology time pattern data.}

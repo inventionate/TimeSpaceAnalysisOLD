@@ -5,9 +5,11 @@
 \title{Title}
 \usage{
 fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
-  title = "MCA quali var ellipses", facet = TRUE, alpha.point = 0.75,
-  path.linetype = "solid", scale_mean_points = TRUE, hcpc = FALSE,
-  axes = 1:2, palette = "Set1")
+  title = "MCA quali var ellipses", facet = TRUE, alpha_point = 0.75,
+  conc_linetype = "solid", conf_linetype = "solid",
+  scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1",
+  myriad = TRUE, concentration_ellipses = TRUE,
+  confidence_ellipses = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -20,9 +22,11 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 
 \item{facet}{whether facet ellipses or not (boolean).}
 
-\item{alpha.point}{opacity of mean points.}
+\item{alpha_point}{opacity of individual points.}
 
-\item{path.linetype}{linetype of mean point path.}
+\item{conc_linetype}{linetype of concentration ellipse.}
+
+\item{conf_linetype}{linetype of confidence ellipse.}
 
 \item{scale_mean_points}{scale mean point size in respect of the group size (boolean).}
 
@@ -32,7 +36,11 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 
 \item{palette}{Colour brewer scale.}
 
-\item{path_mean}{plot mean point path (boolean). Only possible if facet is FALSE.}
+\item{myriad}{use Myriad Pro font family (boolean).}
+
+\item{concentration_ellipses}{plot concentration ellipse (boolean).}
+
+\item{confidence_ellipses}{plot confidence ellipses (boolean).}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.

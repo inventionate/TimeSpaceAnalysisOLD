@@ -6,7 +6,7 @@
 \usage{
 fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
   title = "GDA axis high contribution modalities", axes = 1:2,
-  groups = NULL, textsize = 4, colour_palette = "Dark2")
+  groups = NULL, textsize = 4, colour_palette = "Dark2", myriad = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}

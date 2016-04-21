@@ -5,7 +5,7 @@
 \title{Plot single or multiple time pattern.}
 \usage{
 plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE,
-  print_prop_duration = TRUE, fluid = FALSE)
+  print_prop_duration = TRUE, fluid = FALSE, myriad = TRUE)
 }
 \arguments{
 \item{data}{data frame which contains time pattern data.}

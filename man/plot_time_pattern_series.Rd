@@ -4,7 +4,8 @@
 \alias{plot_time_pattern_series}
 \title{Plot time pattern series data.}
 \usage{
-plot_time_pattern_series(data_tp, alpha = 0.3, palette = "Set1")
+plot_time_pattern_series(data_tp, alpha = 0.3, palette = "Set1",
+  myriad = TRUE)
 }
 \arguments{
 \item{data_tp}{data frame including questionnaire_id, kml3d results and time pattern data.}

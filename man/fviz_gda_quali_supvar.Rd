@@ -7,7 +7,7 @@
 fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali var structure", path = FALSE, linetype = "solid",
   axes = 1:2, scale_point = TRUE, size_point = 3, scale_text = FALSE,
-  size_text = 3, palette = "Set1", na_exclude = TRUE)
+  size_text = 3, palette = "Set1", na_exclude = TRUE, myriad = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}

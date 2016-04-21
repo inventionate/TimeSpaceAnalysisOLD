@@ -7,7 +7,7 @@
 plot_barplot(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
   labels_inline = FALSE, amount = FALSE, rotate_x_axis_text = FALSE,
   textsize = 20, titlesize = 25, labelsize = 8, include_na = TRUE,
-  digits = 0, ylim = NA, xlim = NA)
+  digits = 0, ylim = NA, xlim = NA, myriad = TRUE)
 }
 \arguments{
 \item{dfname}{categorical variable.}
