@@ -9,7 +9,7 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
   conc_linetype = "solid", conf_linetype = "solid",
   scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1",
   myriad = TRUE, concentration_ellipses = TRUE,
-  confidence_ellipses = TRUE)
+  confidence_ellipses = TRUE, conf_colour = FALSE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -41,6 +41,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 \item{concentration_ellipses}{plot concentration ellipse (boolean).}
 
 \item{confidence_ellipses}{plot confidence ellipses (boolean).}
+
+\item{conf_colour}{colour confidence ellipses (boolean).}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.
