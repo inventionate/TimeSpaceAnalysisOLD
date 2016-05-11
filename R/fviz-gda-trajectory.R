@@ -149,6 +149,9 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, contr
     if(facet) p <- p + facet_wrap(~clust_year)
   }
 
+  # Theme adaptieren
+  p <- p + add_theme()
+
   # Ausgabe des Plots
   return(p)
 }
