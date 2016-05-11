@@ -12,7 +12,7 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
   confidence_ellipses = TRUE, conf_colour = FALSE)
 }
 \arguments{
-\item{res_gda}{GDA result.}
+\item{res_gda}{GDA result (rownames have to be individual questionnaire IDs).}
 
 \item{df_var_quali}{data frame of one quali variable.}
 

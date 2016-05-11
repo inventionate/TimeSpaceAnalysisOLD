@@ -2,7 +2,7 @@
 NULL
 #' Title
 #'
-#' @param res_gda GDA result.
+#' @param res_gda GDA result (rownames have to be individual questionnaire IDs).
 #' @param df_var_quali data frame of one quali variable.
 #' @param var_quali_name name if quali variable.
 #' @param title plot title.
