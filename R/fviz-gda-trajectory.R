@@ -1,4 +1,6 @@
-#' Title
+#' @include add-theme.R
+NULL
+#' Visualization of trajectories (connected HMFA partial points).
 #'
 #' @param res_gda HMFA result (rownames have to be questionnaire IDs).
 #' @param select contribution, cos2, vector of names or within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals).
@@ -113,7 +115,7 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, contr
 
   # Plot data
 
-  p <- factoextra::fviz_hmfa_ind_starplot(res_gda, node.level = 2, label = "none", invisible = "ind") + add_theme()
+  p <- factoextra::fviz_hmfa_ind_starplot(res_gda, node.level = 2, label = "none", invisible = "ind", axes = axes, axes.linetype = "solid") + add_theme()
   # Individuen mit Zeitpfeil
   if(!mean_path & !ellipses) {
     p <- p +
