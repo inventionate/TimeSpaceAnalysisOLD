@@ -7,6 +7,8 @@ NULL
 #' @return vector containing group ids in MFA result order.
 #' @export
 get_mfa_mod_group_id <- function(res_mfa) {
+
+  # @todo: Hier in Functional Programming switchen.
   group_id <- NULL
   for(g in 1:length(res_mfa$call$group)) {
     group_id <- c(group_id, rep(g, res_mfa$call$group[g]))

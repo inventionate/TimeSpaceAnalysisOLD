@@ -2,8 +2,8 @@ Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time space analysis (GDA approaches, time pattern
     analysis, places chronologies).
-Version: 0.9
-Date: 2016-05-11
+Version: 0.9.1
+Date: 2016-05-12
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
 Description: See above.
@@ -14,6 +14,7 @@ Depends:
     readr,
     tidyr,
     dplyr,
+    purrr,
     httr,
     rjson,
     RCurl,

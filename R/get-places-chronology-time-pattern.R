@@ -14,11 +14,9 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
     as.data.frame() %>%
     mutate(activity = factor(activity))
 
-
-
   # Leeren Datensatz hinzufügen, um vergleichbare Ausgangsbedingungen zu schaffen.
   # D. h., jeder Person wird eine vergleichbare Aktivität mit der Länge Null hinzugefügt.
-  # Für jede ID an jedem Tag Eine Aktivität mit prop_duration 0 erzeugen
+  # Für jede ID an jedem Tag eine Aktivität mit prop_duration 0 erzeugen.
   activities <- levels(data$activity)
 
   data_scaffold <- data %>%
@@ -26,6 +24,7 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
     distinct() %>%
     na.omit()
 
+  # @todo: Hier in Functional Programming switchen.
   data_zero_duration_activites <- NULL
   for(i in 1:length(activities))
   {
