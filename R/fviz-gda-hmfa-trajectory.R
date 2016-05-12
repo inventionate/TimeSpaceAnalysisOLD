@@ -15,7 +15,7 @@ NULL
 #'
 #' @return HMFA trajectory ggplot2 visualization.
 #' @export
-fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, contrib = NULL, cos2 = NULL, within_inertia = NULL),
+fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, contrib = NULL, cos2 = NULL, within_inertia = NULL),
                                 ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE,
                                 ellipses = FALSE, facet = FALSE, mean_path = FALSE)
   {
@@ -62,14 +62,14 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, contr
     if(select$within_inertia[[1]] == 0) {
       selected_ind_high <- NULL
     } else {
-      selected_ind_high <- hmfa_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1])), Dim.2 = matches(paste0("Dim.", axes[2]))) %>% add_rownames %>%
-      mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(desc(within_inertia)) %>% slice(1:select$within_inertia[[1]]) %>% data.frame
+      selected_ind_high <- hmfa_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
+        add_rownames %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(desc(within_inertia)) %>% slice(1:select$within_inertia[[1]])
     }
     if(select$within_inertia[[2]] == 0) {
       selected_ind_low <- NULL
     } else {
-      selected_ind_low <- hmfa_within_inertia %>% data.frame %>% select(Dim.1, Dim.2) %>% add_rownames %>%
-      mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(within_inertia) %>% slice(1:select$within_inertia[[2]]) %>% data.frame
+      selected_ind_low <- hmfa_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
+        add_rownames %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(within_inertia) %>% slice(1:select$within_inertia[[2]])
     }
     selected_ind <- rbind(selected_ind_low, selected_ind_high)
   }
@@ -115,19 +115,19 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, contr
 
   # Plot data
 
-  p <- factoextra::fviz_hmfa_ind_starplot(res_gda, node.level = 2, label = "none", invisible = "ind", axes = axes, axes.linetype = "solid") + add_theme()
+  p <- factoextra::fviz_hmfa_ind_starplot(res_gda, node.level = 2, label = "none", invisible = "ind", axes = axes, axes.linetype = "solid")
   # Individuen mit Zeitpfeil
   if(!mean_path & !ellipses) {
     p <- p +
       scale_colour_brewer(palette = "YlGnBu", direction = -1) +
-      geom_point(data = coord_ind_timeseries, aes(Dim1, Dim2, group = "clust"), colour = "black", size = 7) +
-      geom_point(data = coord_ind_timeseries, aes(Dim1, Dim2, group = "clust", colour = year), size = 5) +
+      geom_point(data = coord_ind_timeseries, aes(Dim1, Dim2, group = clust), colour = "black", size = 7) +
+      geom_point(data = coord_ind_timeseries, aes(Dim1, Dim2, group = clust, colour = year), size = 5) +
       geom_path(data = coord_ind_timeseries, aes(Dim1, Dim2, group = rowname), size = 1,
                 arrow = arrow(length = unit(0.3, "cm"), type = "closed")) +
       theme(legend.position = "bottom", legend.title = element_blank()) +
       ggtitle("Fiktiver Vergleich der ersten drei Studiensemester") +
-      xlab(paste0("Achse 1 (", round(hmfa_studienalltag$eig$`percentage of variance`[1], 1), "%)")) +
-      ylab(paste0("Achse 2 (", round(hmfa_studienalltag$eig$`percentage of variance`[2], 1), "%)"))
+      xlab(paste0("Achse 1 (", round(res_gda$eig$`percentage of variance`[1], 1), "%)")) +
+      ylab(paste0("Achse 2 (", round(res_gda$eig$`percentage of variance`[2], 1), "%)"))
     if(facet) p <- p + facet_wrap(~clust)
   }
   # Mittelpunkte
