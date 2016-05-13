@@ -12,13 +12,13 @@ NULL
 #' @param facet plot ellipses/ individuals per year (boolean).
 #' @param mean_path plot mean path (boolean). If yes, no ellipses and no facets are plotted.
 #' @param clust HCPC result of primary MFA.
+#' @param facet_labels Rename facet labels.
 #'
 #' @return HMFA trajectory ggplot2 visualization.
 #' @export
 fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, contrib = NULL, cos2 = NULL, within_inertia = NULL),
-                                ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE,
-                                ellipses = FALSE, facet = FALSE, mean_path = FALSE)
-  {
+                                ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet_labels = label_value,
+                                ellipses = FALSE, facet = FALSE, mean_path = FALSE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -148,7 +148,7 @@ fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, 
                    alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid") +
       geom_point(data = coord_mean_timeseries, aes(Dim1, Dim2), colour = "black", shape = 18, size = 5) +
       geom_point(data = coord_mean_timeseries, aes(Dim1, Dim2, colour = clust_year), shape = 18, size = 4)
-    if(facet) p <- p + facet_wrap(~clust_year)
+    if(facet) p <- p + facet_wrap(~clust_year, labeller = facet_labels)
   }
 
   # Theme adaptieren

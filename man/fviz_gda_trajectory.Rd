@@ -7,7 +7,7 @@
 fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
   = NULL), ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2,
   myriad = TRUE, time_points = NULL, ellipses = FALSE, facet = FALSE,
-  mean_path = FALSE)
+  facet_labels = NULL, mean_path = FALSE)
 }
 \arguments{
 \item{res_gda}{MFA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
@@ -29,6 +29,8 @@ fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
 \item{ellipses}{plot concentration ellipses (boolean).}
 
 \item{facet}{plot ellipses/ individuals per time (boolean).}
+
+\item{facet_labels}{rename facet labels (vector).}
 
 \item{mean_path}{plot mean path (boolean). If yes, no ellipses and no facets are plotted.}
 }
