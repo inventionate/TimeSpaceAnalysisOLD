@@ -16,7 +16,7 @@ NULL
 #'
 #' @return HMFA trajectory ggplot2 visualization.
 #' @export
-fviz_gda_mfa_trajectory <- function(res_gda, clust, select = list(name = NULL, within_inertia = NULL), ellipse_level = 0.8647,
+fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, within_inertia = NULL), ellipse_level = 0.8647,
                                     ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, time_points = NULL, ellipses = FALSE,
                                     facet = FALSE, mean_path = FALSE) {
 
@@ -66,7 +66,8 @@ fviz_gda_mfa_trajectory <- function(res_gda, clust, select = list(name = NULL, w
   {
     # Mittelwerte aller Individuen berechnen
     ind_mean_coord <- rbind(ws1516 %>% filter(id %in% ss16_id & id %in% ws1617_id),
-                            ss16 %>% filter(id %in% ws1617_id), ws1617) %>%
+                            ss16 %>% filter(id %in% ws1617_id),
+                            ws1617) %>%
       select(-time) %>% group_by(id) %>% summarise_each(funs(mean))
     ind_mean_coord_id <- data.frame(ind_mean_coord)$id
 
