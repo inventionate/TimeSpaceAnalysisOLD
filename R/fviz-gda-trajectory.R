@@ -2,7 +2,7 @@
 NULL
 #' Visualization of trajectories (connected MFA active/passive individual points).
 #'
-#' @param res_gda MFA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
+#' @param res_gda MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
 #' @param select vector of names or within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals).
 #' @param ellipse_level the ellipse level. Default: 86.47\%.
 #' @param ellipse_alpha opacity value.

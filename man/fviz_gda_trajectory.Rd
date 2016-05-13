@@ -10,7 +10,7 @@ fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
   facet_labels = NULL, mean_path = FALSE)
 }
 \arguments{
-\item{res_gda}{MFA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
+\item{res_gda}{MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
 
 \item{clust}{HCPC result of primary MFA.}
 
