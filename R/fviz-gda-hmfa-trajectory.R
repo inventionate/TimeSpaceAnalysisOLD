@@ -160,6 +160,9 @@ fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, 
   # Theme adaptieren
   p <- p + add_theme()
 
+  # Beschreibung der Punkte
+  p <- p + theme(legend.position = "bottom", legend.title = element_blank())
+
   # Ausgabe des Plots
   return(p)
 }
