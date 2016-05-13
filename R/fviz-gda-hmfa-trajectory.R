@@ -12,12 +12,12 @@ NULL
 #' @param facet plot ellipses/ individuals per year (boolean).
 #' @param mean_path plot mean path (boolean). If yes, no ellipses and no facets are plotted.
 #' @param clust HCPC result of primary MFA.
-#' @param facet_labels Rename facet labels.
+#' @param facet_labels Rename facet labels (vector).
 #'
 #' @return HMFA trajectory ggplot2 visualization.
 #' @export
 fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, contrib = NULL, cos2 = NULL, within_inertia = NULL),
-                                ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet_labels = label_value,
+                                ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet_labels = NULL,
                                 ellipses = FALSE, facet = FALSE, mean_path = FALSE) {
 
   # Add Myriad Pro font family
@@ -128,7 +128,10 @@ fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, 
       ggtitle("Fiktiver Vergleich der ersten drei Studiensemester") +
       xlab(paste0("Achse 1 (", round(res_gda$eig$`percentage of variance`[1], 1), "%)")) +
       ylab(paste0("Achse 2 (", round(res_gda$eig$`percentage of variance`[2], 1), "%)"))
-    if(facet) p <- p + facet_wrap(~clust)
+    if(facet) {
+      if(is.null(facet_labels)) p <- p + facet_wrap(~clust, labeller = label_both)
+      else p <- p + facet_wrap(~clust, labeller = labeller(clust = facet_labels))
+    }
   }
   # Mittelpunkte
   if(mean_path) {
@@ -148,7 +151,10 @@ fviz_gda_hmfa_trajectory <- function(res_gda, clust, select = list(name = NULL, 
                    alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid") +
       geom_point(data = coord_mean_timeseries, aes(Dim1, Dim2), colour = "black", shape = 18, size = 5) +
       geom_point(data = coord_mean_timeseries, aes(Dim1, Dim2, colour = clust_year), shape = 18, size = 4)
-    if(facet) p <- p + facet_wrap(~clust_year, labeller = facet_labels)
+    if(facet) {
+      if(is.null(facet_labels)) p <- p + facet_wrap(~clust_time, labeller = label_both)
+      else p <- p + facet_wrap(~clust_time, labeller = labeller(clust_time = facet_labels))
+    }
   }
 
   # Theme adaptieren

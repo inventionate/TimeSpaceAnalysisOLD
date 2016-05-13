@@ -6,9 +6,8 @@
 \usage{
 fviz_gda_hmfa_trajectory(res_gda, clust, select = list(name = NULL, contrib =
   NULL, cos2 = NULL, within_inertia = NULL), ellipse_level = 0.8647,
-  ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE,
-  facet_labels = label_value, ellipses = FALSE, facet = FALSE,
-  mean_path = FALSE)
+  ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet_labels = NULL,
+  ellipses = FALSE, facet = FALSE, mean_path = FALSE)
 }
 \arguments{
 \item{res_gda}{HMFA result (rownames have to be questionnaire IDs).}
@@ -25,7 +24,7 @@ fviz_gda_hmfa_trajectory(res_gda, clust, select = list(name = NULL, contrib =
 
 \item{myriad}{use Myriad Pro font (boolean).}
 
-\item{facet_labels}{Rename facet labels.}
+\item{facet_labels}{Rename facet labels (vector).}
 
 \item{ellipses}{plot concentration ellipses (boolean).}
 
