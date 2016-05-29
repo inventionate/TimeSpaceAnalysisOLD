@@ -60,7 +60,7 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
 
   if(!is.null(select$name))
   {
-    selected_ind <- res_gda$ind %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
+    selected_ind <- res_gda$ind$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
       filter(id %in% select$name)
   }
   if(!is.null(select$within_inertia))
@@ -114,7 +114,6 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
     mutate(time = factor(time, levels = c("Wintersemester 15/16", "Sommersemester 16", "Wintersemester 16/17")))
 
   # Plot data
-
   p <- factoextra::fviz_mfa_ind(res_gda, label = "none", invisible = "ind", pointsize = -1, axes.linetype = "solid", axes = axes)
   # Individuen mit Zeitpfeil
   if(!mean_path & !ellipses) {
