@@ -5,8 +5,8 @@
 \title{Visualization of trajectories (connected MFA active/passive individual points).}
 \usage{
 fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
-  = NULL), ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2,
-  myriad = TRUE, time_points = NULL, ellipses = FALSE, facet = FALSE,
+  = NULL, time_point = NULL), ellipses = FALSE, ellipse_level = 0.8647,
+  ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet = FALSE,
   facet_labels = NULL, mean_path = FALSE)
 }
 \arguments{
@@ -14,7 +14,9 @@ fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
 
 \item{clust}{HCPC result of primary MFA.}
 
-\item{select}{vector of names or within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals).}
+\item{select}{vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or time_point (vector containing the semesters to plot).}
+
+\item{ellipses}{plot concentration ellipses (boolean).}
 
 \item{ellipse_level}{the ellipse level. Default: 86.47\%.}
 
@@ -23,10 +25,6 @@ fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
 \item{axes}{axes to plot.}
 
 \item{myriad}{use Myriad Pro font (boolean).}
-
-\item{time_points}{vector containing names of time points (not yet implemented!).}
-
-\item{ellipses}{plot concentration ellipses (boolean).}
 
 \item{facet}{plot ellipses/ individuals per time (boolean).}
 

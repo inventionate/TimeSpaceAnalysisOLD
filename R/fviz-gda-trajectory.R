@@ -3,7 +3,7 @@ NULL
 #' Visualization of trajectories (connected MFA active/passive individual points).
 #'
 #' @param res_gda MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
-#' @param select vector of names or within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals).
+#' @param select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or time_point (vector containing the semesters to plot).
 #' @param ellipse_level the ellipse level. Default: 86.47\%.
 #' @param ellipse_alpha opacity value.
 #' @param axes axes to plot.
@@ -12,16 +12,20 @@ NULL
 #' @param facet plot ellipses/ individuals per time (boolean).
 #' @param mean_path plot mean path (boolean). If yes, no ellipses and no facets are plotted.
 #' @param clust HCPC result of primary MFA.
-#' @param time_points vector containing names of time points (not yet implemented!).
 #' @param facet_labels rename facet labels (vector).
 #'
 #' @return HMFA trajectory ggplot2 visualization.
 #' @export
-fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, within_inertia = NULL), ellipse_level = 0.8647,
-                                    ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, time_points = NULL, ellipses = FALSE,
-                                    facet = FALSE, facet_labels = NULL, mean_path = FALSE) {
+fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, within_inertia = NULL, time_point = NULL),
+                                ellipses = FALSE, ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE,
+                                facet = FALSE, facet_labels = NULL, mean_path = FALSE) {
 
-  # @todo: Umgang mit teilweise kompletten Fällen!!!
+  # @todo   time_points umsetzten. Dabei handelt es sich um die Angabe eines Semesters, das dann visualisiert wird.
+  #         Also timepoint = ws1516 visualisiert alle, die im ws1516 daten angegeben haben uws. Am besten wäre es,
+  #         wenn ein Filter eingerichtet wird. facet ist davon unberührt, weil es die cluster visualisiert.
+  #         Im Prinzip macht es Sinn, die Option in Select zu integrierten. Also "timepoint" als Option.
+  #         Dann werden alle visualisiert, man kann dann aber auch 1, 2 o. ä. wählen und es werden nur die entsprehenden
+  #         dargestellt. SO MACHEN WIRS (morgen auf der Bahnfahrt).
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -108,10 +112,26 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
     filter(id %in% selected_ind$id)
 
   # Daten final zusammenstellen
-  coord_mean_timeseries <- bind_rows(ws_coord_quali_1516, ss_coord_quali_16, ws_coord_quali_1617)
+  coord_mean_timeseries <- bind_rows(ws_coord_quali_1516, ss_coord_quali_16, ws_coord_quali_1617) %>%
+    separate(clust_time, c("clust", "time"), "_", remove = FALSE) %>%
+    mutate(clust_time = factor(clust_time, levels = c("1_Wintersemester 15/16", "1_Sommersemester 16", "1_Wintersemester 16/17",
+                                                      "2_Wintersemester 15/16", "2_Sommersemester 16", "2_Wintersemester 16/17",
+                                                      "3_Wintersemester 15/16", "3_Sommersemester 16", "3_Wintersemester 16/17")))
 
   coord_ind_timeseries <- bind_rows(ws_coord_ind_1516, ss_coord_ind_16, ws_coord_ind_1617) %>%
-    mutate(time = factor(time, levels = c("Wintersemester 15/16", "Sommersemester 16", "Wintersemester 16/17")))
+    unite(clust_time, clust, time, remove = FALSE) %>%
+    mutate(time = factor(time, levels = c("Wintersemester 15/16", "Sommersemester 16", "Wintersemester 16/17")),
+           clust_time = factor(clust_time, levels = c("1_Wintersemester 15/16", "1_Sommersemester 16", "1_Wintersemester 16/17",
+                                                      "2_Wintersemester 15/16", "2_Sommersemester 16", "2_Wintersemester 16/17",
+                                                      "3_Wintersemester 15/16", "3_Sommersemester 16", "3_Wintersemester 16/17")))
+
+  # Zu visualisierende Semester festlegen
+  if(!is.null(select$time_point)) {
+    # Mittelwerte nach Semestern filtern
+    coord_mean_timeseries <- coord_mean_timeseries %>% filter(time %in% select$time_point)
+    # Individuen filtern
+    coord_ind_timeseries <- coord_ind_timeseries %>% filter(time %in% select$time_point)
+  }
 
   # Plot data
   p <- factoextra::fviz_mfa_ind(res_gda, label = "none", invisible = "ind", pointsize = -1, axes.linetype = "solid", axes = axes)
@@ -145,7 +165,7 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
   # Ellipsen der unterschiedlichen Zeitgruppen einzeichnen
   if(ellipses) {
     p <- p +
-      stat_ellipse(data = coord_ind_timeseries %>% unite(clust_time, clust, time),
+      stat_ellipse(data = coord_ind_timeseries,
                    aes(Dim.1, Dim.2, fill = clust_time, colour = clust_time), geom ="polygon",  type = "norm",
                    alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid") +
       geom_point(data = coord_mean_timeseries, aes(Dim.1, Dim.2), colour = "black", shape = 18, size = 5) +
