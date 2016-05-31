@@ -58,6 +58,7 @@ Collate:
     'fviz-add-sup-ind.R'
     'fviz-dendrogram.R'
     'fviz-gda-hmfa-trajectory.R'
+    'fviz-gda-interaction.R'
     'fviz-gda-quali-ellipses.R'
     'supvar-stats.R'
     'fviz-gda-quali-supvar.R'
