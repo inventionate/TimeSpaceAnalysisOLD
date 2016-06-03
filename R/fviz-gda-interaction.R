@@ -21,6 +21,9 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali_names, title =
                                path.linetype = "solid", path.size = 1, path.colour = NULL, scale_mean_points = TRUE, axes = 1:2,
                                palette = "Set1", mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE) {
 
+  # Dev message.
+  print("Interaktionswolke: Die Funktion befindet sich im Alpha-Stadium und ist noch nicht einsatzfähig.")
+
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
