@@ -4,19 +4,18 @@
 \alias{fviz_gda_interaction}
 \title{Concat crossed variables and investigate interaction effects.}
 \usage{
-fviz_gda_interaction(res_gda, df_var_quali, var_quali_name,
+fviz_gda_interaction(res_gda, df_var_quali, var_quali_names,
   title = "MCA quali interaction effects", mean.alpha = 0.75,
   path.linetype = "solid", path.size = 1, path.colour = NULL,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1",
-  mod_names = NULL, mod_level_order = NULL, path.alpha = 0.7,
-  myriad = TRUE)
+  mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
 \item{df_var_quali}{crossed variable data frame.}
 
-\item{var_quali_name}{crossed variable name.}
+\item{var_quali_names}{vector containing variables to cross.}
 
 \item{title}{plot title.}
 
@@ -34,9 +33,11 @@ fviz_gda_interaction(res_gda, df_var_quali, var_quali_name,
 
 \item{palette}{used colour brewer palette.}
 
-\item{mod_names}{names of the crossed categories.}
-
 \item{mod_level_order}{order of the crossed modalities.}
+
+\item{path.alpha}{opacity of the path.}
+
+\item{myriad}{use myriad font or not (boolean).}
 }
 \value{
 ggplot2 visualizsation.

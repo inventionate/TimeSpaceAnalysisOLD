@@ -7,7 +7,7 @@
 fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
   = NULL, time_point = NULL), ellipses = FALSE, ellipse_level = 0.8647,
   ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet = FALSE,
-  facet_labels = NULL, mean_path = FALSE)
+  facet_labels = NULL, mean_path = FALSE, labels = FALSE)
 }
 \arguments{
 \item{res_gda}{MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
