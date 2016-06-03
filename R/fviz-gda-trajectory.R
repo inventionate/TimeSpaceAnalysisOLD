@@ -18,14 +18,7 @@ NULL
 #' @export
 fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, within_inertia = NULL, time_point = NULL),
                                 ellipses = FALSE, ellipse_level = 0.8647, ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE,
-                                facet = FALSE, facet_labels = NULL, mean_path = FALSE) {
-
-  # @todo   time_points umsetzten. Dabei handelt es sich um die Angabe eines Semesters, das dann visualisiert wird.
-  #         Also timepoint = ws1516 visualisiert alle, die im ws1516 daten angegeben haben uws. Am besten wäre es,
-  #         wenn ein Filter eingerichtet wird. facet ist davon unberührt, weil es die cluster visualisiert.
-  #         Im Prinzip macht es Sinn, die Option in Select zu integrierten. Also "timepoint" als Option.
-  #         Dann werden alle visualisiert, man kann dann aber auch 1, 2 o. ä. wählen und es werden nur die entsprehenden
-  #         dargestellt. SO MACHEN WIRS (morgen auf der Bahnfahrt).
+                                facet = FALSE, facet_labels = NULL, mean_path = FALSE, labels = FALSE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -39,8 +32,6 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
     filter(time == 3) %>% mutate(time = "Wintersemester 16/17")
 
   # Koordinaten der Individuen pro Semester
-  # @todo: Hier ist das Zuordnungsproblem! Es muss so programmiert werden, dass es ausreicht eine Zuweiseung für das 1. WS zu machen,
-  # die dann auf die anderen Semester übertragen wird.
   ws_coord_ind_1516 <- data.frame(ws1516, clust = clust$data.clust$clust)
   ss16_id <- data.frame(ss16)$id
   ss_coord_ind_16 <- data.frame(ss16, clust = data.frame(clust$data.clust %>% add_rownames %>% filter(rowname %in% ss16_id))$clust)
@@ -48,7 +39,6 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
   ws_coord_ind_1617 <- data.frame(ws1617, clust = data.frame(clust$data.clust %>% add_rownames %>% filter(rowname %in% ws1617_id))$clust)
 
   # Koordinaten der Ellipsenmittelpunkte pro Semester und Cluster
-
   ws_coord_quali_1516 <- ws_coord_ind_1516 %>% select(-id) %>%
     unite(clust_time, clust, time) %>% group_by(clust_time) %>%
     summarise_each(funs(mean))
@@ -61,18 +51,20 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
 
   # Selection (es wird select_ind definiert)
   selected_ind <- res_gda$ind$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"))
-
+  # Durch Angabe des Namens filtern.
   if(!is.null(select$name))
   {
-    selected_ind <- res_gda$ind$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
+    selected_ind <- selected_ind_name <- res_gda$ind$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
       filter(id %in% select$name)
   }
+  # Durch Angabe der Varianz filtern.
   if(!is.null(select$within_inertia))
   {
-    # Mittelwerte aller Individuen berechnen
+    # Mittelwerte aller Individuen berechnen (nur vollständige Fälle!)
+    # @todo   Überlegen, ob es auch Sinn macht unvollständige Fälle anzuzeigen oder zu berechnen.
     ind_mean_coord <- rbind(ws1516 %>% filter(id %in% ss16_id & id %in% ws1617_id),
                             ss16 %>% filter(id %in% ws1617_id),
-                            ws1617) %>%
+                            ws1617 %>% filter(id %in% ss16_id)) %>%
       select(-time) %>% group_by(id) %>% summarise_each(funs(mean))
     ind_mean_coord_id <- data.frame(ind_mean_coord)$id
 
@@ -100,7 +92,10 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
       selected_ind_low <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
         add_rownames %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(within_inertia) %>% slice(1:select$within_inertia[[2]])
     }
-    selected_ind <- rbind(selected_ind_high, selected_ind_low)
+    selected_ind <- selected_ind_wi <- rbind(selected_ind_high, selected_ind_low)
+  }
+  if(!is.null(select$name) & !is.null(select$within_inertia)) {
+    selected_ind <- selected_ind_name %>% filter(id %in% selected_ind_wi$id)
   }
 
   # Filterung vornehmen
@@ -147,6 +142,10 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
       ggtitle("Fiktiver Vergleich der ersten drei Studiensemester") +
       xlab(paste0("Achse 1 (", round(res_gda$eig$`percentage of variance`[1], 1), "%)")) +
       ylab(paste0("Achse 2 (", round(res_gda$eig$`percentage of variance`[2], 1), "%)"))
+    if(labels) {
+      p <- p + ggrepel::geom_label_repel(data = coord_ind_timeseries %>% filter(grepl("Wintersemester 15/16$",clust_time)),
+                                         aes(Dim.1, Dim.2, group = clust, colour = time, label = id))
+    }
     if(facet) {
       if(is.null(facet_labels)) p <- p + facet_wrap(~clust, labeller = label_both)
       else p <- p + facet_wrap(~clust, labeller = labeller(clust = facet_labels))
