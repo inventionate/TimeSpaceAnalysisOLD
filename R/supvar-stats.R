@@ -11,17 +11,18 @@
 #' \item{cos2}{data frame of categories square cosine}
 #' \item{var}{data frame of categories within variances, variance between and within categories and variable square correlation ratio (eta2)}
 #' \item{v.test}{data frame of categories test-values}
+#' \item{supvar}{vector of the supplementary variable categories}
 #' @export
 supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
   # Datensatz auslesen
-  var <- var_quali_df %>% select_(var_quali) %>% data.frame
-  
+  var <- var_quali_df %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
+
   # Check, ob es fehlende Werte gibt und ggf. imputieren
   if( length(which(is.na(var))) != 0 & impute ) {
 
     message("Info: Missing data will be imputed!")
-    
+
     var <- var %>% mutate_each(funs(as.factor))
 
     if(inherits(res_gda, c("MCA"))) {
@@ -41,13 +42,13 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
     var <- var_impute$completeObs[var_quali]
   }
-  
+
   # Spalte in Vektor umwandeln
   var <- var[,1]
 
   # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
   var[is.na(var)] <- "Fehlender Wert"
-  
+
   # Adaptiert von GDAtools.
   n <- sum(res_gda$call$row.w)
   FK <- colSums(res_gda$call$row.w*(dichotom(as.data.frame(factor(var)),out='numeric')))/n
@@ -73,5 +74,5 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
   coord <- round(coord,6)
   v.test <- sqrt(cos2)*sqrt(length(v)-1)
   v.test <- (((abs(coord)+coord)/coord)-1)*v.test
-  list(weight=round(weight,1),coord=coord,cos2=round(cos2,6),var=round(vrc,6),v.test=round(v.test,6))
+  list(supvar=var,weight=round(weight,1),coord=coord,cos2=round(cos2,6),var=round(vrc,6),v.test=round(v.test,6))
 }

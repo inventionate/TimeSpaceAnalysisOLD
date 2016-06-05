@@ -4,24 +4,24 @@
 \alias{supvar_crossing_stats}
 \title{Calculate crossed variables double breakdown of variance.}
 \usage{
-supvar_crossing_stats(res_gda, quali_var, impute = TRUE)
+supvar_crossing_stats(res_gda, var_quali_df, var_quali, impute = TRUE,
+  axes = 1:2)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
-\item{quali_var}{crossed variable (vector separated by "_").}
+\item{var_quali_df}{the supplementary data frame.}
 
-\item{impute}{handle missing values by imputation.}
+\item{var_quali}{crossed supplementary variable (vector separated by "_").}
+
+\item{impute}{impute missing data (boolean).}
+
+\item{axes}{the GDA dimensions to calculate.}
 }
 \value{
 Returns a list:
-\item{between_var1}{between variance var1}
-\item{var1_within_var2}{var1 within var2 variance}
-\item{between_var2}{data frame of categories square cosine}
-\item{var2_within_var1}{data frame of categories within variances, variance between and within categories and variable square correlation ratio (eta2)}
-\item{additive}{data frame of categories test-values}
-\item{interaction}{data frame of categories test-values}
-\item{between_var1_var2}{data frame of categories test-values}
+\item{var}{double breakdown of variance.}
+\item{reg}{result of linear regressions.}
 }
 \description{
 Calculate crossed variables double breakdown of variance.

@@ -22,6 +22,7 @@ Returns a list:
 \item{cos2}{data frame of categories square cosine}
 \item{var}{data frame of categories within variances, variance between and within categories and variable square correlation ratio (eta2)}
 \item{v.test}{data frame of categories test-values}
+\item{supvar}{vector of the supplementary variable categories}
 }
 \description{
 Calculate results for supplementary variables.
