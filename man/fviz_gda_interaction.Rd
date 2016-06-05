@@ -2,20 +2,19 @@
 % Please edit documentation in R/fviz-gda-interaction.R
 \name{fviz_gda_interaction}
 \alias{fviz_gda_interaction}
-\title{Concat crossed variables and investigate interaction effects.}
+\title{Visualize interaction cloud.}
 \usage{
-fviz_gda_interaction(res_gda, df_var_quali, var_quali_names,
+fviz_gda_interaction(res_gda, df_var_quali,
   title = "MCA quali interaction effects", mean.alpha = 0.75,
   path.linetype = "solid", path.size = 1, path.colour = NULL,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1",
-  mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE)
+  mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE,
+  impute = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
 \item{df_var_quali}{crossed variable data frame.}
-
-\item{var_quali_names}{vector containing variables to cross.}
 
 \item{title}{plot title.}
 
@@ -38,11 +37,13 @@ fviz_gda_interaction(res_gda, df_var_quali, var_quali_names,
 \item{path.alpha}{opacity of the path.}
 
 \item{myriad}{use myriad font or not (boolean).}
+
+\item{impute}{use imputation to handle missing data.}
 }
 \value{
-ggplot2 visualizsation.
+ggplot2 interaction cloud visualizsation.
 }
 \description{
-Concat crossed variables and investigate interaction effects.
+Visualize interaction cloud.
 }
 

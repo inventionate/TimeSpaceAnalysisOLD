@@ -28,6 +28,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title
                                     conf_colour = FALSE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
+  
+  # Über imputation lösen!!!!
 
   # Variable bestimmen
   if(hcpc) {

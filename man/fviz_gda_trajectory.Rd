@@ -31,6 +31,8 @@ fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
 \item{facet_labels}{rename facet labels (vector).}
 
 \item{mean_path}{plot mean path (boolean). If yes, no ellipses and no facets are plotted.}
+
+\item{labels}{plot individual labels (boolean).}
 }
 \value{
 HMFA trajectory ggplot2 visualization.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get-mca-var-corr.R
 \name{get_mca_var_corr}
 \alias{get_mca_var_corr}
-\title{Title}
+\title{Reshapes MCA results.}
 \usage{
 get_mca_var_corr(res_mca, axes = 1:2)
 }
@@ -12,9 +12,9 @@ get_mca_var_corr(res_mca, axes = 1:2)
 \item{axes}{axes selection.}
 }
 \value{
-data frame with MCA varoable names, types, coords and eta2 values.
+data frame with MCA variable names, types, coords and eta2 values.
 }
 \description{
-Title
+Reshapes MCA results.
 }
 

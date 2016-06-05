@@ -1,9 +1,9 @@
-#' Title
+#' Reshapes MCA results.
 #'
 #' @param res_mca MCA result.
 #' @param axes axes selection.
 #'
-#' @return data frame with MCA varoable names, types, coords and eta2 values.
+#' @return data frame with MCA variable names, types, coords and eta2 values.
 #' @export
 get_mca_var_corr <- function(res_mca, axes = 1:2)
 {

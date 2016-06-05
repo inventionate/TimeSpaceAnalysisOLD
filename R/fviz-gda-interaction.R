@@ -1,4 +1,6 @@
-#' Concat crossed variables and investigate interaction effects.
+#' @include supvar-stats.R
+NULL
+#' Visualize interaction cloud.
 #'
 #' @param res_gda GDA result.
 #' @param df_var_quali crossed variable data frame.
@@ -11,15 +13,16 @@
 #' @param scale_mean_points scale mean points (boolean).
 #' @param axes axes to plot.
 #' @param palette used colour brewer palette.
-#' @param var_quali_names vector containing variables to cross.
 #' @param path.alpha opacity of the path.
 #' @param myriad use myriad font or not (boolean).
+#' @param impute use imputation to handle missing data.
 #'
-#' @return ggplot2 visualizsation.
+#' @return ggplot2 interaction cloud visualizsation.
 #' @export
-fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali_names, title = "MCA quali interaction effects", mean.alpha = 0.75,
+fviz_gda_interaction <- function(res_gda, df_var_quali, title = "MCA quali interaction effects", mean.alpha = 0.75,
                                path.linetype = "solid", path.size = 1, path.colour = NULL, scale_mean_points = TRUE, axes = 1:2,
-                               palette = "Set1", mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE) {
+                               palette = "Set1", mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE, impute = TRUE)
+  {
 
   # Dev message.
   print("Interaktionswolke: Die Funktion befindet sich im Alpha-Stadium und ist noch nicht einsatzfähig.")
@@ -27,25 +30,19 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali_names, title =
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
-  df_source <- data.frame(allgemeine_angaben, df_var_quali)
-  var_quali <- df_source %>%
-    select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
-    filter(questionnaire_id %in% rownames(res_gda$call$X))
+  # Sofern es fehlende Werte gibt imputieren.
 
-  # Auf fehlende Werte prüfen
-  exclude_na <- which(is.na(var_quali[,2]))
-  # Datensätze zusammenstellen
-  if(length(exclude_na) == 0) df_source_na <- data.frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = var_quali[,2])
-  else df_source_na <- data.frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = var_quali[,2])[-exclude_na,]
+  # Berechnung passive Variable durchführen
+  res_quali <- supvar_stats(res_gda, var_quali)
 
-  coord_ind_quali <- df_source_na %>%
-    group_by(Dim.1, Dim.2, var_quali) %>%
-    mutate(count = n()) %>%
-    ungroup()
-  coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(mean))
-  size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
-  coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)
+  # Koordinaten bestimmen
+  res_quali$coord
 
+  # Skalierung der Koordinaten im Fall von MCA Ergebnissen (* 1/wurzel(eigenwert))
+  # Für MCA dann die Koordinaten anpassen (liefert Kategorien, benötigt werden Individuen)
+
+  # Gewicht bestimmen
+  res_gda$weight
 
   # Plot
   if(inherits(res_gda, c("MCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)

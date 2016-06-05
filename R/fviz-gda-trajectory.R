@@ -13,6 +13,7 @@ NULL
 #' @param mean_path plot mean path (boolean). If yes, no ellipses and no facets are plotted.
 #' @param clust HCPC result of primary MFA.
 #' @param facet_labels rename facet labels (vector).
+#' @param labels plot individual labels (boolean).
 #'
 #' @return HMFA trajectory ggplot2 visualization.
 #' @export

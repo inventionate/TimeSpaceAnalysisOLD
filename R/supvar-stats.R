@@ -1,8 +1,9 @@
 #' Calculate results for supplementary variables.
 #'
 #' @param res_gda GDA result.
-#' @param df_var_quali data frame of one quali variable.
-#' @param var_quali_name name if quali variable.
+#' @param var_quali_df the supplementary data frame.
+#' @param var_quali supplementary variable name (string).
+#' @param impute impute missing data (boolean).
 #'
 #' @return Returns a list:
 #' \item{weight}{numeric vector of categories weights}
@@ -11,39 +12,53 @@
 #' \item{var}{data frame of categories within variances, variance between and within categories and variable square correlation ratio (eta2)}
 #' \item{v.test}{data frame of categories test-values}
 #' @export
-supvar_stats <- function(res_gda, df_var_quali, var_quali_name) {
+supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
+  # Datensatz auslesen
+  var <- var_quali_df %>% select_(var_quali) %>% data.frame
+  
+  # Check, ob es fehlende Werte gibt und ggf. imputieren
+  if( length(which(is.na(var))) != 0 & impute ) {
 
-  # Hier umdenken und eher ganze MCA oder MFA rechnen (ausgehend vom call, um an die entsprechenden Werte zu kommen. Vielleicht macht das dann
-  # aber wenig Sinn, als Zusatzfunktion?)
+    message("Info: Missing data will be imputed!")
+    
+    var <- var %>% mutate_each(funs(as.factor))
 
-  var_names <- rownames(res_gda$call$X)
-  df_source <- data.frame(allgemeine_angaben, df_var_quali)
-  var_quali <- df_source %>%
-    select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
-    filter(questionnaire_id %in% var_names)
+    if(inherits(res_gda, c("MCA"))) {
 
-  # Auf fehlende Werte prüfen
-  # exclude_na <- which(is.na(var_quali[,2]))
-  # Datensätze zusammenstellen
-  #if(length(exclude_na) == 0) df_source_na <- data.frame(res_gda$ind$coord, var_quali = var_quali[,2])
-  #else df_source_na <- data.frame(res_gda$ind$coord, var_quali = var_quali[,2])[-exclude_na,]
+      var_impute <- missMDA::imputeMCA(data.frame(res_gda$call$X, var))
 
-  df_source_na <- data.frame(res_gda$ind$coord, var_quali = as.factor(replace(as.character(var_quali[,2]),is.na(var_quali[,2]),paste(attributes(var_quali)$names[2],"Fehlender Wert",sep="_"))))
+    }
 
-  var <- df_source_na$var_quali
+    if(inherits(res_gda, c("MFA"))) {
 
+      var_impute <- missMDA::imputeMFA(data.frame(res_gda$call$X, var),
+                       c(res_gda$call$group, 1),
+                       res_gda$call$ncp,
+                       c(res_gda$call$type, "n"))
+
+    }
+
+    var <- var_impute$completeObs[var_quali]
+  }
+  
+  # Spalte in Vektor umwandeln
+  var <- var[,1]
+
+  # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
+  var[is.na(var)] <- "Fehlender Wert"
+  
+  # Adaptiert von GDAtools.
   n <- sum(res_gda$call$row.w)
   FK <- colSums(res_gda$call$row.w*(dichotom(as.data.frame(factor(var)),out='numeric')))/n
   v <- factor(var)
   wt <- res_gda$call$row.w
-
-  ind <- df_source_na[,1:res_gda$call$ncp]
-
+  # Hier direkt alle Individuen aus dem GDA Ergebnis
+  ind <- data.frame(res_gda$ind$coord[,1:res_gda$call$ncp])
   coord <- aggregate(wt*ind,list(v),sum)[,-1]/n/FK
   vrc <- aggregate(wt*ind*ind,list(v),sum)[,-1]/n/FK-coord*coord
-  if(inherits(res_gda, c("MCA", "sMCA"))) for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]/res_gda$svd$vs[i]
-  if(inherits(res_gda, c("MFA", "sMFA"))) for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]
+  if(inherits(res_gda, c("MCA"))) for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]/res_gda$svd$vs[i]
+  if(inherits(res_gda, c("MFA"))) for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]
   cos2 <- coord*coord/((1/FK)-1)
   weight=n*FK
   names(weight) <- levels(v)# v au lieu de var

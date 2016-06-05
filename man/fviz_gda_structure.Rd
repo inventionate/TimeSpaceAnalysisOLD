@@ -2,20 +2,21 @@
 % Please edit documentation in R/fviz-gda-structure.R
 \name{fviz_gda_structure}
 \alias{fviz_gda_structure}
-\title{Visualize addtive cloud.}
+\title{Visualize additive cloud.}
 \usage{
-fviz_gda_structure(res_gda, df_var_quali, var_quali_names,
+fviz_gda_structure(res_gda, df_var_quali, var_quali_name,
   title = "MCA quali interaction effects", additive_cloud_alpha = 0.75,
   additive_cloud_linetype = "solid", additive_cloud_size = 1,
   additive_cloud_colour = NULL, scale_additive_cloud_points = TRUE,
-  axes = 1:2, palette = "Set1", mod_level_order = NULL, myriad = TRUE)
+  axes = 1:2, palette = "Set1", mod_level_order = NULL, myriad = TRUE,
+  real_cloud = TRUE, fitted_cloud = FALSE, deviations = FALSE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
 \item{df_var_quali}{crossed variable data frame.}
 
-\item{var_quali_names}{names of crossed variables.}
+\item{var_quali_name}{name of quali variable.}
 
 \item{title}{plot title.}
 
@@ -36,11 +37,17 @@ fviz_gda_structure(res_gda, df_var_quali, var_quali_names,
 \item{mod_level_order}{order of modalities.}
 
 \item{myriad}{use Myriad Pro font (boolean).}
+
+\item{real_cloud}{plot crossed additive cloud (boolean).}
+
+\item{fitted_cloud}{plot fitted additive cloud (boolean).}
+
+\item{deviations}{plot deviations between real and fitted additive clouds (boolean).}
 }
 \value{
 ggplot2 visualization of additive cloud.
 }
 \description{
-Visualize addtive cloud.
+Visualize additive cloud.
 }
 

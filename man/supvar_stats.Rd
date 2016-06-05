@@ -4,14 +4,16 @@
 \alias{supvar_stats}
 \title{Calculate results for supplementary variables.}
 \usage{
-supvar_stats(res_gda, df_var_quali, var_quali_name)
+supvar_stats(res_gda, var_quali_df, var_quali, impute = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
-\item{df_var_quali}{data frame of one quali variable.}
+\item{var_quali_df}{the supplementary data frame.}
 
-\item{var_quali_name}{name if quali variable.}
+\item{var_quali}{supplementary variable name (string).}
+
+\item{impute}{impute missing data (boolean).}
 }
 \value{
 Returns a list:
