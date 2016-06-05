@@ -4,7 +4,7 @@
 \alias{fviz_gda_quali_supvar}
 \title{Visualize supplementary variables.}
 \usage{
-fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali_name,
+fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali,
   title = "MCA quali var structure", path = FALSE, linetype = "solid",
   axes = 1:2, scale_point = TRUE, size_point = 3, scale_text = FALSE,
   size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE)
@@ -14,7 +14,7 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali_name,
 
 \item{df_var_quali}{crossed variable data frame.}
 
-\item{var_quali_name}{crossed variable name.}
+\item{var_quali}{crossed variable name.}
 
 \item{title}{plot title.}
 
@@ -37,8 +37,6 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali_name,
 \item{myriad}{use Myriad Pro font family (boolean).}
 
 \item{impute}{impute missing data (boolean).}
-
-\item{na_exclude}{handle missing data (boolean).}
 }
 \value{
 ggplot2 visualization of supplementary variables.

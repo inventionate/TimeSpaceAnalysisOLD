@@ -4,17 +4,18 @@
 \alias{fviz_gda_interaction}
 \title{Visualize interaction cloud.}
 \usage{
-fviz_gda_interaction(res_gda, df_var_quali,
+fviz_gda_interaction(res_gda, df_var_quali, var_quali,
   title = "MCA quali interaction effects", mean.alpha = 0.75,
   path.linetype = "solid", path.size = 1, path.colour = NULL,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1",
-  mod_level_order = NULL, path.alpha = 0.7, myriad = TRUE,
-  impute = TRUE)
+  path.alpha = 0.7, myriad = TRUE, impute = TRUE, variable = 1)
 }
 \arguments{
 \item{res_gda}{GDA result.}
 
 \item{df_var_quali}{crossed variable data frame.}
+
+\item{var_quali}{name of crossed supplementary variable.}
 
 \item{title}{plot title.}
 
@@ -32,13 +33,13 @@ fviz_gda_interaction(res_gda, df_var_quali,
 
 \item{palette}{used colour brewer palette.}
 
-\item{mod_level_order}{order of the crossed modalities.}
-
 \item{path.alpha}{opacity of the path.}
 
 \item{myriad}{use myriad font or not (boolean).}
 
 \item{impute}{use imputation to handle missing data.}
+
+\item{mod_level_order}{order of the crossed modalities.}
 }
 \value{
 ggplot2 interaction cloud visualizsation.
