@@ -4,19 +4,19 @@
 \alias{fviz_gda_quali_ellipses}
 \title{Title}
 \usage{
-fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
+fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
   title = "MCA quali var ellipses", facet = TRUE, alpha_point = 0.75,
   conc_linetype = "solid", conf_linetype = "solid",
-  scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1",
-  myriad = TRUE, concentration_ellipses = TRUE,
+  scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE,
+  impute = TRUE, concentration_ellipses = TRUE,
   confidence_ellipses = TRUE, conf_colour = FALSE)
 }
 \arguments{
-\item{res_gda}{GDA result (rownames have to be individual questionnaire IDs).}
+\item{res_gda}{GDA (MCA, MFA) result (rownames have to be individual questionnaire IDs).}
 
 \item{df_var_quali}{data frame of one quali variable.}
 
-\item{var_quali_name}{name if quali variable.}
+\item{var_quali}{name if quali variable.}
 
 \item{title}{plot title.}
 
@@ -30,13 +30,13 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali_name,
 
 \item{scale_mean_points}{scale mean point size in respect of the group size (boolean).}
 
-\item{hcpc}{add ellipses to HCPC results (boolean).}
-
 \item{axes}{the GDA dimensions to plot.}
 
 \item{palette}{Colour brewer scale.}
 
 \item{myriad}{use Myriad Pro font family (boolean).}
+
+\item{impute}{impute missing data (boolean).}
 
 \item{concentration_ellipses}{plot concentration ellipse (boolean).}
 

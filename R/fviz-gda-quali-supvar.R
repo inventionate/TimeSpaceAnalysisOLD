@@ -5,7 +5,7 @@ NULL
 #'
 #' @param res_gda GDA result.
 #' @param df_var_quali crossed variable data frame.
-#' @param var_quali_name crossed variable name.
+#' @param var_quali crossed variable name.
 #' @param title plot title.
 #' @param path plot path (boolean).
 #' @param linetype specify path linetype.
@@ -13,43 +13,37 @@ NULL
 #' @param palette RColorBrewer palette.
 #' @param scale_point scale points by weight (boolean).
 #' @param scale_text scale text by weight (boolean).
-#' @param na_exclude handle missing data (boolean).
 #' @param size_point define point size.
 #' @param size_text define text size.
+#' @param myriad use Myriad Pro font family (boolean).
+#' @param impute impute missing data (boolean).
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
-fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var structure",
+fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
-                               scale_text = FALSE, size_text = 3, palette = "Set1", na_exclude = TRUE,
-                               myriad = TRUE)
-{
+                               scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
-  # Berechnungen der passiven Variable durchführen
-  supvar <- supvar_stats(res_gda, df_var_quali, var_quali_name)
+  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
 
-  # Fehlende Werte ausschließen
-  if(na_exclude) {
-    supvar <- data.frame(weight = supvar$weight, coord = supvar$coord) %>%
-      add_rownames %>% filter(!grepl("Fehlender Wert$", rowname))
-  } else {
-    supvar <- data.frame(weight = supvar$weight, coord = supvar$coord) %>%
-      add_rownames
-  }
+  # Berechnungen der passiven Variable durchführen
+  supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute)
 
   # Achsen auswählen
-  supvar <- supvar %>% select(rowname, weight, matches(paste0("Dim.",axes[1], "$|Dim.", axes[2], "$")))
+  supvar <- data.frame(weight = supvar_stats$weight, coord = supvar_stats$coord) %>% add_rownames %>% select(rowname, weight, matches(paste0("Dim.",axes[1], "$|Dim.", axes[2], "$")))
 
   # Spaltennamen anpassen
   colnames(supvar) <- c("rowname", "weight", "Dim.1", "Dim.2")
 
   # Reihenfolge der Zeilen an die Faktorenlevels anpassen
-  order_levels <- df_var_quali %>% data.frame %>% select(which(names(data.frame(df_var_quali)) %in% var_quali_name))
+  order_levels <- df_var_quali %>% data.frame %>% select(which(names(data.frame(df_var_quali)) %in% var_quali))
 
   order_levels <- levels(factor(order_levels[,1]))
+
+  if( length(which(is.na(var))) != 0 & !impute ) order_levels <- c(order_levels, "Fehlender Wert")
 
   supvar <- supvar %>% slice(match(order_levels, rowname))
 

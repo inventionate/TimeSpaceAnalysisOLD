@@ -2,15 +2,14 @@
 NULL
 #' Title
 #'
-#' @param res_gda GDA result (rownames have to be individual questionnaire IDs).
+#' @param res_gda GDA (MCA, MFA) result (rownames have to be individual questionnaire IDs).
 #' @param df_var_quali data frame of one quali variable.
-#' @param var_quali_name name if quali variable.
+#' @param var_quali name if quali variable.
 #' @param title plot title.
 #' @param facet whether facet ellipses or not (boolean).
 #' @param scale_mean_points scale mean point size in respect of the group size (boolean).
 #' @param axes the GDA dimensions to plot.
 #' @param palette Colour brewer scale.
-#' @param hcpc add ellipses to HCPC results (boolean).
 #' @param alpha_point opacity of individual points.
 #' @param conc_linetype linetype of concentration ellipse.
 #' @param conf_linetype linetype of confidence ellipse.
@@ -18,45 +17,73 @@ NULL
 #' @param concentration_ellipses plot concentration ellipse (boolean).
 #' @param confidence_ellipses plot confidence ellipses (boolean).
 #' @param conf_colour colour confidence ellipses (boolean).
+#' @param impute impute missing data (boolean).
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
-fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali_name, title = "MCA quali var ellipses",
+fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var ellipses",
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
-                                    scale_mean_points = TRUE, hcpc = FALSE, axes = 1:2, palette = "Set1",
-                                    myriad = TRUE, concentration_ellipses = TRUE, confidence_ellipses = TRUE,
-                                    conf_colour = FALSE) {
+                                    scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
+                                    concentration_ellipses = TRUE, confidence_ellipses = TRUE, conf_colour = FALSE) {
+
+  # @todo: Reihenfolge der facets an die Levels anpassen!
+
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
-  
-  # Über imputation lösen!!!!
 
-  # Variable bestimmen
-  if(hcpc) {
-    var_quali <- data.frame(df_var_quali$data.clust) %>%
-      add_rownames() %>%
-      select(questionnaire_id = rowname, var_quali = clust)
+  # Datensatz auslesen
+  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
+  var_levels <- df_var_quali %>% select_(var_quali) %>% data.frame %>% .[,1] %>% levels
 
+  # Auf Fehlende Werte prüfen.
+  exclude_na <- which(is.na(var))
+
+  if( length(exclude_na) != 0 & impute ) {
+
+    message("Info: Missing data will be imputed!")
+
+    var <- var %>% mutate_each(funs(as.factor))
+
+    if(inherits(res_gda, c("MCA"))) {
+
+      var_impute <- missMDA::imputeMCA(data.frame(res_gda$call$X, var))
+
+    }
+
+    if(inherits(res_gda, c("MFA"))) {
+
+      var_impute <- missMDA::imputeMFA(data.frame(res_gda$call$X, var),
+                                       c(res_gda$call$group, 1),
+                                       res_gda$call$ncp,
+                                       c(res_gda$call$type, "n"))
+
+    }
+
+    var <- var_impute$completeObs[var_quali]
   } else {
-    var_names <- rownames(res_gda$call$X)
-    df_source <- data.frame(allgemeine_angaben, df_var_quali)
-    var_quali <- df_source %>%
-      select(which(names(df_source) %in% c("questionnaire_id", var_quali_name))) %>%
-      filter(questionnaire_id %in% var_names)
+    # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
+    var[is.na(var)] <- "Fehlender Wert"
+    var_levels <- c(var_levels, "Fehlender Wert")
   }
-  # Auf fehlende Werte prüfen
-  exclude_na <- which(is.na(var_quali[,2]))
-  # Datensätze zusammenstellen
-  if(length(exclude_na) == 0) df_source_na <- data.frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = var_quali[,2])
-  else df_source_na <- data.frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = var_quali[,2])[-exclude_na,]
 
-  coord_ind_quali <- df_source_na %>%
+  # Spalte in Vektor umwandeln
+  var <- var[,1]
+
+  # Datensatz zusammenstellen (Koordinaten mit passiver Variable zusammenführen)
+  df_source <- data_frame(Dim.1 = res_gda$ind$coord[, axes[1]], Dim.2 = res_gda$ind$coord[, axes[2]], var_quali = factor(var)) %>%
+    mutate(var_quali = factor(var_quali, levels = var_levels))
+
+  coord_ind_quali <- df_source %>%
     group_by(Dim.1, Dim.2, var_quali) %>%
     mutate(count = n()) %>%
     ungroup()
   coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(mean))
   size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
   coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)
+
+  # Levels berücksichtigen
+
+
   # Plot
   if(inherits(res_gda, c("MCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
   if(inherits(res_gda, c("MFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)

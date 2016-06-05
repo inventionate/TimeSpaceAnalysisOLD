@@ -41,13 +41,13 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
     }
 
     var <- var_impute$completeObs[var_quali]
+  } else {
+    # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
+    var[is.na(var)] <- "Fehlender Wert"
   }
 
   # Spalte in Vektor umwandeln
   var <- var[,1]
-
-  # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
-  var[is.na(var)] <- "Fehlender Wert"
 
   # Adaptiert von GDAtools.
   n <- sum(res_gda$call$row.w)
