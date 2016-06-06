@@ -22,7 +22,7 @@ NULL
 #' @export
 fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA quali interaction effects", mean_alpha = 0.75,
                                path_linetype = "solid", path_size = 1, path_colour = "black", scale_mean_points = TRUE, axes = 1:2,
-                               palette = "Set1", path_alpha = 0.7, myriad = TRUE, impute = TRUE, variable = "b") {
+                               palette = "Set1", path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "b") {
 
   # Check GDA result
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
