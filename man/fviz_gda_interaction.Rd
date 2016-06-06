@@ -5,13 +5,13 @@
 \title{Visualize interaction cloud.}
 \usage{
 fviz_gda_interaction(res_gda, df_var_quali, var_quali,
-  title = "MCA quali interaction effects", mean.alpha = 0.75,
-  path.linetype = "solid", path.size = 1, path.colour = NULL,
+  title = "MCA quali interaction effects", mean_alpha = 0.75,
+  path_linetype = "solid", path_size = 1, path_colour = "black",
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1",
-  path.alpha = 0.7, myriad = TRUE, impute = TRUE, variable = 1)
+  path_alpha = 0.7, myriad = TRUE, impute = TRUE, variable = "b")
 }
 \arguments{
-\item{res_gda}{GDA result.}
+\item{res_gda}{MCA result.}
 
 \item{df_var_quali}{crossed variable data frame.}
 
@@ -19,13 +19,13 @@ fviz_gda_interaction(res_gda, df_var_quali, var_quali,
 
 \item{title}{plot title.}
 
-\item{mean.alpha}{alpha of the mean point.}
+\item{mean_alpha}{alpha of the mean point.}
 
-\item{path.linetype}{linetype of concat path.}
+\item{path_linetype}{linetype of concat path.}
 
-\item{path.size}{size of concat path.}
+\item{path_size}{size of concat path.}
 
-\item{path.colour}{colour of concat path.}
+\item{path_colour}{colour of concat path.}
 
 \item{scale_mean_points}{scale mean points (boolean).}
 
@@ -33,7 +33,7 @@ fviz_gda_interaction(res_gda, df_var_quali, var_quali,
 
 \item{palette}{used colour brewer palette.}
 
-\item{path.alpha}{opacity of the path.}
+\item{path_alpha}{opacity of the path.}
 
 \item{myriad}{use myriad font or not (boolean).}
 

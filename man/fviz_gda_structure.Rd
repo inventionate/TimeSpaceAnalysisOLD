@@ -4,45 +4,31 @@
 \alias{fviz_gda_structure}
 \title{Visualize additive cloud.}
 \usage{
-fviz_gda_structure(res_gda, df_var_quali, var_quali_name,
-  title = "MCA quali interaction effects", additive_cloud_alpha = 0.75,
-  additive_cloud_linetype = "solid", additive_cloud_size = 1,
-  additive_cloud_colour = NULL, scale_additive_cloud_points = TRUE,
-  axes = 1:2, palette = "Set1", mod_level_order = NULL, myriad = TRUE,
-  real_cloud = TRUE, fitted_cloud = FALSE, deviations = FALSE)
+fviz_gda_structure(res_gda, df_var_quali, var_quali,
+  title = "MCA quali structure effects", scale_mean_points = TRUE,
+  axes = 1:2, palette = "Set1", impute = TRUE, myriad = TRUE,
+  cloud = "both")
 }
 \arguments{
-\item{res_gda}{GDA result.}
+\item{res_gda}{MCA result.}
 
 \item{df_var_quali}{crossed variable data frame.}
 
-\item{var_quali_name}{name of quali variable.}
+\item{var_quali}{name of quali variable.}
 
 \item{title}{plot title.}
 
-\item{additive_cloud_alpha}{opacity of the cloud.}
-
-\item{additive_cloud_linetype}{linetype of the cloud.}
-
-\item{additive_cloud_size}{border size of the cloud.}
-
-\item{additive_cloud_colour}{colour of the cloud.}
-
-\item{scale_additive_cloud_points}{scale points (boolean).}
+\item{scale_mean_points}{scale points (boolean).}
 
 \item{axes}{which axis to plot.}
 
 \item{palette}{colour palette (boolean).}
 
-\item{mod_level_order}{order of modalities.}
+\item{impute}{impute missing data (boolean).}
 
 \item{myriad}{use Myriad Pro font (boolean).}
 
-\item{real_cloud}{plot crossed additive cloud (boolean).}
-
-\item{fitted_cloud}{plot fitted additive cloud (boolean).}
-
-\item{deviations}{plot deviations between real and fitted additive clouds (boolean).}
+\item{cloud}{which cloud should be plotted (string: real, fitted, both, deviation)}
 }
 \value{
 ggplot2 visualization of additive cloud.

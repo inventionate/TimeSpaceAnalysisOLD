@@ -33,6 +33,8 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
     if(inherits(res_gda, c("MFA"))) {
 
+      warning("MFA input. Variances, cos2 and v.test aren't calculated!")
+
       var_impute <- missMDA::imputeMFA(data.frame(res_gda$call$X, var),
                        c(res_gda$call$group, 1),
                        res_gda$call$ncp,
@@ -48,18 +50,21 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
   # Spalte in Vektor umwandeln
   var <- var[,1]
-
   # Adaptiert von GDAtools.
-  n <- sum(res_gda$call$row.w)
-  FK <- colSums(res_gda$call$row.w*(dichotom(as.data.frame(factor(var)),out='numeric')))/n
+  row_weight <- res_gda$call$row.w
+  if(inherits(res_gda, c("MFA"))) row_weight <- res_gda$call$row.w.init
+  # Die Gewichte der Zeilen korrigieren, da die MFA diese ausgleicht, was zur Varianzberechnung nicht korrekt ist.
+  #if(inherits(res_gda, c("MFA"))) row_weight <- res_gda$call$row.w.init
+  n <- sum(row_weight)
+  FK <- colSums(row_weight*(dichotom(as.data.frame(factor(var)),out='numeric')))/n
   v <- factor(var)
-  wt <- res_gda$call$row.w
+  wt <- row_weight
   # Hier direkt alle Individuen aus dem GDA Ergebnis
   ind <- data.frame(res_gda$ind$coord[,1:res_gda$call$ncp])
   coord <- aggregate(wt*ind,list(v),sum)[,-1]/n/FK
   vrc <- aggregate(wt*ind*ind,list(v),sum)[,-1]/n/FK-coord*coord
-  if(inherits(res_gda, c("MCA"))) for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]/res_gda$svd$vs[i]
-  if(inherits(res_gda, c("MFA"))) for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]
+  #if(inherits(res_gda, c("MCA")))
+  for(i in 1:res_gda$call$ncp) coord[,i] <- coord[,i]/res_gda$svd$vs[i]
   cos2 <- coord*coord/((1/FK)-1)
   weight=n*FK
   names(weight) <- levels(v)# v au lieu de var
@@ -74,5 +79,7 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
   coord <- round(coord,6)
   v.test <- sqrt(cos2)*sqrt(length(v)-1)
   v.test <- (((abs(coord)+coord)/coord)-1)*v.test
-  list(supvar=var,weight=round(weight,1),coord=coord,cos2=round(cos2,6),var=round(vrc,6),v.test=round(v.test,6))
+  # Absolutes Gewicht bei der MFA wiederherstellen
+  if(inherits(res_gda, c("MFA"))) list(supvar=var,weight=round(weight,1),coord=coord)
+  else list(supvar=var,weight=round(weight,1),coord=coord,cos2=round(cos2,6),var=round(vrc,6),v.test=round(v.test,6))
 }

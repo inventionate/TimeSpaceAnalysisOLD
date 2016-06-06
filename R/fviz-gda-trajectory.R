@@ -130,7 +130,8 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
   }
 
   # Plot data
-  p <- factoextra::fviz_mfa_ind(res_gda, label = "none", invisible = "ind", pointsize = -1, axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = "ind", pointsize = -1, axes.linetype = "solid", axes = axes)
+  else stop("Only MCA plots are currently supported!")
   # Individuen mit Zeitpfeil
   if(!mean_path & !ellipses) {
     p <- p +

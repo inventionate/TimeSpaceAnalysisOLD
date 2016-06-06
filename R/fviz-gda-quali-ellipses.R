@@ -24,7 +24,7 @@ NULL
 fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var ellipses",
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
-                                    concentration_ellipses = TRUE, confidence_ellipses = TRUE, conf_colour = FALSE) {
+                                    concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE) {
 
   # @todo: Reihenfolge der facets an die Levels anpassen!
 

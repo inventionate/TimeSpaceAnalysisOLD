@@ -3,11 +3,11 @@
 NULL
 #' Calculate crossed variables double breakdown of variance.
 #'
-#' @param res_gda GDA result.
+#' @param res_gda MCA result.
 #' @param var_quali_df the supplementary data frame.
 #' @param var_quali crossed supplementary variable (vector separated by "_").
 #' @param impute impute missing data (boolean).
-#' @param axes the GDA dimensions to calculate.
+#' @param axes the GDA dimensions to calculate double breakdown of variance.
 #'
 #' @return Returns a list:
 #' \item{var}{double breakdown of variance.}
@@ -15,6 +15,13 @@ NULL
 #' @export
 supvar_crossing_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, axes = 1:2) {
 
+  # Check GDA result
+  if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
+
+  # Eigenwerte extrahieren, um Variablen skalieren zu können
+  # eigenvalues <- res_gda$eig %>% data.frame %>% add_rownames %>% separate(rowname, c("dim", "num")) %>%
+  #   select(num, eigenvalue) %>% mutate_each(funs(as.numeric), matches("num")) %>% spread(num, eigenvalue)
+  # colnames(eigenvalues) <- paste0("Dim.", 1:ncol(eigenvalues))
 
   # Extract statistical values.
   var_crossed_stats <- supvar_stats(res_gda, var_quali_df, var_quali, impute)
@@ -23,10 +30,6 @@ supvar_crossing_stats <- function(res_gda, var_quali_df, var_quali, impute = TRU
 
   weight <- var_crossed_stats$weight %>% data.frame(weight = .) %>% add_rownames %>% separate(rowname, c("var1", "var2"), sep = "_")
 
-  # Extract eigenvalues.
-  eigenvalues <- res_gda$eig %>% data.frame %>% slice(1:res_gda$call$ncp) %>% add_rownames %>% select(rowname, eigenvalue) %>% spread(rowname, eigenvalue)
-  names(eigenvalues) <- paste0("Dim.", names(eigenvalues))
-
   # Separate supplementary variables.
   var_crossed <- var_crossed_stats$supvar %>% data_frame(var_crossed = .) %>% separate(var_crossed, c("var1", "var2"), "_")
   var1 <- var_crossed$var1
@@ -34,24 +37,23 @@ supvar_crossing_stats <- function(res_gda, var_quali_df, var_quali, impute = TRU
 
   # Var1 between-variance.
   var1_var <- supvar_stats(res_gda, data.frame(var1 = var1), "var1", impute)
-  between_var1_1 <- var1_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[1]))) %>% .$dim
-  between_var1_2 <- var1_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[2]))) %>% .$dim
+  between_var1_1 <- var1_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[1], "$"))) %>% .$dim
+  between_var1_2 <- var1_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[2], "$"))) %>% .$dim
   between_var1_tot <- between_var1_1 + between_var1_2
 
   # Var2 between-variance.
   var2_var <- supvar_stats(res_gda, data.frame(var2 = var2), "var2", impute)
-  between_var2_1 <- var2_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[1]))) %>% .$dim
-  between_var2_2 <- var2_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[2]))) %>% .$dim
+  between_var2_1 <- var2_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[1], "$"))) %>% .$dim
+  between_var2_2 <- var2_var$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[2], "$"))) %>% .$dim
   between_var2_tot <- between_var2_1 + between_var2_2
 
   # Between-variance var1 X var2
-  between_var1_var2_1 <- var_crossed_stats$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[1]))) %>% .$dim
-  between_var1_var2_2 <- var_crossed_stats$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[2]))) %>% .$dim
+  between_var1_var2_1 <- var_crossed_stats$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[1], "$"))) %>% .$dim
+  between_var1_var2_2 <- var_crossed_stats$var %>% add_rownames %>% filter(rowname == "between") %>% select(dim = matches(paste0("Dim.", axes[2], "$"))) %>% .$dim
   between_var1_var2_tot <- between_var1_var2_1 + between_var1_var2_2
 
-
   # Within variance 1.
-  crossed_within_variance1 <- .crossed_within_variance("var1", weight, coord, eigenvalues)
+  crossed_within_variance1 <- .crossed_within_variance("var2", weight, coord)#, eigenvalues)
 
   # Total within variance 1.
   var2_within_var1_1 <- crossed_within_variance1$Dim.1
@@ -59,7 +61,7 @@ supvar_crossing_stats <- function(res_gda, var_quali_df, var_quali, impute = TRU
   var2_within_var1_tot <- var2_within_var1_1 + var2_within_var1_2
 
   # Within variance 2.
-  crossed_within_variance2 <- .crossed_within_variance("var2", weight, coord, eigenvalues)
+  crossed_within_variance2 <- .crossed_within_variance("var1", weight, coord)#, eigenvalues)
 
   # Total within variance 2.
   var1_within_var2_1 <- crossed_within_variance2$Dim.1
@@ -102,5 +104,5 @@ supvar_crossing_stats <- function(res_gda, var_quali_df, var_quali, impute = TRU
   rownames(db_var) <- c(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), paste0("Plane.", axes[1], ".", axes[2]))
 
   # Export
-  list(var = db_var, reg = list(Dim.1 = lm_res_1, Dim.2 = lm_res_2))
+  list(var = db_var, reg = list(Axis.1 = lm_res_1, Axis.2 = lm_res_2))
 }

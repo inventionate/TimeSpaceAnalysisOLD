@@ -8,7 +8,7 @@ supvar_crossing_stats(res_gda, var_quali_df, var_quali, impute = TRUE,
   axes = 1:2)
 }
 \arguments{
-\item{res_gda}{GDA result.}
+\item{res_gda}{MCA result.}
 
 \item{var_quali_df}{the supplementary data frame.}
 
@@ -16,7 +16,7 @@ supvar_crossing_stats(res_gda, var_quali_df, var_quali, impute = TRUE,
 
 \item{impute}{impute missing data (boolean).}
 
-\item{axes}{the GDA dimensions to calculate.}
+\item{axes}{the GDA dimensions to calculate double breakdown of variance.}
 }
 \value{
 Returns a list:
