@@ -15,7 +15,7 @@ gda_describe_axis <- function(res_gda, axis = 1, contrib = "auto", group = NULL,
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
 
   # Calculate contribution criterion (Le Roux & Rouanet 2004: 372)
-  criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)) - length(get_index_mod(res_gda$call$X)))
+  criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)[-res_gda$call$excl]))
 
   # Alle Contributions abfragen
   ctr <- res_gda$var$contrib %>% data.frame %>% add_rownames
@@ -31,7 +31,12 @@ gda_describe_axis <- function(res_gda, axis = 1, contrib = "auto", group = NULL,
     if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
 
     # Anzahl der Kategorien zählen
-    n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
+    var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl] %>%
+      data_frame(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
+      select(var) %>% count(var)
+    var <- data_frame(var = colnames(res_gda$call$X))
+    n_mod <- left_join(var, var_num) %>% .$n
+    # n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
 
     n_mod_group <- NULL
     start <- 0

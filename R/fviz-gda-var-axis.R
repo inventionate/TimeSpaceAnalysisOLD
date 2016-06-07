@@ -25,7 +25,7 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   if(myriad) .add_fonts()
 
   # Calculate contribution criterion (Le Roux & Rouanet 2004: 372)
-  criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)) - length(get_index_mod(res_gda$call$X)))
+  criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)[-res_gda$call$excl]))
 
   # Check GDA algorithm
   if(inherits(res_gda, c("MCA"))) df <- res_gda$var$contrib
@@ -49,7 +49,12 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
 
       # Anzahl der Kategorien zählen
-      n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
+      var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl] %>%
+        data_frame(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
+        select(var) %>% count(var)
+      var <- data_frame(var = colnames(res_gda$call$X))
+      n_mod <- left_join(var, var_num) %>% .$n
+      # n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
 
       n_mod_group <- NULL
       start <- 0
@@ -66,7 +71,7 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
         bind_cols(., df_group_names) %>% filter(rowname %in% modalities$rowname)
 
       # Plot
-      p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
+      p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes,  pointsize = 0)
       if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", shape = "group"), size = 3)
       if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group"), shape = 17, size = 3)
       if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group"), colour = "black", size = 3)
@@ -117,8 +122,8 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   p <- p + add_theme() + ggtitle(title)
 
   if(!is.null(group_style)) {
-    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = "Gruppen", palette = colour_palette, labels = group_names, type = "qualitative")
-    if(group_style %in% c("shape", "both")) p <- p + scale_shape_discrete(name = "Gruppen", labels = group_names, solid = TRUE)
+    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = "Gruppen", palette = colour_palette, labels = modalities_coord %>% select(group) %>% distinct, type = "qualitative")
+    if(group_style %in% c("shape", "both")) p <- p + scale_shape_discrete(name = "Gruppen", labels = modalities_coord %>% select(group) %>% distinct, solid = TRUE)
     p <- p + theme(legend.position = "bottom")
   }
 
