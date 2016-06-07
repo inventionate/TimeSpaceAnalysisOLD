@@ -6,7 +6,8 @@
 \usage{
 fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
   title = "GDA axis high contribution modalities", axes = 1:2,
-  groups = NULL, textsize = 4, colour_palette = "Dark2", myriad = TRUE)
+  group = NULL, group_names = NULL, group_style = "both", textsize = 4,
+  colour_palette = "Dark2", myriad = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
@@ -19,11 +20,17 @@ fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
 
 \item{axes}{the GDA dimensions to plot.}
 
-\item{groups}{MFA group specific colours ("c"), shapes ("s") or both ("b").}
+\item{group}{vector containing group definition.}
 
-\item{textsize}{size of the labels.}
+\item{group_names}{names of the groups.}
 
-\item{colour_palette}{Specify colour brewer palette.}
+\item{group_style}{style to plot (vector containing "shape", "colour" or "both).}
+
+\item{textsize}{size of the text.}
+
+\item{colour_palette}{name of the used colour palette.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
 }
 \value{
 ggplot2 visualization containing selected modalities.

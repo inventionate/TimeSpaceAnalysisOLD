@@ -8,7 +8,7 @@ fviz_gda_interaction(res_gda, df_var_quali, var_quali,
   title = "MCA quali interaction effects", mean_alpha = 0.75,
   path_linetype = "solid", path_size = 1, path_colour = "black",
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1",
-  path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "b")
+  path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "both")
 }
 \arguments{
 \item{res_gda}{MCA result.}
@@ -39,7 +39,7 @@ fviz_gda_interaction(res_gda, df_var_quali, var_quali,
 
 \item{impute}{use imputation to handle missing data.}
 
-\item{mod_level_order}{order of the crossed modalities.}
+\item{variable}{which diagram to plot (vector containing 1, 2 or "both").}
 }
 \value{
 ggplot2 interaction cloud visualizsation.
