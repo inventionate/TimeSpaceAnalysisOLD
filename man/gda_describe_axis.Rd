@@ -2,10 +2,9 @@
 % Please edit documentation in R/gda-describe-axis.R
 \name{gda_describe_axis}
 \alias{gda_describe_axis}
-\title{Calculate group and dimension contributions.}
+\title{Calculate axis contributions.}
 \usage{
-gda_describe_axis(res_gda, axis = 1, contrib = "auto", group = NULL,
-  group_names = NULL, group_style = "both")
+gda_describe_axis(res_gda, axis = 1, contrib = "auto")
 }
 \arguments{
 \item{res_gda}{MCA result.}
@@ -13,17 +12,11 @@ gda_describe_axis(res_gda, axis = 1, contrib = "auto", group = NULL,
 \item{axis}{which axis to calculate.}
 
 \item{contrib}{"auto" calculates the optimal modalities to show (based on the basic criterion). Otherwise define an amount of modalities to plot.}
-
-\item{group}{vector containing group definition.}
-
-\item{group_names}{names of the groups.}
-
-\item{group_style}{style to plot (vector containing "shape", "colour" or "both).}
 }
 \value{
-list containing group and axis results.
+list containing axis contribution results.
 }
 \description{
-Calculate group and dimension contributions.
+Calculate axis contributions.
 }
 

@@ -68,6 +68,7 @@ Collate:
     'fviz-gda-var-axis.R'
     'fviz-mca-var-corr.R'
     'gda-describe-axis.R'
+    'gda-describe-group.R'
     'gda-optimise-df.R'
     'get-mca-var-corr.R'
     'get-places-chronology-time-pattern.R'
