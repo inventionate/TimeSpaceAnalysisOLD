@@ -26,14 +26,12 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE) {
 
-  # @todo: Reihenfolge der facets an die Levels anpassen!
-
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
   # Datensatz auslesen
   var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
-  var_levels <- df_var_quali %>% select_(var_quali) %>% data.frame %>% .[,1] %>% levels
+  var_levels <- df_var_quali %>% select_(var_quali) %>% data.frame %>% .[,1] %>% factor %>% levels
 
   # Auf Fehlende Werte prüfen.
   exclude_na <- which(is.na(var))
