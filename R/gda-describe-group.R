@@ -3,11 +3,10 @@
 #' @param res_gda MCA result.
 #' @param group vector containing group definition.
 #' @param group_names names of the groups.
-#' @param group_style style to plot (vector containing "shape", "colour" or "both).
 #'
 #' @return list containing group results.
 #' @export
-gda_describe_group <- function(res_gda, group = NULL, group_names = NULL, group_style = "both") {
+gda_describe_group <- function(res_gda, group = NULL, group_names = NULL) {
 
   # Check GDA result
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
