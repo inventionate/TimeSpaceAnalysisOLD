@@ -48,8 +48,6 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       # Checken, on Definition korrekt war
       if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
 
-      # Variablen extrahieren
-      var <- colnames(res_gda$call$X)
       # Anzahl der Kategorien zählen
       n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
 
