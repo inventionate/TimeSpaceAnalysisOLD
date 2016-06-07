@@ -6,7 +6,6 @@ NULL
 #' @param df_var_quali crossed variable data frame.
 #' @param var_quali name of crossed supplementary variable.
 #' @param title plot title.
-#' @param mod_level_order order of the crossed modalities.
 #' @param mean_alpha alpha of the mean point.
 #' @param path_linetype linetype of concat path.
 #' @param path_size size of concat path.
@@ -17,12 +16,13 @@ NULL
 #' @param path_alpha opacity of the path.
 #' @param myriad use myriad font or not (boolean).
 #' @param impute use imputation to handle missing data.
+#' @param variable which diagram to plot (vector containing 1, 2 or "both").
 #'
 #' @return ggplot2 interaction cloud visualizsation.
 #' @export
 fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA quali interaction effects", mean_alpha = 0.75,
                                path_linetype = "solid", path_size = 1, path_colour = "black", scale_mean_points = TRUE, axes = 1:2,
-                               palette = "Set1", path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "b") {
+                               palette = "Set1", path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "both") {
 
   # Check GDA result
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
@@ -57,7 +57,7 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA 
   # Pfad plotten
   p <- p + geom_path(data = df_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), group = "category"), arrow = arrow(length = unit(0.3, "cm")), linetype = path_linetype, size = path_size, alpha = path_alpha, colour = path_colour)
   # Beide Möglichkeiten abbilden
-  if(variable == "b") p <- p + facet_wrap(~variable)
+  if(variable == "both") p <- p + facet_wrap(~variable)
   # Designanpassungen
   p <- p + add_theme() + ggtitle(title)
 

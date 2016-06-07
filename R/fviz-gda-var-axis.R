@@ -9,14 +9,18 @@ NULL
 #' @param contrib "auto" calculates the optimal modalities to show (based on the basic criterion). Otherwise define an amount of modalities to plot.
 #' @param title plot title.
 #' @param axes the GDA dimensions to plot.
-#' @param groups MFA group specific colours ("c"), shapes ("s") or both ("b").
-#' @param textsize size of the labels.
-#' @param colour_palette Specify colour brewer palette.
+#' @param myriad use Myriad Pro font (boolean).
+#' @param group vector containing group definition.
+#' @param group_names names of the groups.
+#' @param group_style style to plot (vector containing "shape", "colour" or "both).
+#' @param textsize size of the text.
+#' @param colour_palette name of the used colour palette.
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
-fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2, groups = NULL,
-                              textsize = 4, colour_palette = "Dark2", myriad = TRUE) {
+fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2,
+                              group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Dark2",
+                              myriad = TRUE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -34,9 +38,59 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   if(contrib == "auto") modalities <- modalities %>% filter(ctr > criterion) %>% select(rowname) %>% data.frame
   else modalities <- modalities %>% slice(1:contrib) %>% select(rowname) %>% data.frame
 
-  if(inherits(res_gda, c("MCA"))) p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) {
+
+    if(!is.null(group)) {
+
+      # Gruppennamen festlegen, falls keine angegeben
+      if(is.null(group_names)) group_names <- paste0("Group_", 1:length(group))
+
+      # Checken, on Definition korrekt war
+      if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
+
+      # Variablen extrahieren
+      var <- colnames(res_gda$call$X)
+      # Anzahl der Kategorien zählen
+      n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
+
+      n_mod_group <- NULL
+      start <- 0
+      for(i in 1:length(group)) {
+        n_mod_group <- c(n_mod_group, sum( n_mod[(start + 1):(start + group[i])] ) )
+        start <- sum( group[1:i] )
+      }
+
+      # Gruppenzuordnung der Modalitäten
+      df_group_names <- data.frame(group = rep(group_names, n_mod_group))
+
+      # Zeilennamen hinzufügen
+      modalities_coord <- res_gda$var$coord %>% data.frame %>% add_rownames %>%
+        bind_cols(., df_group_names) %>% filter(rowname %in% modalities$rowname)
+
+      # Plot
+      p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
+      if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", shape = "group"), size = 3)
+      if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group"), shape = 17, size = 3)
+      if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group"), colour = "black", size = 3)
+      if(group_style %in% c("colour", "both")) {
+        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]),
+                                                                              colour = "group", label = factor(modalities_coord$rowname)),
+                                          size = textsize, show.legend = FALSE)
+      }
+      if(group_style == "shape") {
+        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = factor(modalities_coord$rowname)),
+                                          size = textsize, show.legend = FALSE)
+      }
+
+    } else {
+      # Plot group specific modalities
+      p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
+    }
+  }
   if(inherits(res_gda, c("MFA"))) {
-    if(!is.null(groups)) {
+    group_names <- res_gda$call$name.group
+
+    if(!is.null(group_style)) {
       # Identify groups and modality coordinates.
       group_id <- get_mfa_mod_group_id(res_gda)
       modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% add_rownames %>% filter(rowname %in% modalities$rowname)
@@ -45,15 +99,15 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
 
       # Plot group specific modalities
       p <- fviz_mfa_quali_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes, pointsize = 0)
-      if(groups == "b") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", shape = "group_id"), size = 3)
-      if(groups == "c") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id"), shape = 17, size = 3)
-      if(groups == "s") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group_id"), colour = "black", size = 3)
-      if(groups %in% c("c", "b")) {
+      if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", shape = "group_id"), size = 3)
+      if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id"), shape = 17, size = 3)
+      if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group_id"), colour = "black", size = 3)
+      if(group_style %in% c("colour", "both")) {
         p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]),
                                                                               colour = "group_id", label = factor(modalities_coord$rowname)),
                                           size = textsize, show.legend = FALSE)
       }
-      if(groups == "s") {
+      if(group_style == "shape") {
       p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = factor(modalities_coord$rowname)),
                                         size = textsize, show.legend = FALSE)
       }
@@ -64,9 +118,9 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   }
   p <- p + add_theme() + ggtitle(title)
 
-  if(!is.null(groups)) {
-    if(groups %in% c("c", "b")) p <- p + scale_colour_brewer(name = "Gruppen", palette = colour_palette, labels = res_gda$call$name.group, type = "qualitative")
-    if(groups %in% c("s", "b")) p <- p + scale_shape_discrete(name = "Gruppen", labels = res_gda$call$name.group, solid = TRUE)
+  if(!is.null(group_style)) {
+    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = "Gruppen", palette = colour_palette, labels = group_names, type = "qualitative")
+    if(group_style %in% c("shape", "both")) p <- p + scale_shape_discrete(name = "Gruppen", labels = group_names, solid = TRUE)
     p <- p + theme(legend.position = "bottom")
   }
 
