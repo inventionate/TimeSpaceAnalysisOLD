@@ -25,7 +25,8 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   if(myriad) .add_fonts()
 
   # Calculate contribution criterion (Le Roux & Rouanet 2004: 372)
-  criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)[-res_gda$call$excl]))
+  if(is.null(res_gda$call$excl)) criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)))
+  else criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)[-res_gda$call$excl]))
 
   # Check GDA algorithm
   if(inherits(res_gda, c("MCA"))) df <- res_gda$var$contrib
@@ -49,7 +50,9 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
 
       # Anzahl der Kategorien zählen
-      var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl] %>%
+      if(is.null(res_gda$call$excl)) var_num <- getindexcat(res_gda$call$X)
+      else var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl]
+      var_num <- var_num %>%
         data_frame(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
         select(var) %>% count(var)
       var <- data_frame(var = colnames(res_gda$call$X))
