@@ -88,7 +88,7 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
   if(cloud == "fitted") df_ges <- df_ges %>% filter(variable == "fitted")
 
   # Plot
-  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = "ind, ind.sup", axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), axes.linetype = "solid", axes = axes)
   else stop("Only MCA plots are currently supported!")
 
   # Skalierungsdimension festlegen
