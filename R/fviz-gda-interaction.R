@@ -44,7 +44,7 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA 
   if(variable == 2) df_coord <- df_coord %>% filter(variable == "var_2")
 
   # Plot
-  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = "ind", axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = "ind, ind.sup", axes.linetype = "solid", axes = axes)
   else stop("Only MCA plots are currently supported!")
 
   # Skalierungsdimension festlegen

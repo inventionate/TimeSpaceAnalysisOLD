@@ -22,22 +22,29 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
                                 facet = FALSE, facet_labels = NULL, mean_path = FALSE, labels = FALSE) {
 
   # Add Myriad Pro font family
-  if(myriad) .add_fonts()
-
+  # if(myriad) .add_fonts()
   # Fälle zusammenstellen pro Semester
+  
+  
+  
   ws1516 <- res_gda$ind$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
     mutate(time = "Wintersemester 15/16")
+  
+  # @todo: Verallgemeinerung!
+  
   ss16 <- res_gda$ind.sup$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
-    filter(time == 2) %>% mutate(time = "Sommersemester 16")
-  ws1617 <- res_gda$ind.sup$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
-    filter(time == 3) %>% mutate(time = "Wintersemester 16/17")
+    filter(time == 1) %>% mutate(time = "Sommersemester 16")
+  
+  # ws1617 <- res_gda$ind.sup$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time")) %>%
+  #   filter(time == 2) %>% mutate(time = "Wintersemester 16/17")
 
   # Koordinaten der Individuen pro Semester
   ws_coord_ind_1516 <- data.frame(ws1516, clust = clust$data.clust$clust)
   ss16_id <- data.frame(ss16)$id
   ss_coord_ind_16 <- data.frame(ss16, clust = data.frame(clust$data.clust %>% add_rownames %>% filter(rowname %in% ss16_id))$clust)
-  ws1617_id <- data.frame(ws1617)$id
-  ws_coord_ind_1617 <- data.frame(ws1617, clust = data.frame(clust$data.clust %>% add_rownames %>% filter(rowname %in% ws1617_id))$clust)
+  
+  # ws1617_id <- data.frame(ws1617)$id
+  # ws_coord_ind_1617 <- data.frame(ws1617, clust = data.frame(clust$data.clust %>% add_rownames %>% filter(rowname %in% ws1617_id))$clust)
 
   # Koordinaten der Ellipsenmittelpunkte pro Semester und Cluster
   ws_coord_quali_1516 <- ws_coord_ind_1516 %>% select(-id) %>%
@@ -46,9 +53,10 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
   ss_coord_quali_16 <- ss_coord_ind_16 %>% select(-id) %>%
     unite(clust_time, clust, time) %>% group_by(clust_time) %>%
     summarise_each(funs(mean))
-  ws_coord_quali_1617 <- ws_coord_ind_1617 %>% select(-id) %>%
-    unite(clust_time, clust, time) %>% group_by(clust_time) %>%
-    summarise_each(funs(mean))
+  
+  # ws_coord_quali_1617 <- ws_coord_ind_1617 %>% select(-id) %>%
+  #   unite(clust_time, clust, time) %>% group_by(clust_time) %>%
+  #   summarise_each(funs(mean))
 
   # Selection (es wird select_ind definiert)
   selected_ind <- res_gda$ind$coord %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"))
@@ -63,17 +71,17 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
   {
     # Mittelwerte aller Individuen berechnen (nur vollständige Fälle!)
     # @todo   Überlegen, ob es auch Sinn macht unvollständige Fälle anzuzeigen oder zu berechnen.
-    ind_mean_coord <- rbind(ws1516 %>% filter(id %in% ss16_id & id %in% ws1617_id),
-                            ss16 %>% filter(id %in% ws1617_id),
-                            ws1617 %>% filter(id %in% ss16_id)) %>%
+    ind_mean_coord <- rbind(ws1516 %>% filter(id %in% ss16_id), #& id %in% ws1617_id),
+                            ss16) %>% #filter(id %in% ws1617_id)) %>% #,
+                            #ws1617 %>% filter(id %in% ss16_id)) %>%
       select(-time) %>% group_by(id) %>% summarise_each(funs(mean))
     ind_mean_coord_id <- data.frame(ind_mean_coord)$id
 
     # "within inertia" berechnen (adaptiert von FactoMineR)
-    tmp <- array(0, dim = c(dim(ind_mean_coord %>% select(-id)), 3))
-    tmp[,,1] <- (ws1516 %>% filter(id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / 3
-    tmp[,,2] <- (ss16 %>% filter(id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / 3
-    tmp[,,3] <- (ws1617 %>% filter(id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / 3
+    tmp <- array(0, dim = c(dim(ind_mean_coord %>% select(-id)), 2))
+    tmp[,,1] <- (ws1516 %>% filter(id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / 2
+    tmp[,,2] <- (ss16 %>% filter(id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / 2
+    # tmp[,,3] <- (ws1617 %>% filter(id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / 3
     variab.auxil <- apply(tmp,2,sum)
     tmp <- sweep(tmp,2,variab.auxil,FUN="/") * 100
     inertie.intra.ind <- apply(tmp,c(1,2),sum)
@@ -104,22 +112,22 @@ fviz_gda_trajectory <- function(res_gda, clust, select = list(name = NULL, withi
     filter(id %in% selected_ind$id)
   ss_coord_ind_16 <- ss_coord_ind_16 %>% data.frame %>%
     filter(id %in% selected_ind$id)
-  ws_coord_ind_1617 <- ws_coord_ind_1617 %>% data.frame %>%
-    filter(id %in% selected_ind$id)
+  # ws_coord_ind_1617 <- ws_coord_ind_1617 %>% data.frame %>%
+  #   filter(id %in% selected_ind$id)
 
   # Daten final zusammenstellen
-  coord_mean_timeseries <- bind_rows(ws_coord_quali_1516, ss_coord_quali_16, ws_coord_quali_1617) %>%
+  coord_mean_timeseries <- bind_rows(ws_coord_quali_1516, ss_coord_quali_16) %>% #, ws_coord_quali_1617) %>%
     separate(clust_time, c("clust", "time"), "_", remove = FALSE) %>%
-    mutate(clust_time = factor(clust_time, levels = c("1_Wintersemester 15/16", "1_Sommersemester 16", "1_Wintersemester 16/17",
-                                                      "2_Wintersemester 15/16", "2_Sommersemester 16", "2_Wintersemester 16/17",
-                                                      "3_Wintersemester 15/16", "3_Sommersemester 16", "3_Wintersemester 16/17")))
+    mutate(clust_time = factor(clust_time, levels = c("1_Wintersemester 15/16", "1_Sommersemester 16", # "1_Wintersemester 16/17",
+                                                      "2_Wintersemester 15/16", "2_Sommersemester 16", # "2_Wintersemester 16/17",
+                                                      "3_Wintersemester 15/16", "3_Sommersemester 16"))) #,  "3_Wintersemester 16/17")))
 
-  coord_ind_timeseries <- bind_rows(ws_coord_ind_1516, ss_coord_ind_16, ws_coord_ind_1617) %>%
+  coord_ind_timeseries <- bind_rows(ws_coord_ind_1516, ss_coord_ind_16) %>% #, ws_coord_ind_1617) %>%
     unite(clust_time, clust, time, remove = FALSE) %>%
-    mutate(time = factor(time, levels = c("Wintersemester 15/16", "Sommersemester 16", "Wintersemester 16/17")),
-           clust_time = factor(clust_time, levels = c("1_Wintersemester 15/16", "1_Sommersemester 16", "1_Wintersemester 16/17",
-                                                      "2_Wintersemester 15/16", "2_Sommersemester 16", "2_Wintersemester 16/17",
-                                                      "3_Wintersemester 15/16", "3_Sommersemester 16", "3_Wintersemester 16/17")))
+    mutate(time = factor(time, levels = c("Wintersemester 15/16", "Sommersemester 16")), #"Wintersemester 16/17")),
+           clust_time = factor(clust_time, levels = c("1_Wintersemester 15/16", "1_Sommersemester 16", #"1_Wintersemester 16/17",
+                                                      "2_Wintersemester 15/16", "2_Sommersemester 16", #"2_Wintersemester 16/17",
+                                                      "3_Wintersemester 15/16", "3_Sommersemester 16"))) #, "3_Wintersemester 16/17")))
 
   # Zu visualisierende Semester festlegen
   if(!is.null(select$time_point)) {
