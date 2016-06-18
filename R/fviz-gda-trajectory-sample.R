@@ -25,7 +25,6 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
   # Trajektoriedaten zusammenstellen
   coord_trajectory <- get_gda_trajectory(res_gda, time_point_names)
   coord_all <-  coord_trajectory$coord_all
-  coord_mean_mass <-  coord_trajectory$coord_mean_mass
 
   if(complete) {
     # Auswahl, falls nur komplette Fälle
@@ -33,7 +32,17 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
 
     # Filterung vornehmen
     coord_all <-  coord_all %>% filter(id %in% selected_ind$id)
+
   }
+
+  # Mittelpunkte
+  coord_mean <- coord_all %>% select(-id) %>% group_by(time) %>% summarise_each(funs(mean))
+
+  # Massen der Individuenmittelpunkte
+  coord_mass <- coord_all %>% select(-id) %>% count(time) %>% rename(mass = n)
+
+  # Mittelpunkte und Massen zusammenführen
+  coord_mean_mass <- full_join(coord_mean, coord_mass)
 
   # Masse hinzufügen
   coord_all <- coord_all %>% select_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "time") %>%

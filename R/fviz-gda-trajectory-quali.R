@@ -26,7 +26,6 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   # Trajektoriedaten zusammenstellen
   coord_trajectory <- get_gda_trajectory(res_gda, time_point_names)
   coord_all = coord_trajectory$coord_all
-  coord_mean_mass = coord_trajectory$coord_mean_mass
   time_point_names <- coord_trajectory$time_point_names
 
   # Datensatz für zusätzliche Variable konstruieren

@@ -31,17 +31,17 @@ get_gda_trajectory <- function(res_gda, time_point_names = NULL) {
                                                    time_point_names[2:length(time_point_names)]))) %>%
     mutate(time = factor(time, levels = time_point_names))
 
-  # Mittelpunkte
-  coord_mean <- coord_all %>% select(-id) %>% group_by(time) %>% summarise_each(funs(mean))
-
-  # Massen der Individuenmittelpunkte
-  coord_mass <- coord_all %>% select(-id) %>% count(time) %>% rename(mass = n)
-
-  # Mittelpunkte und Massen zusammenführen
-  coord_mean_mass <- full_join(coord_mean, coord_mass)
+  # # Mittelpunkte
+  # coord_mean <- coord_all %>% select(-id) %>% group_by(time) %>% summarise_each(funs(mean))
+  #
+  # # Massen der Individuenmittelpunkte
+  # coord_mass <- coord_all %>% select(-id) %>% count(time) %>% rename(mass = n)
+  #
+  # # Mittelpunkte und Massen zusammenführen
+  # coord_mean_mass <- full_join(coord_mean, coord_mass)
 
   # Zusammenstellung der Ergebnisse
-  res <- list(coord_all = coord_all, coord_mean_mass = coord_mean_mass, time_point_names = time_point_names)
+  res <- list(coord_all = coord_all, time_point_names = time_point_names)
 
   # Ausgabe der Ergebnisse
   return(res)
