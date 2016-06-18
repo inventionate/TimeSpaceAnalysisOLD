@@ -2,28 +2,33 @@
 % Please edit documentation in R/fviz-gda-trajectory.R
 \name{fviz_gda_trajectory}
 \alias{fviz_gda_trajectory}
-\title{Visualization of trajectories (connected MFA active/passive individual points).}
+\title{Visualization of trajectories (connected active and passive individual points).}
 \usage{
 fviz_gda_trajectory(res_gda, select = list(name = NULL, within_inertia = NULL,
-  case = NULL), axes = 1:2, myriad = TRUE, labels = FALSE)
+  case = NULL), title = "Trajectory individuals plot", axes = 1:2,
+  labels = FALSE, myriad = TRUE, time_point_names = NULL)
 }
 \arguments{
-\item{res_gda}{MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
+\item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
 
-\item{select}{vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or time_point (vector containing the semesters to plot).}
+\item{select}{vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or case (vector containing NULL, complete, or incomplete).}
+
+\item{title}{the plot title}
 
 \item{axes}{axes to plot.}
 
-\item{myriad}{use Myriad Pro font (boolean).}
-
 \item{labels}{plot individual labels (boolean).}
 
-\item{facet_labels}{rename facet labels (vector).}
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{time_point_names}{vector containing the name of the time points.}
+
+\item{labels}{plot labels (boolean).}
 }
 \value{
-HMFA trajectory ggplot2 visualization.
+trajectory ggplot2 visualization.
 }
 \description{
-Visualization of trajectories (connected MFA active/passive individual points).
+Visualization of trajectories (connected active and passive individual points).
 }
 

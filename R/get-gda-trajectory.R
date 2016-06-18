@@ -1,15 +1,13 @@
 #' @include utilities.R
 #' @include add-theme.R
 NULL
-#' Title
+#' Extract trajectory data.
 #'
-#' @param res_gda
-#' @param time_point_names
+#' @param res_gda GDA result.
+#' @param time_point_names name of the separated time points.
 #'
-#' @return
+#' @return list containing time point separated ind coord and time point names.
 #' @export
-#'
-#' @examples
 get_gda_trajectory <- function(res_gda, time_point_names = NULL) {
 
   # Anzahl Zeitpunkte bestimmen

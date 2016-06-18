@@ -1,20 +1,23 @@
-
-#' Title
+#' @include utilities.R
+#' @include add-theme.R
+#' @include get-gda-trajectory.R
+NULL
+#' Visualize trajectories and structuring factors.
 #'
-#' @param res_gda
-#' @param df_var_quali
-#' @param var_quali
-#' @param axes
-#' @param myriad
-#' @param labels
-#' @param select
+#' @param res_gda MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
+#' @param df_var_quali data frame containing one qualitative variable (with IDs as rownames).
+#' @param var_quali name of the structuring variable.
+#' @param axes the axes to plot.
+#' @param myriad use Myriad Pro font (boolean).
+#' @param labels plot labels (boolean).
+#' @param select select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or case (vector containing NULL, complete, or incomplete).
+#' @param title the plot title.
+#' @param time_point_names vector containing the name of the time points.
 #'
-#' @return
+#' @return ggplot2 visualization.
 #' @export
-#'
-#' @examples
-fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE,
-                                      labels = FALSE, time_point_names = NULL,
+fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, labels = FALSE,
+                                      title = "Trajectory individuals structuring factors plot", time_point_names = NULL,
                                       select = list(name = NULL, within_inertia = NULL, case = NULL)) {
 
   # Add Myriad Pro font family
@@ -28,7 +31,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
 
   # Datensatz für zusätzliche Variable konstruieren
   df_quali <- df_var_quali %>% data.frame %>% add_rownames(var = "id") %>% select_("id", var_quali = var_quali)
-  df_base <- res_gda$call$X %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"), sep = "_")
+  df_base <- res_gda$call$X %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"), sep = "_", fill = "right")
   df_full <- full_join(df_base, df_quali) %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
 
   # Imputation
@@ -49,17 +52,22 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   else stop("Only MCA plots are currently supported!")
 
   p <- p + scale_colour_brewer(palette = "YlGnBu", direction = -1) +
-    geom_point(data = coord_ind_timeseries, aes(Dim.1, Dim.2), colour = "black", size = 4) +
-    geom_point(data = coord_ind_timeseries, aes(Dim.1, Dim.2, colour = time), size = 2.5) +
-    geom_path(data = coord_ind_timeseries, aes(Dim.1, Dim.2, group = id), size = 1,
+    geom_point(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), colour = "black", size = 4) +
+    geom_point(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time"), size = 2.5) +
+    geom_path(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), group = "id"), size = 1,
               arrow = arrow(length = unit(0.3, "cm"), type = "closed")) +
-    ggtitle("Vergleich der ersten drei Studiensemester") +
-    xlab(paste0("Achse 1 (", round(res_gda$eig$`percentage of variance`[1], 1), "%)")) +
-    ylab(paste0("Achse 2 (", round(res_gda$eig$`percentage of variance`[2], 1), "%)")) +
-    # Labeln
-    ggrepel::geom_label_repel(data = coord_ind_timeseries %>% filter(time == time_point_names[1]),
-                              aes(Dim.1, Dim.2, colour = time, label = id)) +
-    facet_wrap(~var_quali)
+    ggtitle(title) +
+    xlab(paste0("Achse", axes[1], "(", round(res_gda$eig$`percentage of variance`[axes[1]], 1), "%)")) +
+    ylab(paste0("Achse", axes[2], "(", round(res_gda$eig$`percentage of variance`[axes[2]], 1), "%)"))
+
+  # Labeln
+  if(labels) {
+    p <- p + ggrepel::geom_label_repel(data = coord_ind_timeseries %>% filter(time == time_point_names[1]),
+                                       aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", label = "id"))
+  }
+
+  # Aufteilen
+  p <- p + facet_wrap(~var_quali)
 
   # Theme adaptieren
   p <- p + add_theme()

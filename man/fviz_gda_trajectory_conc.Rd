@@ -2,12 +2,29 @@
 % Please edit documentation in R/fviz-gda-trajectory-conc.R
 \name{fviz_gda_trajectory_conc}
 \alias{fviz_gda_trajectory_conc}
-\title{Title}
+\title{Visualization of the separated concentration ellipses per time point.}
 \usage{
 fviz_gda_trajectory_conc(res_gda, time_point_names = NULL, myriad = TRUE,
-  axes = 1:2)
+  axes = 1:2, ind_points = TRUE,
+  title = "Trajectory plot compare concentration ellipses")
+}
+\arguments{
+\item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
+
+\item{time_point_names}{vector containing the name of the time points.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{axes}{the axes to plot.}
+
+\item{ind_points}{show individuals (boolean).}
+
+\item{title}{title of the plot}
+}
+\value{
+ggplot2 visualization.
 }
 \description{
-Title
+Visualization of the separated concentration ellipses per time point.
 }
 

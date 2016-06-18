@@ -2,16 +2,37 @@
 % Please edit documentation in R/fviz-gda-trajectory-quali.R
 \name{fviz_gda_trajectory_quali}
 \alias{fviz_gda_trajectory_quali}
-\title{Title}
+\title{Visualize trajectories and structuring factors.}
 \usage{
 fviz_gda_trajectory_quali(res_gda, df_var_quali, var_quali, axes = 1:2,
-  myriad = TRUE, labels = FALSE, time_point_names = NULL,
-  select = list(name = NULL, within_inertia = NULL, case = NULL))
+  myriad = TRUE, labels = FALSE,
+  title = "Trajectory individuals structuring factors plot",
+  time_point_names = NULL, select = list(name = NULL, within_inertia = NULL,
+  case = NULL))
 }
 \arguments{
-\item{select}{}
+\item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
+
+\item{df_var_quali}{data frame containing one qualitative variable (with IDs as rownames).}
+
+\item{var_quali}{name of the structuring variable.}
+
+\item{axes}{the axes to plot.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{labels}{plot labels (boolean).}
+
+\item{title}{the plot title.}
+
+\item{time_point_names}{vector containing the name of the time points.}
+
+\item{select}{select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or case (vector containing NULL, complete, or incomplete).}
+}
+\value{
+ggplot2 visualization.
 }
 \description{
-Title
+Visualize trajectories and structuring factors.
 }
 

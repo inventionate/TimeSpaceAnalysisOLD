@@ -2,14 +2,19 @@
 % Please edit documentation in R/get-gda-trajectory.R
 \name{get_gda_trajectory}
 \alias{get_gda_trajectory}
-\title{Title}
+\title{Extract trajectory data.}
 \usage{
 get_gda_trajectory(res_gda, time_point_names = NULL)
 }
 \arguments{
-\item{time_point_names}{}
+\item{res_gda}{GDA result.}
+
+\item{time_point_names}{name of the separated time points.}
+}
+\value{
+list containing time point separated ind coord and time point names.
 }
 \description{
-Title
+Extract trajectory data.
 }
 

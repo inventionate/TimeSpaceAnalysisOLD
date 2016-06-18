@@ -2,12 +2,36 @@
 % Please edit documentation in R/fviz-gda-trajectory-ellipses.R
 \name{fviz_gda_trajectory_ellipses}
 \alias{fviz_gda_trajectory_ellipses}
-\title{Title}
+\title{Visualization of trajectory structuring factor ellipses.}
 \usage{
 fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
-  myriad = TRUE, time_point_names = NULL)
+  myriad = TRUE, time_point_names = NULL, ind_points = TRUE,
+  conc = TRUE,
+  title = "Trajectory individuals structuring factors ellipse plot")
+}
+\arguments{
+\item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
+
+\item{df_var_quali}{data frame containing one qualitative variable (with IDs as rownames).}
+
+\item{var_quali}{name of the structuring variable.}
+
+\item{axes}{the axes to plot.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{time_point_names}{vector containing the name of the time points.}
+
+\item{ind_points}{show individuals (boolean).}
+
+\item{conc}{show concentration ellipse of active, first time point group (boolean).}
+
+\item{title}{title of the plot.}
+}
+\value{
+ggplot2 visualization.
 }
 \description{
-Title
+Visualization of trajectory structuring factor ellipses.
 }
 

@@ -1,19 +1,23 @@
 #' @include utilities.R
 #' @include add-theme.R
+#' @include get-gda-trajectory.R
 NULL
-#' Visualization of trajectories (connected MFA active/passive individual points).
+#' Visualization of trajectories (connected active and passive individual points).
 #'
-#' @param res_gda MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
-#' @param select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or time_point (vector containing the semesters to plot).
+#' @param res_gda MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
+#' @param select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or case (vector containing NULL, complete, or incomplete).
 #' @param axes axes to plot.
 #' @param myriad use Myriad Pro font (boolean).
-#' @param facet_labels rename facet labels (vector).
 #' @param labels plot individual labels (boolean).
+#' @param title the plot title
+#' @param labels plot labels (boolean).
+#' @param time_point_names vector containing the name of the time points.
 #'
-#' @return HMFA trajectory ggplot2 visualization.
+#' @return trajectory ggplot2 visualization.
 #' @export
 fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inertia = NULL, case = NULL),
-                                axes = 1:2, myriad = TRUE, labels = FALSE) {
+                                title = "Trajectory individuals plot", axes = 1:2, labels = FALSE,
+                                myriad = TRUE, time_point_names = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -34,16 +38,19 @@ fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inert
   else stop("Only MCA plots are currently supported!")
 
   p <- p + scale_colour_brewer(palette = "YlGnBu", direction = -1) +
-    geom_point(data = coord_ind_timeseries, aes(Dim.1, Dim.2), colour = "black", size = 4) +
-    geom_point(data = coord_ind_timeseries, aes(Dim.1, Dim.2, colour = time), size = 2.5) +
-    geom_path(data = coord_ind_timeseries, aes(Dim.1, Dim.2, group = id), size = 1,
+    geom_point(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), colour = "black", size = 4) +
+    geom_point(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time"), size = 2.5) +
+    geom_path(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), group = "id"), size = 1,
               arrow = arrow(length = unit(0.3, "cm"), type = "closed")) +
-    ggtitle("Vergleich der ersten drei Studiensemester") +
-    xlab(paste0("Achse 1 (", round(res_gda$eig$`percentage of variance`[1], 1), "%)")) +
-    ylab(paste0("Achse 2 (", round(res_gda$eig$`percentage of variance`[2], 1), "%)")) +
-    # Labeln
-    ggrepel::geom_label_repel(data = coord_ind_timeseries %>% filter(time == time_point_names[1]),
-                              aes(Dim.1, Dim.2, colour = time, label = id))
+    ggtitle(title) +
+    xlab(paste0("Achse", axes[1], "(", round(res_gda$eig$`percentage of variance`[axes[1]], 1), "%)")) +
+    ylab(paste0("Achse", axes[2], "(", round(res_gda$eig$`percentage of variance`[axes[2]], 1), "%)"))
+
+  # Labeln
+  if(labels) {
+    p <- p + ggrepel::geom_label_repel(data = coord_ind_timeseries %>% filter(time == time_point_names[1]),
+                                         aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", label = "id"))
+  }
 
   # Theme adaptieren
   p <- p + add_theme()
