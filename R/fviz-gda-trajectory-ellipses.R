@@ -11,13 +11,13 @@ NULL
 #' @param myriad use Myriad Pro font (boolean).
 #' @param time_point_names vector containing the name of the time points.
 #' @param ind_points show individuals (boolean).
-#' @param conc show concentration ellipse of active, first time point group (boolean).
+#' @param conccentration_ellipse show concentration ellipse of active, first time point group (boolean).
 #' @param title title of the plot.
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE,
-                                         time_point_names = NULL, ind_points = TRUE, conc = TRUE,
+                                         time_point_names = NULL, ind_points = TRUE, conccentration_ellipse = TRUE,
                                          title = "Trajectory individuals structuring factors ellipse plot") {
 
   # Add Myriad Pro font family
@@ -53,7 +53,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   else stop("Only MCA plots are currently supported!")
 
   # Concentartion ellipse
-  if(conc) p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 100)
+  if(concentration_ellipse) p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x, y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 100)
 
   # Quali ellipses
   p <- p + stat_ellipse(data = coord_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
