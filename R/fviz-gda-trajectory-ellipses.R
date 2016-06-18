@@ -17,7 +17,7 @@ NULL
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE,
-                                         time_point_names = NULL, ind_points = TRUE, conccentration_ellipse = TRUE,
+                                         time_point_names = NULL, ind_points = TRUE, concentration_ellipse = TRUE,
                                          title = "Trajectory individuals structuring factors ellipse plot") {
 
   # Add Myriad Pro font family
