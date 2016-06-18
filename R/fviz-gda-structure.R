@@ -1,3 +1,4 @@
+#' @include utilities.R
 #' @include supvar-stats.R
 #' @include supvar-crossing-stats.R
 NULL
@@ -30,9 +31,7 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
   res_quali <- supvar_stats(res_gda, df_var_quali, var_quali, impute)
 
   # Eigenwerte extrahieren, um Variablen skalieren zu können
-  eigenvalues <- res_gda$eig %>% data.frame %>% add_rownames %>% separate(rowname, c("dim", "num")) %>%
-    select(num, eigenvalue) %>% mutate_each(funs(as.numeric), matches("num")) %>% spread(num, eigenvalue)
-  colnames(eigenvalues) <- paste0("Dim.", 1:ncol(eigenvalues))
+  eigenvalues <- .get_eigenvalues(res_gda)
 
   # Punkte ohne Interaktion berechnen
   # Kreuzsstatistiken berechnen

@@ -1,33 +1,48 @@
-#' @include utilities.R
-#' @include add-theme.R
-NULL
-#' Visualization of trajectories (connected MFA active/passive individual points).
+
+#' Title
 #'
-#' @param res_gda MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).
-#' @param select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or time_point (vector containing the semesters to plot).
-#' @param axes axes to plot.
-#' @param myriad use Myriad Pro font (boolean).
-#' @param facet_labels rename facet labels (vector).
-#' @param labels plot individual labels (boolean).
+#' @param res_gda
+#' @param df_var_quali
+#' @param var_quali
+#' @param axes
+#' @param myriad
+#' @param labels
+#' @param select
 #'
-#' @return HMFA trajectory ggplot2 visualization.
+#' @return
 #' @export
-fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inertia = NULL, case = NULL),
-                                axes = 1:2, myriad = TRUE, labels = FALSE) {
+#'
+#' @examples
+fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE,
+                                      labels = FALSE, time_point_names = NULL,
+                                      select = list(name = NULL, within_inertia = NULL, case = NULL)) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
   # Trajektoriedaten zusammenstellen
   coord_trajectory <- get_gda_trajectory(res_gda, time_point_names)
-  coord_all <-  coord_trajectory$coord_all
+  coord_all = coord_trajectory$coord_all
+  coord_mean_mass = coord_trajectory$coord_mean_mass
   time_point_names <- coord_trajectory$time_point_names
+
+  # Datensatz für zusätzliche Variable konstruieren
+  df_quali <- df_var_quali %>% data.frame %>% add_rownames(var = "id") %>% select_("id", var_quali = var_quali)
+  df_base <- res_gda$call$X %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"), sep = "_")
+  df_full <- full_join(df_base, df_quali) %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
+
+  # Imputation
+  message("Info: Missing data will be imputed!")
+  df_full_imp <- imputeMCA(df_full)
+
+  # Datensatz um qualitative Variable ergänzen, um Gruppierungen vorzunehmen.
+  coord_var_quali <- bind_cols(coord_all, data_frame(var_quali = df_full_imp$completeObs$var_quali))
 
   # Auswahl vornehmen
   selected_ind <- .select_trajectory(coord_all, select)
 
   # Filterung vornehmen
-  coord_ind_timeseries <-  coord_all %>% filter(id %in% selected_ind$id)
+  coord_ind_timeseries <-  coord_var_quali %>% filter(id %in% selected_ind$id)
 
   # Plot der Daten
   if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), pointsize = -1, axes.linetype = "solid", axes = axes)
@@ -43,7 +58,8 @@ fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inert
     ylab(paste0("Achse 2 (", round(res_gda$eig$`percentage of variance`[2], 1), "%)")) +
     # Labeln
     ggrepel::geom_label_repel(data = coord_ind_timeseries %>% filter(time == time_point_names[1]),
-                              aes(Dim.1, Dim.2, colour = time, label = id))
+                              aes(Dim.1, Dim.2, colour = time, label = id)) +
+    facet_wrap(~var_quali)
 
   # Theme adaptieren
   p <- p + add_theme()
@@ -53,4 +69,5 @@ fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inert
 
   # Ausgabe des Plots
   return(p)
+
 }

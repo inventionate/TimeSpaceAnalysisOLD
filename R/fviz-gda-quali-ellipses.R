@@ -42,15 +42,19 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
     var <- var %>% mutate_each(funs(as.factor))
 
+    # Nur aktive Individuen verwenden
+    if(!is.null(res_gda$call$ind.sup)) X <- res_gda$call$X[-res_gda$call$ind.sup,]
+    else X <- res_gda$call$X
+
     if(inherits(res_gda, c("MCA"))) {
 
-      var_impute <- missMDA::imputeMCA(data.frame(res_gda$call$X, var))
+      var_impute <- missMDA::imputeMCA(data.frame(X, var))
 
     }
 
     if(inherits(res_gda, c("MFA"))) {
 
-      var_impute <- missMDA::imputeMFA(data.frame(res_gda$call$X, var),
+      var_impute <- missMDA::imputeMFA(data.frame(X, var),
                                        c(res_gda$call$group, 1),
                                        res_gda$call$ncp,
                                        c(res_gda$call$type, "n"))
@@ -75,6 +79,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
     group_by(Dim.1, Dim.2, var_quali) %>%
     mutate(count = n()) %>%
     ungroup()
+
   coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(mean))
   size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_each(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
   coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)

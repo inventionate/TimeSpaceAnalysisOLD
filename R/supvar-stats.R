@@ -23,11 +23,15 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
     message("Info: Missing data will be imputed!")
 
+    # Nur aktive Individuen verwenden
+    if(!is.null(res_gda$call$ind.sup)) X <- res_gda$call$X[-res_gda$call$ind.sup,]
+    else X <- res_gda$call$X
+
     var <- var %>% mutate_each(funs(as.factor))
 
     if(inherits(res_gda, c("MCA"))) {
 
-      var_impute <- missMDA::imputeMCA(data.frame(res_gda$call$X, var))
+      var_impute <- missMDA::imputeMCA(data.frame(X, var))
 
     }
 
@@ -35,7 +39,7 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
       warning("MFA input. Variances, cos2 and v.test aren't calculated!")
 
-      var_impute <- missMDA::imputeMFA(data.frame(res_gda$call$X, var),
+      var_impute <- missMDA::imputeMFA(data.frame(X, var),
                        c(res_gda$call$group, 1),
                        res_gda$call$ncp,
                        c(res_gda$call$type, "n"))

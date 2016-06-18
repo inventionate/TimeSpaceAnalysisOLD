@@ -4,35 +4,21 @@
 \alias{fviz_gda_trajectory}
 \title{Visualization of trajectories (connected MFA active/passive individual points).}
 \usage{
-fviz_gda_trajectory(res_gda, clust, select = list(name = NULL, within_inertia
-  = NULL, time_point = NULL), ellipses = FALSE, ellipse_level = 0.8647,
-  ellipse_alpha = 0.1, axes = 1:2, myriad = TRUE, facet = FALSE,
-  facet_labels = NULL, mean_path = FALSE, labels = FALSE)
+fviz_gda_trajectory(res_gda, select = list(name = NULL, within_inertia = NULL,
+  case = NULL), axes = 1:2, myriad = TRUE, labels = FALSE)
 }
 \arguments{
 \item{res_gda}{MFA or MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
 
-\item{clust}{HCPC result of primary MFA.}
-
 \item{select}{vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or time_point (vector containing the semesters to plot).}
-
-\item{ellipses}{plot concentration ellipses (boolean).}
-
-\item{ellipse_level}{the ellipse level. Default: 86.47\%.}
-
-\item{ellipse_alpha}{opacity value.}
 
 \item{axes}{axes to plot.}
 
 \item{myriad}{use Myriad Pro font (boolean).}
 
-\item{facet}{plot ellipses/ individuals per time (boolean).}
+\item{labels}{plot individual labels (boolean).}
 
 \item{facet_labels}{rename facet labels (vector).}
-
-\item{mean_path}{plot mean path (boolean). If yes, no ellipses and no facets are plotted.}
-
-\item{labels}{plot individual labels (boolean).}
 }
 \value{
 HMFA trajectory ggplot2 visualization.
