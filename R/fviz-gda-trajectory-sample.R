@@ -37,7 +37,7 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
 
   # Masse hinzufügen
   coord_all <- coord_all %>% select_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "time") %>%
-    group_by(Dim.1, Dim.2, time) %>% mutate(mass = n()) %>% ungroup()
+    group_by_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "time") %>% mutate(mass = n()) %>% ungroup()
 
   # Plot der Daten
   if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), pointsize = -1, axes.linetype = "solid", axes = axes)
