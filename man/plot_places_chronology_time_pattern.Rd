@@ -24,6 +24,8 @@ plot_places_chronology_time_pattern(data, id = "all", weekday = "all",
 \item{bar_width}{specify the width of the bars.}
 
 \item{ncol}{number of cols, if there are multiple plots (facets).}
+
+\item{myriad}{use Myriad Pro font (boolean).}
 }
 \value{
 ggplot2 visualization of place chronology time pattern data.

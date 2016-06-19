@@ -5,14 +5,18 @@
 #' @param weekday vector, which contains a day selection.
 #' @param title specify plot title.
 #' @param shape_path number, which specifies the path shape intensity.
+#' @param exclude_sleep exclude sleep duration (boolean).
 #'
 #' @return reshaped data frame for further visualization.
 #' @export
-get_places_chronology <- function(data, id = "all", weekday = "all", title, shape_path) {
+get_places_chronology <- function(data, id = "all", weekday = "all", title, shape_path, exclude_sleep) {
+
+  # Schlaf ggf. ausschließen
+  if(exclude_sleep) data <- data %>% filter(activity != "Schlafen")
 
   # Datensatz aufbereiten
   data_places_chronology <- data %>%
-    as.data.frame() %>%
+    data.frame() %>%
     mutate(start_time = hours(start_time)) %>%
     filter(address != "") %>%
     #  Dauer an einem Ort berechnen
@@ -62,7 +66,7 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
     distinct()
 
   # Pfade hübscher machen, indem eine Kurve berechnet wird.
-  plot.new()
+  # plot.new()
   coord_curved_path <- as.data.frame(xspline(data_places_chronology$lon, data_places_chronology$lat, shape = shape_path, draw = FALSE))
 
   # Daten zurückgeben

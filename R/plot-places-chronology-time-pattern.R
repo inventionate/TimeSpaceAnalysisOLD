@@ -11,6 +11,7 @@ NULL
 #' @param legend show or hide legends (boolean).
 #' @param bar_width specify the width of the bars.
 #' @param ncol number of cols, if there are multiple plots (facets).
+#' @param myriad use Myriad Pro font (boolean).
 #'
 #' @return ggplot2 visualization of place chronology time pattern data.
 #' @export

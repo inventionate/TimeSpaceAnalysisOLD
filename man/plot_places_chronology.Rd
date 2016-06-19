@@ -12,7 +12,8 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
   unique_places = FALSE, print_place_duration = FALSE,
   activity_duration_overall = TRUE, facet_scales = "fixed",
-  point_padding = unit(1e-06, "lines"), myriad = TRUE)
+  point_padding = unit(1e-06, "lines"), myriad = TRUE,
+  exclude_sleep = TRUE)
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
@@ -64,6 +65,10 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 \item{facet_scales}{should Scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y").}
 
 \item{point_padding}{Amount of padding around labeled point. Defaults to unit(0, "lines").}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{exclude_sleep}{exclude sleep duration (boolean).}
 }
 \value{
 ggplot2 visualization of place chronology data.
