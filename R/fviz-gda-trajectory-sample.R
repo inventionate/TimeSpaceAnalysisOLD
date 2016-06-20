@@ -25,10 +25,11 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
   # Trajektoriedaten zusammenstellen
   coord_trajectory <- get_gda_trajectory(res_gda, time_point_names)
   coord_all <-  coord_trajectory$coord_all
+  time_point_names <- coord_trajectory$time_point_names
 
   if(complete) {
     # Auswahl, falls nur komplette Fälle
-    selected_ind <- .select_trajectory(coord_all, select = list(case = "complete"))
+    selected_ind <- .select_trajectory(coord_all, select = list(case = "complete"), time_point_names)
 
     # Filterung vornehmen
     coord_all <-  coord_all %>% filter(id %in% selected_ind$id)

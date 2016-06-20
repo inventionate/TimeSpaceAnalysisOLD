@@ -28,7 +28,7 @@ fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inert
   time_point_names <- coord_trajectory$time_point_names
 
   # Auswahl vornehmen
-  selected_ind <- .select_trajectory(coord_all, select)
+  selected_ind <- .select_trajectory(coord_all, select, time_point_names)
 
   # Filterung vornehmen
   coord_ind_timeseries <-  coord_all %>% filter(id %in% selected_ind$id)
