@@ -75,6 +75,9 @@
   selected_ind_complete <- coord_all %>% count(id) %>% filter(n == length(time_point_names)) %>% select(id)
   coord_complete <- coord_all %>% filter(id %in% selected_ind_complete$id)
 
+  # Info bzgl. der Anzahl kompleter Fälle.
+  print(paste0("Info: ", length(selected_ind_complete$id), " complete cases."))
+
   # Selection (es wird select_ind definiert)
   selected_ind <- coord_all %>% select(id)
   # Durch Angabe des Namens filtern.
