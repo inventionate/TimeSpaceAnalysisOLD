@@ -69,7 +69,7 @@
   return(eigenvalues)
 }
 # Select trajectory ind
-.select_trajectory <- function(coord_all, select, time_point_names) {
+.select_trajectory <- function(coord_all, select, time_point_names, axes) {
 
   # Vollständige Fälle bestimmen
   selected_ind_complete <- coord_all %>% count(id) %>% filter(n == length(time_point_names)) %>% select(id)

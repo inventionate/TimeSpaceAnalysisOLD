@@ -41,7 +41,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   coord_var_quali <- bind_cols(coord_all, data_frame(var_quali = df_full_imp$completeObs$var_quali))
 
   # Auswahl vornehmen
-  selected_ind <- .select_trajectory(coord_all, select, time_point_names)
+  selected_ind <- .select_trajectory(coord_all, select, time_point_names, axes)
 
   # Filterung vornehmen
   coord_ind_timeseries <-  coord_var_quali %>% filter(id %in% selected_ind$id)
