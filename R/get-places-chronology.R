@@ -66,7 +66,7 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
     distinct()
 
   # Pfade hübscher machen, indem eine Kurve berechnet wird.
-  # plot.new()
+  plot.new()
   coord_curved_path <- as.data.frame(xspline(data_places_chronology$lon, data_places_chronology$lat, shape = shape_path, draw = FALSE))
 
   # Daten zurückgeben
