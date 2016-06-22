@@ -70,10 +70,13 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       df_group_names <- data.frame(group = rep(group_names, n_mod_group))
 
       # Zeilennamen hinzufügen
+      if(is.null(res_gda$call$excl)) col_weight <- res_gda$call$marge.col
+      else col_weight <- res_gda$call$marge.col[-res_gda$call$excl]
+      
       modalities_coord <- res_gda$var$coord %>% data.frame %>%
-        add_rownames %>% bind_cols(., df_group_names, data.frame(weight = res_gda$call$marge.col[-res_gda$call$excl] * res_gda$call$N)) %>%
+        add_rownames %>% bind_cols(., df_group_names, data.frame(weight = col_weight * res_gda$call$N)) %>%
         filter(rowname %in% modalities$rowname)
-
+     
       # Plot
       p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes,  pointsize = 0)
       if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", shape = "group", size = "weight"))

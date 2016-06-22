@@ -79,16 +79,13 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
       df_group_names <- data.frame(group = rep(group_names, n_mod_group))
 
       # Zeilennamen hinzufügen
-      if(is.null(res_gda$call$excl)) {
-        modalities_coord <- res_gda$var$coord %>% data.frame %>%
-          add_rownames %>% bind_cols(., df_group_names, data.frame(weight = res_gda$call$marge.col * res_gda$call$N)) %>%
-          filter(rowname %in% modalities$category)
-      } else {
-        modalities_coord <- res_gda$var$coord %>% data.frame %>%
-          add_rownames %>% bind_cols(., df_group_names, data.frame(weight = res_gda$call$marge.col[-res_gda$call$excl] * res_gda$call$N)) %>%
-          filter(rowname %in% modalities$category)
-      }
-      
+      if(is.null(res_gda$call$excl)) col_weight <- res_gda$call$marge.col
+      else col_weight <- res_gda$call$marge.col[-res_gda$call$excl]
+
+      modalities_coord <- res_gda$var$coord %>% data.frame %>%
+        add_rownames %>% bind_cols(., df_group_names, data.frame(weight = col_weight * res_gda$call$N)) %>%
+        filter(rowname %in% modalities$category)
+
 
       # Plot
       p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$category), axes.linetype = "solid", axes = axes,  pointsize = 0)
