@@ -61,7 +61,7 @@
 # Extract eigenvalues
 .get_eigenvalues <- function(res_gda) {
 
-  eigenvalues <- res_gda$eig %>% data.frame %>% add_rownames %>% separate(rowname, c("dim", "num")) %>%
+  eigenvalues <- res_gda$eig %>% data.frame %>% tibble::rownames_to_column() %>% separate(rowname, c("dim", "num")) %>%
     select(num, eigenvalue) %>% mutate_each(funs(as.numeric), matches("num")) %>% spread(num, eigenvalue)
 
   colnames(eigenvalues) <- paste0("Dim.", 1:ncol(eigenvalues))
@@ -114,13 +114,13 @@
       selected_ind_high <- NULL
     } else {
       selected_ind_high <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
-        add_rownames %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(desc(within_inertia)) %>% slice(1:select$within_inertia[[2]])
+        tibble::rownames_to_column() %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(desc(within_inertia)) %>% slice(1:select$within_inertia[[2]])
     }
     if(select$within_inertia[[1]] == 0) {
       selected_ind_low <- NULL
     } else {
       selected_ind_low <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
-        add_rownames %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(within_inertia) %>% slice(1:select$within_inertia[[1]])
+        tibble::rownames_to_column() %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(within_inertia) %>% slice(1:select$within_inertia[[1]])
     }
     selected_ind <- selected_ind_wi <- rbind(selected_ind_high, selected_ind_low)
   }
@@ -129,4 +129,31 @@
   }
 
   return(selected_ind)
+}
+# Gruppennamen der einzelnen Kategorien extrahieren
+.get_group_names <- function(res_gda, group, group_names) {
+
+  if(is.null(res_gda$call$excl)) var_num <- getindexcat(res_gda$call$X)
+  else var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl]
+
+  var_num <- var_num %>%
+    data_frame(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
+    select(var) %>% count(var) %>% mutate_at(vars(var), funs(as.factor))
+
+  var <- data_frame(var = colnames(res_gda$call$X)) %>% mutate_all(funs(as.factor))
+
+  n_mod <- left_join(var, var_num, by = "var") %>% .$n
+  # n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
+
+  n_mod_group <- NULL
+  start <- 0
+  for(i in 1:length(group)) {
+    n_mod_group <- c(n_mod_group, sum( n_mod[(start + 1):(start + group[i])] ) )
+    start <- sum( group[1:i] )
+  }
+
+  # Gruppenzuordnung der Modalitäten
+  df_group_names <- data.frame(group = rep(group_names, n_mod_group))
+
+  return(df_group_names)
 }

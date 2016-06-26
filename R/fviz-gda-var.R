@@ -34,7 +34,7 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
   if(inherits(res_gda, c("MFA"))) df <- res_gda$quali.var$contrib
 
   # Auswahl festlegen
-  modalities <-  df %>% data.frame %>% select(matches(paste0("^Dim.", axes[1], "|", axes[2], "$"))) %>% add_rownames(var = "category") %>%
+  modalities <-  df %>% data.frame %>% select(matches(paste0("^Dim.", axes[1], "|", axes[2], "$"))) %>% tibble::rownames_to_column(var = "category") %>%
     gather(dim, ctr, -category) %>% arrange(desc(ctr))
 
   if(contrib == "auto") {
@@ -42,7 +42,7 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
   }
   else {
     modalities <- df %>% data.frame %>% select(matches(paste0("^Dim.", axes[1], "|", axes[2], "$"))) %>%
-      add_rownames(var = "category") %>% mutate_each(funs(. * eigenvalues$.), matches("Dim")) %>%
+      tibble::rownames_to_column(var = "category") %>% mutate_each(funs(. * eigenvalues$.), matches("Dim")) %>%
       mutate_(ctr = paste0("Dim.", axes[1], " + Dim.", axes[2])) %>% arrange(desc(ctr)) %>%
       slice(1:contrib) %>% select(category) %>% data.frame
 
@@ -59,31 +59,14 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
       if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
 
       # Anzahl der Kategorien zählen
-      if(is.null(res_gda$call$excl)) var_num <- getindexcat(res_gda$call$X)
-      else var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl]
-      var_num <- var_num %>%
-        data_frame(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
-        select(var) %>% count(var)
-      var <- data_frame(var = colnames(res_gda$call$X))
-      n_mod <- left_join(var, var_num) %>% .$n
-      # n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
-
-      n_mod_group <- NULL
-      start <- 0
-      for(i in 1:length(group)) {
-        n_mod_group <- c(n_mod_group, sum( n_mod[(start + 1):(start + group[i])] ) )
-        start <- sum( group[1:i] )
-      }
-
-      # Gruppenzuordnung der Modalitäten
-      df_group_names <- data.frame(group = rep(group_names, n_mod_group))
+      df_group_names <- .get_group_names(res_gda, group, group_names)
 
       # Zeilennamen hinzufügen
       if(is.null(res_gda$call$excl)) col_weight <- res_gda$call$marge.col
       else col_weight <- res_gda$call$marge.col[-res_gda$call$excl]
 
       modalities_coord <- res_gda$var$coord %>% data.frame %>%
-        add_rownames %>% bind_cols(., df_group_names, data.frame(weight = col_weight * res_gda$call$N)) %>%
+        tibble::rownames_to_column() %>% bind_cols(., df_group_names, data.frame(weight = col_weight * res_gda$call$N)) %>%
         filter(rowname %in% modalities$category)
 
 
@@ -113,7 +96,7 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
     if(!is.null(group_style)) {
       # Identify groups and modality coordinates.
       group_id <- get_mfa_mod_group_id(res_gda)
-      modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% add_rownames %>% filter(rowname %in% modalities$category)
+      modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% tibble::rownames_to_column() %>% filter(rowname %in% modalities$category)
       # Add group ids
       modalities_coord <- left_join(modalities_coord, group_id, by = c("rowname" = "mod")) %>% data.frame
 
