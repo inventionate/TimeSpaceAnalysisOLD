@@ -33,7 +33,8 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute)
 
   # Achsen auswählen
-  supvar <- data.frame(weight = supvar_stats$weight, coord = supvar_stats$coord) %>% add_rownames %>% select(rowname, weight, matches(paste0("Dim.",axes[1], "$|Dim.", axes[2], "$")))
+  supvar <- data.frame(weight = supvar_stats$weight, coord = supvar_stats$coord) %>%
+    tibble::rownames_to_column() %>% select(rowname, weight, matches(paste0("Dim.",axes[1], "$|Dim.", axes[2], "$")))
 
   # Spaltennamen anpassen
   colnames(supvar) <- c("rowname", "weight", "Dim.1", "Dim.2")

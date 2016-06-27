@@ -35,7 +35,7 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA 
 
   # Datensatz konstruieren
   df_coord <- data.frame(res_quali$coord, weight = res_quali$weight) %>%
-    add_rownames %>%
+    tibble::rownames_to_column() %>%
     separate(rowname, c("var_1", "var_2"), sep = "_", remove = FALSE) %>%
     gather(key = variable, value = category, var_1, var_2)
 

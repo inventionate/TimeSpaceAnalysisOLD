@@ -16,7 +16,7 @@ gda_describe_axis <- function(res_gda, axis = 1, contrib = "auto") {
   else criterion <- 100/(length(GDAtools::getindexcat(res_gda$call$X)[-res_gda$call$excl]))
 
   # Alle Contributions abfragen
-  ctr <- res_gda$var$contrib %>% data.frame %>% add_rownames
+  ctr <- res_gda$var$contrib %>% data.frame %>% tibble::rownames_to_column()
 
   # Contrib exportieren und sortieren
   ctr_axis <- ctr %>% select(rowname, ctr = matches(paste0("^Dim.", axis, "$"))) %>%
@@ -27,7 +27,7 @@ gda_describe_axis <- function(res_gda, axis = 1, contrib = "auto") {
   else ctr_axis <- ctr_axis %>% slice(1:contrib)
 
   # Die entsprechenden Koordinaten extrahieren
-  coord_axis <- res_gda$var$coord %>% data.frame %>% add_rownames %>%
+  coord_axis <- res_gda$var$coord %>% data.frame %>% tibble::rownames_to_column() %>%
     filter(rowname %in% ctr_axis$rowname) %>% select(rowname, coord = matches(paste0("^Dim.", axis, "$")))
 
   # Datensatz Kategorien ctr

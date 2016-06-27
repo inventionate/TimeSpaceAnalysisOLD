@@ -38,10 +38,10 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
   res_crossing <- supvar_crossing_stats(res_gda, df_var_quali, var_quali, impute, axes)
 
   # Anzahl der Modalitäten (Levels) pro Variable
-  var_mod <- res_quali$coord %>% add_rownames %>% separate(rowname, c("var1_mod", "var2_mod"), sep = "_") %>%
+  var_mod <- res_quali$coord %>% tibble::rownames_to_column() %>% separate(rowname, c("var1_mod", "var2_mod"), sep = "_") %>%
     select(var1_mod, var2_mod) %>% summarise_each(funs(n_distinct))
 
-  var_mod_names <- res_quali$coord %>% add_rownames %>%
+  var_mod_names <- res_quali$coord %>% tibble::rownames_to_column() %>%
     separate(rowname, c("var1_mod", "var2_mod"), sep = "_", remove = FALSE) %>%
     arrange(var1_mod, desc(var2_mod)) %>% .$rowname
 
@@ -69,14 +69,14 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
   fitted_coord <- data.frame(df_coord1, df_coord2)
 
   # Datensatz zusammenstellen
-  df_real <- data.frame(res_quali$coord, weight = res_quali$weight) %>% add_rownames %>%
+  df_real <- data.frame(res_quali$coord, weight = res_quali$weight) %>% tibble::rownames_to_column() %>%
     select_("rowname", paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "weight") %>%
     separate(rowname, c("var_1", "var_2"), sep = "_", remove = FALSE) %>%
     mutate(variable = "real")
 
   # Fitted cloud berechnen. Es können nur  Indikatortabellen verarbeitet werden, daher wird hier reskaliert!
   # Die errechneten Koordianten müssen noch an die Wolke der Kategorien angepasst werden.
-  df_fitted <- data.frame(fitted_coord, weight = res_quali$weight) %>% add_rownames %>%
+  df_fitted <- data.frame(fitted_coord, weight = res_quali$weight) %>% tibble::rownames_to_column() %>%
     separate(rowname, c("var_1", "var_2"), sep = "_", remove = FALSE) %>%
     mutate(variable = "fitted") %>% mutate_each(funs(. * 1/sqrt(eigenvalues$.)), matches("Dim"))
 
