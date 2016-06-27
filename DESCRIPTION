@@ -36,6 +36,7 @@ Depends:
     missMDA,
     RColorBrewer,
     factoextra,
+    archivist,
     pander,
     RSQLite,
     kfigr
