@@ -29,8 +29,8 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   time_point_names <- coord_trajectory$time_point_names
 
   # Datensatz für zusätzliche Variable konstruieren
-  df_quali <- df_var_quali %>% data.frame %>% add_rownames(var = "id") %>% select_("id", var_quali = var_quali)
-  df_base <- res_gda$call$X %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"), sep = "_", fill = "right")
+  df_quali <- df_var_quali %>% data.frame %>% tibble::rownames_to_column(var = "id") %>% select_("id", var_quali = var_quali)
+  df_base <- res_gda$call$X %>% data.frame %>% tibble::rownames_to_column() %>% separate(rowname, c("id", "time"), sep = "_", fill = "right")
   df_full <- full_join(df_base, df_quali) %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
 
   # Imputation

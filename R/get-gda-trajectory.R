@@ -11,7 +11,7 @@ NULL
 get_gda_trajectory <- function(res_gda, time_point_names = NULL) {
 
   # Anzahl Zeitpunkte bestimmen
-  time_points <- res_gda$ind.sup$coord %>% data.frame %>% add_rownames %>%
+  time_points <- res_gda$ind.sup$coord %>% data.frame %>% tibble::rownames_to_column() %>%
     separate(rowname, c("id", "time")) %>% select(time) %>% distinct %>% .$time %>% length
 
   if(length(time_points) == 0) stop("There are no different time points!")
@@ -21,10 +21,10 @@ get_gda_trajectory <- function(res_gda, time_point_names = NULL) {
   # Basisdatensatz konstruieren
 
   # Hauptkoordinaten (Zeitpunkt 1)
-  coord_main <- res_gda$ind$coord %>% data.frame %>% add_rownames("id") %>% mutate(time = time_point_names[1])
+  coord_main <- res_gda$ind$coord %>% data.frame %>% tibble::rownames_to_column("id") %>% mutate(time = time_point_names[1])
 
   # Zusätzliche Koordinaten (Zeitpunkte n)
-  coord_all <- bind_rows(coord_main, res_gda$ind.sup$coord %>% data.frame %>% add_rownames %>%
+  coord_all <- bind_rows(coord_main, res_gda$ind.sup$coord %>% data.frame %>% tibble::rownames_to_column() %>%
                            separate(rowname, c("id", "time")) %>%
                            mutate(time = mapvalues(time,
                                                    1:(length(time_point_names) - 1),
