@@ -16,7 +16,6 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
 
   # Datensatz aufbereiten
   data_places_chronology <- data %>%
-    data.frame() %>%
     mutate(start_time = hours(start_time)) %>%
     filter(address != "") %>%
     #  Dauer an einem Ort berechnen
@@ -29,7 +28,6 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
     # Titel anpassen.
     title <- paste(title, as.character(id))
   }
-
 
   # Anzahl der zu plottenden Wochentage.
   if (weekday[[1]] != "all") {
@@ -45,25 +43,25 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
     mutate(activity_duration_overall = sum(duration),
            start_time_average = mean(start_time)) %>%
     select(-date, -prop_duration, -duration, -place_duration, -start_time) %>%
-    distinct()
+    ungroup() %>%
+    distinct(.keep_all = TRUE)
 
   # Datensatz mit besuchten Orten und deren Häufigfkeit erstellen.
   data_unique_places_count <- data_places_chronology %>%
-    count(place) %>%
-    select(n)
+    count(place)
 
   # Datensatz mit besuchten Orten erstellen.
   data_unique_places <- data_places_chronology %>%
     ungroup() %>%
     select(questionnaire_id, place, lon, lat, place_duration) %>%
-    distinct()
+    distinct(.keep_all = TRUE)
 
   # Datensatz mit besuchten Orten erstellen (ohne Berücksichtugung der Dauer).
   data_unique_places_overall <- data_unique_places %>%
-    ungroup() %>%
     group_by(questionnaire_id, place) %>%
     mutate(place_duration = sum(place_duration)) %>%
-    distinct()
+    ungroup() %>%
+    distinct(.keep_all = TRUE)
 
   # Pfade hübscher machen, indem eine Kurve berechnet wird.
   plot.new()

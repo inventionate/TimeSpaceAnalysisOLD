@@ -11,7 +11,6 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
   # Relevante Variablen auswählen
   data <- data %>%
     select(questionnaire_id, date, day, duration, activity) %>%
-    as.data.frame() %>%
     mutate(activity = factor(activity))
 
   # Leeren Datensatz hinzufügen, um vergleichbare Ausgangsbedingungen zu schaffen.
@@ -21,7 +20,7 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
 
   data_scaffold <- data %>%
     group_by(questionnaire_id, day) %>%
-    distinct() %>%
+    distinct(.keep_all = TRUE) %>%
     na.omit()
 
   # @todo: Hier in Functional Programming switchen.
@@ -31,7 +30,7 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
     data_zero_duration_activites <- bind_rows(data_zero_duration_activites, data_scaffold %>% mutate(duration = 0, activity = activities[i]))
   }
 
-  data_pc_zm <- data <- bind_rows(data, data_zero_duration_activites)
+  data_pc_zm <- data <- bind_rows(data, data_zero_duration_activites %>% mutate_at(vars(activity), funs(as.factor)))
 
   # Nach ID filtern
   # Es darf dein NA Auschluss durchgeführt werden, weil sonst die Fahrzeit verloren geht!
@@ -46,7 +45,7 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
     ungroup() %>%
     group_by(questionnaire_id, day, activity) %>%
     mutate(prop_duration = sum(prop_duration)) %>%
-    distinct() %>%
+    distinct(.keep_all = TRUE) %>%
     arrange(questionnaire_id, date, activity) %>%
     ungroup() %>%
     # Festlegen der Reihenfolge der Levels und orden der Daten.
