@@ -16,7 +16,7 @@
 supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
   # Datensatz auslesen
-  var <- var_quali_df %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
+  var <- var_quali_df %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
 
   # Check, ob es fehlende Werte gibt und ggf. imputieren
   if( length(which(is.na(var))) != 0 & impute ) {
@@ -27,7 +27,7 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
     if(!is.null(res_gda$call$ind.sup)) X <- res_gda$call$X[-res_gda$call$ind.sup,]
     else X <- res_gda$call$X
 
-    var <- var %>% mutate_each(funs(as.factor))
+    var <- var %>% mutate_all(funs(as.factor))
 
     if(inherits(res_gda, c("MCA"))) {
 

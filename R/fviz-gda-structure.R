@@ -39,7 +39,7 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
 
   # Anzahl der Modalitäten (Levels) pro Variable
   var_mod <- res_quali$coord %>% tibble::rownames_to_column() %>% separate(rowname, c("var1_mod", "var2_mod"), sep = "_") %>%
-    select(var1_mod, var2_mod) %>% summarise_each(funs(n_distinct))
+    select(var1_mod, var2_mod) %>% summarise_all(funs(n_distinct))
 
   var_mod_names <- res_quali$coord %>% tibble::rownames_to_column() %>%
     separate(rowname, c("var1_mod", "var2_mod"), sep = "_", remove = FALSE) %>%
@@ -78,7 +78,7 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
   # Die errechneten Koordianten müssen noch an die Wolke der Kategorien angepasst werden.
   df_fitted <- data.frame(fitted_coord, weight = res_quali$weight) %>% tibble::rownames_to_column() %>%
     separate(rowname, c("var_1", "var_2"), sep = "_", remove = FALSE) %>%
-    mutate(variable = "fitted") %>% mutate_each(funs(. * 1/sqrt(eigenvalues$.)), matches("Dim"))
+    mutate(variable = "fitted") %>% mutate_at(vars(matches("Dim")), funs(. * 1/sqrt(eigenvalues$.)))
 
   df_ges <- bind_rows(df_real, df_fitted)
 

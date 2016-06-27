@@ -41,11 +41,11 @@
 # Calculate crossed within variance
 .crossed_within_variance <- function(var, weight, coord) {#, eigenvalues) {
   # Varianzen berechnen
-  variances <- join(weight, coord) %>% group_by_(`var`) %>%
+  variances <- join(weight, coord, by = c("var1", "var2")) %>% group_by_(`var`) %>%
     mutate(total_weight = sum(weight),
            relative_weight = weight/total_weight) %>%
-    mutate_each(funs(weighted.mean(., weight) - .), matches("Dim")) %>%
-    summarise_each(funs(sum(relative_weight*(.^2))), matches("Dim"))# %>%
+    mutate_at(vars(matches("Dim")), funs(weighted.mean(., weight) - .)) %>%
+    summarise_at(vars(matches("Dim")), funs(sum(relative_weight*(.^2))))# %>%
     #mutate_each(funs(. * eigenvalues$.), matches("Dim"))
 
   # Gesamte Anzahl an Personen
@@ -53,8 +53,8 @@
 
   # Age within gender variance
   within_variance <-
-    join(variances, weight_total) %>%
-    summarise_each(funs(weighted.mean(., weight_total)), matches("Dim"))
+    join(variances, weight_total, by = var) %>%
+    summarise_at(vars(matches("Dim")), funs(weighted.mean(., weight_total)))
 
   return(within_variance)
 }
@@ -62,7 +62,7 @@
 .get_eigenvalues <- function(res_gda) {
 
   eigenvalues <- res_gda$eig %>% data.frame %>% tibble::rownames_to_column() %>% separate(rowname, c("dim", "num")) %>%
-    select(num, eigenvalue) %>% mutate_each(funs(as.numeric), matches("num")) %>% spread(num, eigenvalue)
+    select(num, eigenvalue) %>% mutate_at(vars(matches("num")), funs(as.numeric)) %>% spread(num, eigenvalue)
 
   colnames(eigenvalues) <- paste0("Dim.", 1:ncol(eigenvalues))
 
