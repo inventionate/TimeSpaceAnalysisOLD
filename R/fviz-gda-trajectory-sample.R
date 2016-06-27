@@ -43,7 +43,7 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
   coord_mass <- coord_all %>% select(-id) %>% count(time) %>% rename(mass = n)
 
   # Mittelpunkte und Massen zusammenführen
-  coord_mean_mass <- full_join(coord_mean, coord_mass)
+  coord_mean_mass <- full_join(coord_mean, coord_mass, by = "time")
 
   # Masse hinzufügen
   coord_all <- coord_all %>% select_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "time") %>%

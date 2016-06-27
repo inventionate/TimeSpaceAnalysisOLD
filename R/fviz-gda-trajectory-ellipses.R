@@ -30,9 +30,9 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   time_point_names <- coord_trajectory$time_point_names
 
   # Datensatz für zusätzliche Variable konstruieren
-  df_quali <- df_var_quali %>% data.frame %>% add_rownames(var = "id") %>% select_("id", var_quali = var_quali)
-  df_base <- res_gda$call$X %>% data.frame %>% add_rownames %>% separate(rowname, c("id", "time"), sep = "_", fill = "right")
-  df_full <- full_join(df_base, df_quali) %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
+  df_quali <- df_var_quali %>% data.frame %>% tibble::rownames_to_column(var = "id") %>% select_("id", var_quali = var_quali)
+  df_base <- res_gda$call$X %>% data.frame %>% tibble::rownames_to_column() %>% separate(rowname, c("id", "time"), sep = "_", fill = "right")
+  df_full <- full_join(df_base, df_quali, by = "id") %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
 
   # Imputation
   message("Info: Missing data will be imputed!")
@@ -46,7 +46,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   # Mittelwerte und Gruppengewicht berechnen
   coord_mean_var_quali <- coord_var_quali %>% select(-mass) %>% group_by(time, var_quali) %>% summarise_each(funs(mean))
   coord_mass_var_quali <- coord_var_quali %>% count(var_quali, time) %>% rename(mass = n)
-  coord_mean_mass_var_quali <- full_join(coord_mean_var_quali, coord_mass_var_quali)
+  coord_mean_mass_var_quali <- full_join(coord_mean_var_quali, coord_mass_var_quali, by = c("time", "var_quali"))
 
   # Plot der Daten
   if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), pointsize = -1, axes.linetype = "solid", axes = axes)
