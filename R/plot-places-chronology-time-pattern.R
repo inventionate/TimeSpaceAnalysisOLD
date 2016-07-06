@@ -39,7 +39,7 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
           arrange(questionnaire_id) %>%
           group_by(questionnaire_id, activity) %>%
           spread(questionnaire_id, prop_duration) %>%
-          as_data_frame() %>%
+          as_tibble() %>%
           print(n = nrow(.))
       }
 

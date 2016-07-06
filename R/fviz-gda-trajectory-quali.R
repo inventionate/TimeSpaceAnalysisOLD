@@ -38,7 +38,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   df_full_imp <- imputeMCA(df_full)
 
   # Datensatz um qualitative Variable ergänzen, um Gruppierungen vorzunehmen.
-  coord_var_quali <- bind_cols(coord_all, data_frame(var_quali = df_full_imp$completeObs$var_quali))
+  coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full_imp$completeObs$var_quali))
 
   # Auswahl vornehmen
   selected_ind <- .select_trajectory(coord_all, select, time_point_names, axes)

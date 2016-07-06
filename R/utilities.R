@@ -2,7 +2,7 @@
 .count_distinct_ind <- function(res_gda, axes = 1:2) {
   # Koordinaten der Individuen vorbereiten
   # Punkte an den gleichen Stellen vergößern und multiple entfernen.
-  res_gda <- data_frame(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]]) %>%
+  res_gda <- tibble(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]]) %>%
     group_by(x, y) %>%
     mutate(count = n()) %>%
     ungroup() %>%
@@ -137,10 +137,10 @@
   else var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl]
 
   var_num <- var_num %>%
-    data_frame(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
+    tibble(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
     select(var) %>% count(var) %>% mutate_at(vars(var), funs(as.factor))
 
-  var <- data_frame(var = colnames(res_gda$call$X)) %>% mutate_all(funs(as.factor))
+  var <- tibble(var = colnames(res_gda$call$X)) %>% mutate_all(funs(as.factor))
 
   n_mod <- left_join(var, var_num, by = "var") %>% .$n
   # n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct

@@ -72,7 +72,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   var <- var[,1]
 
   # Datensatz zusammenstellen (Koordinaten mit passiver Variable zusammenführen)
-  df_source <- data_frame(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]], var_quali = factor(var)) %>%
+  df_source <- tibble(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]], var_quali = factor(var)) %>%
     mutate(var_quali = factor(var_quali, levels = var_levels))
 
   coord_ind_quali <- df_source %>%

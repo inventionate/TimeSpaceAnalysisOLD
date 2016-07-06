@@ -13,8 +13,8 @@ get_mfa_mod_group_id <- function(res_mfa) {
   for(g in 1:length(res_mfa$call$group)) {
     group_id <- c(group_id, rep(g, res_mfa$call$group[g]))
   }
-  group_id <- data_frame(var = colnames(res_mfa$call$X), group_id)
-  mod <- data_frame(mod = colnames(GDAtools::dichotom(res_mfa$call$X))) %>%
+  group_id <- tibble(var = colnames(res_mfa$call$X), group_id)
+  mod <- tibble(mod = colnames(GDAtools::dichotom(res_mfa$call$X))) %>%
     separate(mod, c("var", "mod"), extra = "merge", sep = "\\.")
   group_shape <- full_join(mod, group_id)
   index_rm <- get_index_mod(res_mfa$call$X, pattern = "Fehlender Wert|kann ich nicht sagen")

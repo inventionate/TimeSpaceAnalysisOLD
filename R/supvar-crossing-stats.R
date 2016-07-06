@@ -31,7 +31,7 @@ supvar_crossing_stats <- function(res_gda, var_quali_df, var_quali, impute = TRU
   weight <- var_crossed_stats$weight %>% data.frame(weight = .) %>% tibble::rownames_to_column() %>% separate(rowname, c("var1", "var2"), sep = "_")
 
   # Separate supplementary variables.
-  var_crossed <- var_crossed_stats$supvar %>% data_frame(var_crossed = .) %>% separate(var_crossed, c("var1", "var2"), "_")
+  var_crossed <- var_crossed_stats$supvar %>% tibble(var_crossed = .) %>% separate(var_crossed, c("var1", "var2"), "_")
   var1 <- var_crossed$var1
   var2 <- var_crossed$var2
 

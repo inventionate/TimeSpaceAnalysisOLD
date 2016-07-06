@@ -39,7 +39,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   df_full_imp <- imputeMCA(df_full)
 
   # Datensatz um qualitative Variable ergänzen, um Gruppierungen vorzunehmen.
-  coord_var_quali <- bind_cols(coord_all, data_frame(var_quali = df_full_imp$completeObs$var_quali)) %>%
+  coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full_imp$completeObs$var_quali)) %>%
     select_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "var_quali", "time") %>%
     group_by_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "var_quali", "time") %>% mutate(mass = n()) %>% ungroup()
 
