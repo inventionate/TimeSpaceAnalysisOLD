@@ -56,7 +56,7 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 
 \item{ncol}{number of cols, if there are multiple plots (facets).}
 
-\item{unique_places}{plot only unique places. Useful to visualize place related overall structure.}
+\item{unique_places}{plot only unique places. Useful to visualize place related overall structure (boolean).}
 
 \item{print_place_duration}{print place overall duration (hours).}
 

@@ -4,21 +4,30 @@
 \alias{fviz_add_sup_ind}
 \title{Add supplementary individuals.}
 \usage{
-fviz_add_sup_ind(res_gda, excl = NULL, sup_ind = NULL, colour = "red",
-  label = NULL, size = 10, myriad = TRUE)
+fviz_add_sup_ind(res_gda, sup_ind = NULL, colour = "red",
+  ind_visible = FALSE, label = NULL, size = 10, myriad = TRUE,
+  group = NULL, group_names = NULL, group_style = "both")
 }
 \arguments{
-\item{res_gda}{GDA results.}
-
-\item{excl}{Exclude modalities (list).}
+\item{res_gda}{MCA results.}
 
 \item{sup_ind}{supplementary individual profiles (data.frame).}
 
 \item{colour}{colour of point and labels.}
 
+\item{ind_visible}{show individual points.}
+
 \item{label}{label names.}
 
 \item{size}{label size.}
+
+\item{myriad}{use Myriad Pro font.}
+
+\item{group}{vector containing group definition.}
+
+\item{group_names}{names of the groups.}
+
+\item{group_style}{style to plot (vector containing "shape", "colour" or "both).}
 }
 \value{
 ggplot2 visalization of supplementary individuals.
