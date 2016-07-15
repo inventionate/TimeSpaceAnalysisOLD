@@ -1,4 +1,4 @@
-#' @include fviz-gda-conc-ellipse.R
+#' @include fviz-gda-var.R
 NULL
 #' Add supplementary individuals.
 #'
