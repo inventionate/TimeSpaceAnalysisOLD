@@ -40,7 +40,7 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   colnames(supvar) <- c("rowname", "weight", "Dim.1", "Dim.2")
 
   # Reihenfolge der Zeilen an die Faktorenlevels anpassen
-  order_levels <- df_var_quali %>% data.frame %>% select(which(names(data.frame(df_var_quali)) %in% var_quali))
+  order_levels <- df_var_quali %>% select(matchesvar_quali)
 
   order_levels <- levels(factor(order_levels[,1]))
 
