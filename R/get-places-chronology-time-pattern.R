@@ -25,7 +25,7 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
 
   # @todo: Hier in Functional Programming switchen.
   data_zero_duration_activites <- NULL
-  for(i in 1:length(activities))
+  for(i in seq_along(activities))
   {
     data_zero_duration_activites <- bind_rows(data_zero_duration_activites, data_scaffold %>% mutate(duration = 0, activity = activities[i]))
   }

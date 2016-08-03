@@ -44,7 +44,7 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
     if(!is.null(group)) {
 
       # Gruppennamen festlegen, falls keine angegeben
-      if(is.null(group_names)) group_names <- paste0("Group_", 1:length(group))
+      if(is.null(group_names)) group_names <- paste0("Group_", seq_along(group))
 
       # Checken, on Definition korrekt war
       if(length(group) != length(group_names)) stop("Wrongt group and group name definition!")
