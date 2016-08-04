@@ -16,7 +16,6 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, shap
 
   # Datensatz aufbereiten
   data_places_chronology <- data %>%
-    mutate(start_time = hours(start_time)) %>%
     filter(address != "") %>%
     #  Dauer an einem Ort berechnen
     group_by(questionnaire_id, day, place) %>%
