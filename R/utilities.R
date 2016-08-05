@@ -100,7 +100,7 @@
 
     # "within inertia" berechnen (adaptiert von FactoMineR)
     tmp <- array(0, dim = c(dim(ind_mean_coord %>% select(-id)), 2))
-    for(i in 1:length(time_point_names)) {
+    for(i in seq_along(time_point_names)) {
       tmp[,,i] <- (coord_complete %>% filter(time == time_point_names[i] & id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / length(time_point_names)
     }
     variab.auxil <- apply(tmp,2,sum)
@@ -147,7 +147,7 @@
 
   n_mod_group <- NULL
   start <- 0
-  for(i in 1:length(group)) {
+  for(i in seq_along(group)) {
     n_mod_group <- c(n_mod_group, sum( n_mod[(start + 1):(start + group[i])] ) )
     start <- sum( group[1:i] )
   }

@@ -28,7 +28,7 @@ get_time_pattern_profile <- function(data_tp, id = "all")
     mutate(prop_avg_duration = avg_duration / sum(avg_duration)) %>%
     arrange(zeitmuster, day, desc(activity)) %>%
     ungroup() %>%
-    mutate(zeitmuster = mapvalues(zeitmuster, 1:length(data_ts[[3]]), data_ts[[3]]))
+    mutate(zeitmuster = mapvalues(zeitmuster, seq_along(data_ts[[3]]), data_ts[[3]]))
 
   return(data_series_average_prop)
 }

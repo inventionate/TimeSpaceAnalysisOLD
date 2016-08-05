@@ -17,7 +17,7 @@ db_load <- function(remote_db_path, copy = FALSE, convert_encoding = FALSE) {
     remote_tables <- dplyr::src_tbls(remote_db)
 
     # Tabellen lokal verfügbar machen
-    for (n in 1:length(remote_tables)) {
+    for (n in seq_along(remote_tables)) {
 
       df_db <- dplyr::tbl(remote_db, remote_tables[n])
 
