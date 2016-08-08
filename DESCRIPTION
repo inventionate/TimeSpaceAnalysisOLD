@@ -9,8 +9,7 @@ Encoding: UTF-8
 Description: Use Geometric Data Analysis approaches (e.g. MCA or MFA), time pattern analysis (see "time sequence clustering") and places chronologies (see "time geography") analysis.
 License: GPL (>= 3) | file LICENSE
 Depends:
-    R (>= 3.3)
-Imports:
+    R (>= 3.3),
     plyr,
     readr,
     tidyr,
