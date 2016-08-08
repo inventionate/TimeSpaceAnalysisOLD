@@ -48,7 +48,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
 
   # Behandlung von fehlenden Werten
   if(!impute) {
-    message("Info: Missing data will excluded!")
+    message("Info: Missing data will be excluded!")
     coord_var_quali <- na.omit(coord_var_quali)
   }
 

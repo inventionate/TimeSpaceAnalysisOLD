@@ -45,7 +45,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
 
   # Behandlung von fehlenden Werten
   if(!impute) {
-    message("Info: Missing data will excluded!")
+    message("Info: Missing data will be excluded!")
     coord_var_quali <- na.omit(coord_var_quali)
     # Nur vorhandene Fälle verwenden
     coord_all <- coord_all %>% filter(id %in% coord_var_quali$id)
