@@ -5,8 +5,8 @@
 \title{Visualization of trajectory structuring factor ellipses.}
 \usage{
 fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
-  myriad = TRUE, time_point_names = NULL, ind_points = TRUE,
-  concentration_ellipse = TRUE,
+  myriad = TRUE, impute = TRUE, time_point_names = NULL,
+  ind_points = TRUE, concentration_ellipse = TRUE,
   title = "Trajectory individuals structuring factors ellipse plot")
 }
 \arguments{
@@ -20,13 +20,15 @@ fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
 
 \item{myriad}{use Myriad Pro font (boolean).}
 
+\item{impute}{use imputation for missing data.}
+
 \item{time_point_names}{vector containing the name of the time points.}
 
 \item{ind_points}{show individuals (boolean).}
 
-\item{title}{title of the plot.}
+\item{concentration_ellipse}{}
 
-\item{conccentration_ellipse}{show concentration ellipse of active, first time point group (boolean).}
+\item{title}{title of the plot.}
 }
 \value{
 ggplot2 visualization.

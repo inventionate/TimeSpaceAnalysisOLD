@@ -11,12 +11,13 @@ NULL
 #' @param myriad use Myriad Pro font (boolean).
 #' @param time_point_names vector containing the name of the time points.
 #' @param ind_points show individuals (boolean).
-#' @param conccentration_ellipse show concentration ellipse of active, first time point group (boolean).
 #' @param title title of the plot.
+#' @param impute use imputation for missing data.
+#' @param concentration_ellipse
 #'
 #' @return ggplot2 visualization.
 #' @export
-fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE,
+fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, impute = TRUE,
                                          time_point_names = NULL, ind_points = TRUE, concentration_ellipse = TRUE,
                                          title = "Trajectory individuals structuring factors ellipse plot") {
 
@@ -35,13 +36,21 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   df_full <- full_join(df_base, df_quali, by = "id") %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
 
   # Imputation
-  message("Info: Missing data will be imputed!")
-  df_full_imp <- imputeMCA(df_full)
+  if(impute) {
+    message("Info: Missing data will be imputed!")
+    df_full <- imputeMCA(df_full)$completeObs
+  }
 
   # Datensatz um qualitative Variable ergänzen, um Gruppierungen vorzunehmen.
-  coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full_imp$completeObs$var_quali)) %>%
+  coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full$var_quali)) %>%
     select_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "var_quali", "time") %>%
     group_by_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "var_quali", "time") %>% mutate(mass = n()) %>% ungroup()
+
+  # Behandlung von fehlenden Werten
+  if(!impute) {
+    message("Info: Missing data will excluded!")
+    coord_var_quali <- na.omit(coord_var_quali)
+  }
 
   # Mittelwerte und Gruppengewicht berechnen
   coord_mean_var_quali <- coord_var_quali %>% select(-mass) %>% group_by(time, var_quali) %>% summarise_each(funs(mean))

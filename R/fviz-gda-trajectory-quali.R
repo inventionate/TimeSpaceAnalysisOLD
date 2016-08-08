@@ -13,12 +13,13 @@ NULL
 #' @param select select vector of names, within_inertia of individuals selection (within_inertia: vector containing the number of high variation and low variationindividuals) or case (vector containing NULL, complete, or incomplete).
 #' @param title the plot title.
 #' @param time_point_names vector containing the name of the time points.
+#' @param impute use imputation for missing data.
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, labels = FALSE,
                                       title = "Trajectory individuals structuring factors plot", time_point_names = NULL,
-                                      select = list(name = NULL, within_inertia = NULL, case = NULL)) {
+                                      select = list(name = NULL, within_inertia = NULL, case = NULL), impute = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -34,11 +35,21 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   df_full <- full_join(df_base, df_quali, by = "id") %>% mutate_each(funs(as.factor)) %>% select(-id, -time) %>% data.frame
 
   # Imputation
-  message("Info: Missing data will be imputed!")
-  df_full_imp <- imputeMCA(df_full)
+  if(impute) {
+    message("Info: Missing data will be imputed!")
+    df_full_imp <- imputeMCA(df_full)$completeObs
+  }
 
   # Datensatz um qualitative Variable ergänzen, um Gruppierungen vorzunehmen.
-  coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full_imp$completeObs$var_quali))
+  coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full$var_quali))
+
+  # Behandlung von fehlenden Werten
+  if(!impute) {
+    message("Info: Missing data will excluded!")
+    coord_var_quali <- na.omit(coord_var_quali)
+    # Nur vorhandene Fälle verwenden
+    coord_all <- coord_all %>% filter(id %in% coord_var_quali$id)
+  }
 
   # Auswahl vornehmen
   selected_ind <- .select_trajectory(coord_all, select, time_point_names, axes)
