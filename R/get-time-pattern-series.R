@@ -31,5 +31,5 @@ get_time_pattern_series <- function(data_tp)
     transmute(zeitmuster = zeitmuster, prop = paste("(", round(n / sum(n) * 100, 1), "%)")) %>%
     unite(label, zeitmuster, prop, sep = " ")
 
-  return(list(data_series, data_series_average, data_series_profile_prop$label))
+  return(list(data_series = data_series, data_series_average = data_series_average, data_series_profile_prop_label = data_series_profile_prop$label))
 }
