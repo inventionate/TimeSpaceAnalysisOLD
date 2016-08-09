@@ -20,7 +20,7 @@ NULL
 #' @export
 fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high contribution modalities", axes = 1:2, myriad = TRUE,
                          group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Dark2",
-                         individuals = FALSE, individuals_size = 5, individuals_alpha = 0.5, individuals_names = FALSE) {
+                         individuals = FALSE, individuals_size = "auto", individuals_alpha = 0.5, individuals_names = FALSE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -34,9 +34,6 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
   # Check GDA algorithm
   if(inherits(res_gda, c("MCA"))) df <- res_gda$var$contrib
   if(inherits(res_gda, c("MFA"))) df <- res_gda$quali.var$contrib
-
-  # Koordinaten Individuen extrahieren
-  coord_ind <- data.frame(res_gda$ind$coord)
 
   # Auswahl festlegen
   modalities <-  df %>% data.frame %>% select(matches(paste0("^Dim.", axes[1], "|", axes[2], "$"))) %>% tibble::rownames_to_column(var = "category") %>%
@@ -77,8 +74,14 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
 
       # Plot
       p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$category), axes.linetype = "solid", axes = axes,  pointsize = 0)
-      if(individuals) p <- p + geom_point(data = coord_ind, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), colour = "black", size = individuals_size, alpha = individuals_alpha)
-      if(individuals_names) p <- p + ggrepel::geom_label_repel(data = coord_ind, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = rownames(coord_ind)), colour = "black", size = individuals_size, alpha = individuals_alpha)
+      if(individuals) {
+        if(individuals_size == "auto") {
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
+        } else {
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y), size = individuals_size, inherit.aes = FALSE, alpha = individuals_alpha)
+        }
+      }
+      if(individuals_names) p <- p + ggrepel::geom_label_repel(data = .count_distinct_ind(res_gda, axes), aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = rownames(.count_distinct_ind(res_gda, axes))), colour = "black", size = individuals_size, alpha = individuals_alpha)
       if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", shape = "group", size = "weight"))
       if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", size = "weight"), shape = 17)
       if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group", size = "weight"), colour = "black")
@@ -109,8 +112,14 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
 
       # Plot group specific modalities
       p <- fviz_mfa_quali_var(res_gda, label = "none", select.var = list(name = modalities$category), axes.linetype = "solid", axes = axes, pointsize = 0)
-      if(individuals) p <- p + geom_point(data = coord_ind, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "black", size = individuals_size, alpha = individuals_alpha))
-      if(individuals_names) p <- p + ggrepel::geom_label_repel(data = coord_ind, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = rownames(coord_ind)), colour = "black", size = individuals_size, alpha = individuals_alpha)
+      if(individuals) {
+        if(individuals_size == "auto") {
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
+        } else {
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y), size = individuals_size, inherit.aes = FALSE, alpha = individuals_alpha)
+        }
+      }
+      if(individuals_names) p <- p + ggrepel::geom_label_repel(data = .count_distinct_ind(res_gda, axes), aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = rownames(.count_distinct_ind(res_gda, axes))), colour = "black", size = individuals_size, alpha = individuals_alpha)
       if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", shape = "group_id", size = "weight"))
       if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", size = "weight"), shape = 17)
       if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group_id", size = "weight"), colour = "black")
@@ -138,6 +147,8 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
     if(group_style %in% c("shape", "both")) p <- p + scale_shape_discrete(name = "Gruppen", labels = modalities_coord %>% select(group) %>% distinct, solid = TRUE)
     p <- p + theme(legend.position = "bottom")
   }
+
+  if(individuals_size == "auto") p <- p + scale_size_continuous(range = c(3, 3 * max(.count_distinct_ind(res_gda)$count)), guide = FALSE)
 
   return(p)
 }

@@ -6,7 +6,7 @@
     group_by(x, y) %>%
     mutate(count = n()) %>%
     ungroup() %>%
-    as.data.frame()
+    data.frame()
 }
 # Data frame selection
 .select <- function(d, filter = NULL, check= TRUE){
