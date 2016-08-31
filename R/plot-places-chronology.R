@@ -70,13 +70,13 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   }
 
   # Grafische Elemente hinzufügen
-  if(id[[1]] == "all" | length(id) > 1) {
+  # if(id[[1]] == "all" | length(id) > 1) {
     plot_pc <- plot_pc +
       geom_path(data = data_pc$data_places_chronology, aes(label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
-  } else {
-    plot_pc <- plot_pc +
-      geom_path(data = data_pc$coord_curved_path, aes(x = x, y = y, label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
-  }
+  # } else {
+  #   plot_pc <- plot_pc +
+  #     geom_path(data = data_pc$coord_curved_path, aes(x = x, y = y, label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
+  # }
   if(unique_places) {
     plot_pc <- plot_pc +
       geom_point(data = data_pc$data_unique_places_overall, aes(label = NULL), size = 5, colour = colour_path, alpha = 0.75) +
