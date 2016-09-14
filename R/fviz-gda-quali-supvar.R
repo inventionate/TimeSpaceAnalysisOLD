@@ -17,12 +17,14 @@ NULL
 #' @param size_text define text size.
 #' @param myriad use Myriad Pro font family (boolean).
 #' @param impute impute missing data (boolean).
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
-                               scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE) {
+                               scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
+                               plot_modif_rates = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -71,6 +73,9 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
 
   # Standardthema hinzufügen
   p <- p + add_theme() + ggtitle(title)
+
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
   # Plotten
   return(p)

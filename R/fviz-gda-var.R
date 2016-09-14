@@ -15,12 +15,14 @@ NULL
 #' @param textsize size of the text.
 #' @param colour_palette name of the used colour palette.
 #' @param individuals show individual points/ biplot (boolean).
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
 fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high contribution modalities", axes = 1:2, myriad = TRUE,
                          group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Dark2",
-                         individuals = FALSE, individuals_size = "auto", individuals_alpha = 0.5, individuals_names = FALSE) {
+                         individuals = FALSE, individuals_size = "auto", individuals_alpha = 0.5, individuals_names = FALSE,
+                         plot_modif_rates = TRUE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -150,5 +152,9 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
 
   if(individuals_size == "auto") p <- p + scale_size_continuous(range = c(3, 3 * max(.count_distinct_ind(res_gda)$count)), guide = FALSE)
 
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 }

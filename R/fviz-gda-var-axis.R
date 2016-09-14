@@ -15,12 +15,13 @@ NULL
 #' @param group_style style to plot (vector containing "shape", "colour" or "both).
 #' @param textsize size of the text.
 #' @param colour_palette name of the used colour palette.
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2,
                               group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Dark2",
-                              myriad = TRUE) {
+                              myriad = TRUE, plot_modif_rates = TRUE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -120,5 +121,9 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
     p <- p + theme(legend.position = "bottom")
   }
 
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 }

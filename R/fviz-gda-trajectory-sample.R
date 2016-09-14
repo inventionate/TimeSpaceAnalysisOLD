@@ -12,12 +12,13 @@ NULL
 #' @param title title of the plot
 #' @param concentration_ellipse show or hide overall concentration ellipse (boolean).
 #' @param complete plot only complete cases (boolean).
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad = TRUE, axes = 1:2,
                                      ind_points = TRUE, concentration_ellipse = TRUE, complete = TRUE,
-                                     title = "Trajectory plot to compare samples") {
+                                     title = "Trajectory plot to compare samples", plot_modif_rates = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -80,7 +81,10 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
   # Beschreibung der Punkte
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())
 
-  # Ausgabe des Plots
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 
 }

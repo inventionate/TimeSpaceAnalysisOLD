@@ -5,7 +5,8 @@
 \title{Title}
 \usage{
 fviz_gda_conc_ellipse(res_gda, level = 0.8647, alpha = 0.1,
-  colour = "black", linetype = "dashed", axes = 1:2, myriad = TRUE)
+  colour = "black", linetype = "dashed", axes = 1:2, myriad = TRUE,
+  scale_size = 1, title = "GDA individuals plot", plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -19,6 +20,14 @@ fviz_gda_conc_ellipse(res_gda, level = 0.8647, alpha = 0.1,
 \item{linetype}{ellipse edge linetype.}
 
 \item{axes}{the GDA dimensions to plot.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{scale_size}{scale minimal point size.}
+
+\item{title}{the plot title.}
+
+\item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 }
 \value{
 ggplot2 GDA visualisation with concentration ellipse.

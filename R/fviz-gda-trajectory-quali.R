@@ -14,12 +14,14 @@ NULL
 #' @param title the plot title.
 #' @param time_point_names vector containing the name of the time points.
 #' @param impute use imputation for missing data.
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, labels = FALSE,
                                       title = "Trajectory individuals structuring factors plot", time_point_names = NULL,
-                                      select = list(name = NULL, within_inertia = NULL, case = NULL), impute = TRUE) {
+                                      select = list(name = NULL, within_inertia = NULL, case = NULL), impute = TRUE,
+                                      plot_modif_rates = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -85,7 +87,10 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   # Beschreibung der Punkte
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())
 
-  # Ausgabe des Plots
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 
 }

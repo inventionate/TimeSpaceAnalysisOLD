@@ -14,12 +14,13 @@ NULL
 #' @param impute impute missing data (boolean).
 #' @param cloud which cloud should be plotted (string: real, fitted, both, deviation)
 #' @param myriad use Myriad Pro font (boolean).
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization of additive cloud.
 #' @export
 fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA quali structure effects",
                                scale_mean_points = TRUE, axes = 1:2, palette = "Set1", impute = TRUE,
-                               myriad = TRUE, cloud = "both") {
+                               myriad = TRUE, cloud = "both", plot_modif_rates = TRUE) {
 
   # Check GDA result
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
@@ -133,5 +134,9 @@ fviz_gda_structure <- function(res_gda, df_var_quali, var_quali, title = "MCA qu
   # Designanpassungen
   p <- p + add_theme() + ggtitle(title)
 
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 }

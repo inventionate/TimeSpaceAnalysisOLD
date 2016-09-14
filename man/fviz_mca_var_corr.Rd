@@ -2,14 +2,15 @@
 % Please edit documentation in R/fviz-mca-var-corr.R
 \name{fviz_mca_var_corr}
 \alias{fviz_mca_var_corr}
-\title{Visualize MCA variable correlation square.}
+\title{Visualize MCA variable representation square.}
 \usage{
-fviz_mca_var_corr(X, axes = c(1, 2), geom = c("point", "text"),
+fviz_mca_var_corr(res_gda, axes = c(1, 2), geom = c("point", "text"),
   labelsize = 4, pointsize = 2, invisible = NULL, labels = TRUE,
-  repel = TRUE, select = list(name = NULL, eta2 = NULL), myriad = TRUE)
+  repel = TRUE, select = list(name = NULL, eta2 = NULL), myriad = TRUE,
+  plot_modif_rates = TRUE, title = "MCA - Variable Representation")
 }
 \arguments{
-\item{X}{MCA result.}
+\item{res_gda}{MCA result.}
 
 \item{axes}{axes to plot.}
 
@@ -26,11 +27,15 @@ fviz_mca_var_corr(X, axes = c(1, 2), geom = c("point", "text"),
 \item{repel}{repel labels (boolean).}
 
 \item{select}{selection of variables (names) or eta2 values (all above value).}
+
+\item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
+
+\item{title}{plot title.}
 }
 \value{
 ggplot2 visualization of variable correlation square (variables representation).
 }
 \description{
-Visualize MCA variable correlation square.
+Visualize MCA variable representation square.
 }
 

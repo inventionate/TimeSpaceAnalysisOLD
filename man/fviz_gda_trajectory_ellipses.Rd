@@ -7,7 +7,8 @@
 fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
   myriad = TRUE, impute = TRUE, time_point_names = NULL,
   ind_points = TRUE, concentration_ellipse = TRUE,
-  title = "Trajectory individuals structuring factors ellipse plot")
+  title = "Trajectory individuals structuring factors ellipse plot",
+  plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
@@ -26,9 +27,11 @@ fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
 
 \item{ind_points}{show individuals (boolean).}
 
-\item{concentration_ellipse}{}
+\item{concentration_ellipse}{plot confidence ellipses (boolean).}
 
 \item{title}{title of the plot.}
+
+\item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 }
 \value{
 ggplot2 visualization.

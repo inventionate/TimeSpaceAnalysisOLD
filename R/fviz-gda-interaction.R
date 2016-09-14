@@ -17,12 +17,13 @@ NULL
 #' @param myriad use myriad font or not (boolean).
 #' @param impute use imputation to handle missing data.
 #' @param variable which diagram to plot (vector containing 1, 2 or "both").
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 interaction cloud visualizsation.
 #' @export
 fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA quali interaction effects", mean_alpha = 0.75,
                                path_linetype = "solid", path_size = 1, path_colour = "black", scale_mean_points = TRUE, axes = 1:2,
-                               palette = "Set1", path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "both") {
+                               palette = "Set1", path_alpha = 1, myriad = TRUE, impute = TRUE, variable = "both", plot_modif_rates = TRUE) {
 
   # Check GDA result
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
@@ -61,5 +62,9 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA 
   # Designanpassungen
   p <- p + add_theme() + ggtitle(title)
 
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 }

@@ -6,7 +6,8 @@
 \usage{
 fviz_gda_trajectory_sample(res_gda, time_point_names = NULL, myriad = TRUE,
   axes = 1:2, ind_points = TRUE, concentration_ellipse = TRUE,
-  complete = TRUE, title = "Trajectory plot to compare samples")
+  complete = TRUE, title = "Trajectory plot to compare samples",
+  plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
@@ -24,6 +25,8 @@ fviz_gda_trajectory_sample(res_gda, time_point_names = NULL, myriad = TRUE,
 \item{complete}{plot only complete cases (boolean).}
 
 \item{title}{title of the plot}
+
+\item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 }
 \value{
 ggplot2 visualization.

@@ -2,11 +2,13 @@
 .count_distinct_ind <- function(res_gda, axes = 1:2) {
   # Koordinaten der Individuen vorbereiten
   # Punkte an den gleichen Stellen vergößern und multiple entfernen.
-  res_gda <- tibble(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]]) %>%
+  coord_ind <- tibble(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]]) %>%
     group_by(x, y) %>%
     mutate(count = n()) %>%
     ungroup() %>%
     data.frame()
+
+  return(coord_ind)
 }
 # Data frame selection
 .select <- function(d, filter = NULL, check= TRUE){
@@ -156,4 +158,27 @@
   df_group_names <- data.frame(group = rep(group_names, n_mod_group))
 
   return(df_group_names)
+}
+# Beschriftung eines Plots anpassen
+.gda_plot_labels <- function(res_gda, ggplot_gda, title, axes, plot_modif_rates = TRUE) {
+
+  if( plot_modif_rates ) {
+
+    modif_rates <- GDAtools::modif.rate(res_gda)
+
+    xlab = paste0("Achse ", axes[1], " (", modif_rates[axes[1], 1], "%)")
+
+    ylab = paste0("Achse ", axes[2], " (", modif_rates[axes[2], 1], "%)")
+
+  } else {
+
+    eig <- factoextra::get_eigenvalue(res_gda)[,2]
+
+    xlab = paste0("Achse  ", axes[1], " (", round(eig[axes[1]],1), "%)")
+
+    ylab = paste0("Achse ", axes[2], " (", round(eig[axes[2]], 1),"%)")
+
+  }
+
+  p <- ggplot_gda + labs(title = title, x = xlab, y = ylab)
 }

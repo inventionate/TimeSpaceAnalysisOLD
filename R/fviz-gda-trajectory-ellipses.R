@@ -13,13 +13,15 @@ NULL
 #' @param ind_points show individuals (boolean).
 #' @param title title of the plot.
 #' @param impute use imputation for missing data.
-#' @param concentration_ellipse
+#' @param concentration_ellipse plot confidence ellipses (boolean).
+#' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, impute = TRUE,
                                          time_point_names = NULL, ind_points = TRUE, concentration_ellipse = TRUE,
-                                         title = "Trajectory individuals structuring factors ellipse plot") {
+                                         title = "Trajectory individuals structuring factors ellipse plot",
+                                         plot_modif_rates = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -85,7 +87,10 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   # Beschreibung der Punkte
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())
 
-  # Ausgabe des Plots
+  # Beschriftung anpassen
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+
+  # Plotten
   return(p)
 
 }

@@ -8,8 +8,8 @@ fviz_gda_var(res_gda, contrib = "auto",
   title = "GDA plane high contribution modalities", axes = 1:2,
   myriad = TRUE, group = NULL, group_names = NULL, group_style = "both",
   textsize = 4, colour_palette = "Dark2", individuals = FALSE,
-  individuals_size = 5, individuals_alpha = 0.5,
-  individuals_names = FALSE)
+  individuals_size = "auto", individuals_alpha = 0.5,
+  individuals_names = FALSE, plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
@@ -33,6 +33,8 @@ fviz_gda_var(res_gda, contrib = "auto",
 \item{colour_palette}{name of the used colour palette.}
 
 \item{individuals}{show individual points/ biplot (boolean).}
+
+\item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 }
 \value{
 ggplot2 visualization containing selected modalities.

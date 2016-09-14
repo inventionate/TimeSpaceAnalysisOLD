@@ -7,7 +7,7 @@
 fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
   title = "GDA axis high contribution modalities", axes = 1:2,
   group = NULL, group_names = NULL, group_style = "both", textsize = 4,
-  colour_palette = "Dark2", myriad = TRUE)
+  colour_palette = "Dark2", myriad = TRUE, plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
@@ -31,6 +31,8 @@ fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
 \item{colour_palette}{name of the used colour palette.}
 
 \item{myriad}{use Myriad Pro font (boolean).}
+
+\item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 }
 \value{
 ggplot2 visualization containing selected modalities.
