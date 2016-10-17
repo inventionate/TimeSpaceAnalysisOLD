@@ -129,8 +129,8 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   p <- p + scale_size(guide = FALSE)
 
   if(!is.null(group_style) & !is.null(group)) {
-    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = "Gruppen", palette = colour_palette, labels = modalities_coord %>% select(group) %>% distinct, type = "qualitative")
-    if(group_style %in% c("shape", "both")) p <- p + scale_shape_discrete(name = "Gruppen", labels = modalities_coord %>% select(group) %>% distinct, solid = TRUE)
+    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = "Themengruppen", palette = colour_palette, labels = modalities_coord %>% select(group) %>% distinct, type = "qualitative")
+    if(group_style %in% c("shape", "both")) p <- p + scale_shape_discrete(name = "Themengruppen", labels = modalities_coord %>% select(group) %>% distinct, solid = TRUE)
     p <- p + theme(legend.position = "bottom")
   }
 
