@@ -16,6 +16,9 @@ NULL
 #' @param colour_palette name of the used colour palette.
 #' @param individuals show individual points/ biplot (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param individuals_size set individual point size manual or "auto".
+#' @param individuals_alpha set alpha value.
+#' @param individuals_names plot individual names (boolean).
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export

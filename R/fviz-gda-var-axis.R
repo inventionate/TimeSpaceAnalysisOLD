@@ -15,12 +15,17 @@ NULL
 #' @param group_style style to plot (vector containing "shape", "colour" or "both).
 #' @param textsize size of the text.
 #' @param colour_palette name of the used colour palette.
+#' @param individuals show individual points/ biplot (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param individuals_size set individual point size manual or "auto".
+#' @param individuals_alpha set alpha value.
+#' @param individuals_names plot individual names (boolean).
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2,
                               group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Dark2",
+                              individuals = FALSE, individuals_size = "auto", individuals_alpha = 0.5, individuals_names = FALSE,
                               myriad = TRUE, plot_modif_rates = TRUE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -63,6 +68,14 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
 
       # Plot
       p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes,  pointsize = 0)
+      if(individuals) {
+        if(individuals_size == "auto") {
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
+        } else {
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y), size = individuals_size, inherit.aes = FALSE, alpha = individuals_alpha)
+        }
+      }
+      if(individuals_names) p <- p + ggrepel::geom_label_repel(data = .count_distinct_ind(res_gda, axes), aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = rownames(.count_distinct_ind(res_gda, axes))), colour = "black", size = individuals_size, alpha = individuals_alpha)
       if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", shape = "group", size = "weight"))
       if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", size = "weight"), shape = 17)
       if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group", size = "weight"), colour = "black")

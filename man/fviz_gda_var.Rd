@@ -34,6 +34,12 @@ fviz_gda_var(res_gda, contrib = "auto",
 
 \item{individuals}{show individual points/ biplot (boolean).}
 
+\item{individuals_size}{set individual point size manual or "auto".}
+
+\item{individuals_alpha}{set alpha value.}
+
+\item{individuals_names}{plot individual names (boolean).}
+
 \item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 }
 \value{
