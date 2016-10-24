@@ -10,7 +10,7 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE,
   impute = TRUE, concentration_ellipses = TRUE,
   confidence_ellipses = FALSE, conf_colour = FALSE,
-  plot_modif_rates = TRUE)
+  plot_modif_rates = TRUE, ncol = 3)
 }
 \arguments{
 \item{res_gda}{GDA (MCA, MFA) result (rownames have to be individual questionnaire IDs).}
@@ -46,6 +46,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
 \item{conf_colour}{colour confidence ellipses (boolean).}
 
 \item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
+
+\item{ncol}{Number of facet columns.}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.

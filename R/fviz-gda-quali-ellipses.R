@@ -19,6 +19,7 @@ NULL
 #' @param conf_colour colour confidence ellipses (boolean).
 #' @param impute impute missing data (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param ncol Number of facet columns.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -26,7 +27,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
-                                    plot_modif_rates = TRUE) {
+                                    plot_modif_rates = TRUE, ncol = 3) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -104,7 +105,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
     else p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, group = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
   }
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
-  if(facet) p <- p + facet_wrap(~var_quali)
+  if(facet) p <- p + facet_wrap(~var_quali, ncol = ncol)
   p <- p + add_theme() + ggtitle(title)
 
   # Beschriftung anpassen
