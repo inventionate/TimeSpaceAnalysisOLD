@@ -49,7 +49,7 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
     arrange(questionnaire_id, date, activity) %>%
     ungroup() %>%
     # Festlegen der Reihenfolge der Levels und orden der Daten.
-    mutate(activity = factor(activity, levels = c("Schlafen", "Freizeit", "Fahrzeit", "Arbeitszeit", "Selbststudium", "Lerngruppe", "Lehrveranstaltung"))) %>%
+    mutate(activity = factor(activity, levels = c("Lehrveranstaltung", "Lerngruppe", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen"))) %>%
     arrange(activity)
 
   return(data_pc_zm)
