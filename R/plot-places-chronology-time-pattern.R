@@ -27,7 +27,7 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
     # Tagesauswahl definieren
     if (weekday[[1]] != "all") {
       # Farbpalette festlegen
-      colours <- rev(RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_pc_zm$activity)))
+      colours <- RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_pc_zm$activity))
       # Die Farbe für "Lerngruppe" ändern, damit es sich von "Zwischenzeit" unterscheidet.
       colours[6] <- "#FD5A9D"
 

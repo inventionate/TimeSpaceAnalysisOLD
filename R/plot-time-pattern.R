@@ -21,9 +21,9 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
     if(reshape_data) {
       colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
     } else {
-      colours <-  rev(RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity)))
+      colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
       # Die Farbe für "Lerngruppen" ändern, da es sich deutlich von "Zwischenzeit" unterscheiden sollte.
-      colours[6] <- "#FD5A9D"
+      # colours[6] <- "#FD5A9D"
     }
 
     if(print_prop_duration) {
@@ -44,8 +44,8 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%"))
       # scale_fill_brewer(name = "Tätigkeiten", labels = c("Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit",
       #                                                     "Arbeitszeit", "Freizeit", "Schlafen"), palette = "Spectral") +
-    if(reshape_data) p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
-    else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=TRUE))
+    if(reshape_data) p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=FALSE))
+    else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
     p <- p + theme_bw() +
     # ggtitle(paste('Zeitmuster
     # ID', test$questionnaire_id))
