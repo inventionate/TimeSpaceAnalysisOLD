@@ -42,12 +42,12 @@ gda_describe_group <- function(res_gda, group = NULL, group_names = NULL) {
   var <- ncol(res_gda$call$X)
 
   # Beitrag pro Variable berechnen
-  var_car_n <- res_gda$call$X %>% mutate_all(funs(nlevels)) %>% distinct
+  var_cat_n <- res_gda$call$X %>% mutate_all(funs(nlevels)) %>% distinct
 
-  ctr_var_overall <- var_cat_n %>% mutate_all(funs( (.-1)/(cat-var)*100 )) %>% gather("cat", "ctr") %>% as_tibble
+  ctr_var_overall <- var_cat_n %>% mutate_all(funs( (.-1)/(cat-var)*100 )) %>% gather("cat", "ctr") %>% add_column(group = rep(group_names, group)) %>% as_tibble
 
   # Beitrag pro Gruppe berechnen
-  ctr_group_overall <- add_column(ctr_var_overall, group = rep(group_names, group)) %>% group_by(group) %>% summarise_at(vars(ctr), sum)
+  ctr_group_overall <- ctr_var_overall %>% group_by(group) %>% summarise_at(vars(ctr), sum)
 
   # Round values
   ctr_var_overall <- ctr_var_overall %>% mutate_at(vars(ctr), funs(round(., digits = 2)))
