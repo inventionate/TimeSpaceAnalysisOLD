@@ -8,7 +8,6 @@ NULL
 #' @param map a ggmap map object.
 #' @param weekday vactor, which contains the weekday to plot.
 #' @param size_range specify the size for visualizatipn of duration.
-#' @param shape_path specify the shape of the path line. Higher values result in smoother paths.
 #' @param colour_path sepcify the path line colour.
 #' @param size_path specify the path line size.
 #' @param alpha_path specify the path line alpha value [0:1].
@@ -33,7 +32,7 @@ NULL
 #'
 #' @return ggplot2 visualization of place chronology data.
 #' @export
-plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL, size_range = c(3,15), shape_path = 1, colour_path = "black", size_path = 2,
+plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL, size_range = c(3,15), colour_path = "black", size_path = 2,
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
                                    title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
                                    print_place_duration = FALSE, activity_duration_overall = TRUE, facet_scales = "fixed", point_padding = unit(1e-06, "lines"),
@@ -42,7 +41,7 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   if(myriad) .add_fonts()
 
   # Datensatz aufbereiten.
-  data_pc <- get_places_chronology(data, id, weekday, title, shape_path, exclude_sleep)
+  data_pc <- get_places_chronology(data, id, weekday, title, exclude_sleep)
 
   if(print_place_duration) {
     data_pc$data_unique_places_overall %>%
@@ -70,13 +69,11 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   }
 
   # Grafische Elemente hinzufügen
-  # if(id[[1]] == "all" | length(id) > 1) {
-    plot_pc <- plot_pc +
-      geom_path(data = data_pc$data_places_chronology, aes(label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
-  # } else {
-  #   plot_pc <- plot_pc +
-  #     geom_path(data = data_pc$coord_curved_path, aes(x = x, y = y, label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
-  # }
+  plot_pc <- plot_pc +
+    geom_path(data = data_pc$data_places_chronology, aes(label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path) +
+    # @TODO Dokumentieren und optional machen, inkl. Veränderungsmöglichkeiten.
+    ggalt::stat_bkde2d(bandwidth=c(0.03, 0.2), aes(alpha = ..level.., fill = ..level..), geom = "polygon",
+                       show.legend = FALSE)
   if(unique_places) {
     plot_pc <- plot_pc +
       geom_point(data = data_pc$data_unique_places_overall, aes(label = NULL), size = 5, colour = colour_path, alpha = 0.75) +
