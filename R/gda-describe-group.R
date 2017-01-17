@@ -31,7 +31,7 @@ gda_describe_group <- function(res_gda, group = NULL, group_names = NULL, excl =
   ctr <- ctr %>% bind_cols(., df_group_names)
 
   # Gruppen contrib berechnen
-  ctr_group_axes <- ctr %>% group_by(group) %>% summarise_at(funs(sum), matches("Dim"))
+  ctr_group_axes <- ctr %>% group_by(group) %>% summarise_at(vars(matches("Dim")), funs(sum))
 
   # Gesamtvarianz und Beitrag der einzelnen Gruppen berechnen
 
