@@ -45,14 +45,15 @@ gda_describe_group <- function(res_gda, group = NULL, group_names = NULL, excl =
   diff_cat_var <- cat - var
 
   # Gruppe der Variable
-  group_var <- as_tibble(list(var = rownames(res_gda$var$eta2))) %>% add_column(group = rep(group_names, group))
+  group_var <- as_tibble(list(var = rownames(res_gda$var$eta2))) %>% add_column(group = rep(group_names, group)) %>% mutate_all(funs(as.factor))
 
   # Beitrag pro Variable berechnen
    #res_gda$call$X %>% mutate_all(funs(nlevels)) %>% distinct
   if( is.null(excl) ) var_cat_mod <- GDAtools::getindexcat(res_gda$call$X)
   else var_cat_mod <- GDAtools::getindexcat(res_gda$call$X)[-excl]
 
-  var_cat_n <- var_cat_mod %>% as_tibble %>% separate(value, c("var", "mod"), sep="\\.") %>% count(var) %>% full_join(group_var)
+  var_cat_n <- var_cat_mod %>% as_tibble %>% separate(value, c("var", "mod"), sep="\\.") %>% mutate_all(funs(as.factor)) %>%
+    count(var) %>% full_join(group_var, by="var")
 
   # Beitrag pro Variable berechnen
   ctr_var_overall <- var_cat_n %>% mutate( ctr = (n-1)/(diff_cat_var)*100 ) %>% rename(mod_n = n)
