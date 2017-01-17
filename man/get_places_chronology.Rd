@@ -4,7 +4,7 @@
 \alias{get_places_chronology}
 \title{Reshape place chronology data.}
 \usage{
-get_places_chronology(data, id = "all", weekday = "all", title, shape_path,
+get_places_chronology(data, id = "all", weekday = "all", title,
   exclude_sleep)
 }
 \arguments{
@@ -15,8 +15,6 @@ get_places_chronology(data, id = "all", weekday = "all", title, shape_path,
 \item{weekday}{vector, which contains a day selection.}
 
 \item{title}{specify plot title.}
-
-\item{shape_path}{number, which specifies the path shape intensity.}
 
 \item{exclude_sleep}{exclude sleep duration (boolean).}
 }

@@ -5,15 +5,14 @@
 \title{Plot single or multiple place chronologies in different scales.}
 \usage{
 plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
-  size_range = c(3, 15), shape_path = 1, colour_path = "black",
-  size_path = 2, alpha_path = 0.75, linetype_path = "solid",
-  force_repel = 1, legend = FALSE, structure = FALSE,
-  map_extent = "panel", title = "Orte Chronologie", axis_label = FALSE,
-  xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
-  unique_places = FALSE, print_place_duration = FALSE,
-  activity_duration_overall = TRUE, facet_scales = "fixed",
-  point_padding = unit(1e-06, "lines"), myriad = TRUE,
-  exclude_sleep = TRUE)
+  size_range = c(3, 15), colour_path = "black", size_path = 2,
+  alpha_path = 0.75, linetype_path = "solid", force_repel = 1,
+  legend = FALSE, structure = FALSE, map_extent = "panel",
+  title = "Orte Chronologie", axis_label = FALSE, xlim = NULL,
+  ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
+  print_place_duration = FALSE, activity_duration_overall = TRUE,
+  facet_scales = "fixed", point_padding = unit(1e-06, "lines"),
+  myriad = TRUE, exclude_sleep = TRUE)
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
@@ -25,8 +24,6 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 \item{map}{a ggmap map object.}
 
 \item{size_range}{specify the size for visualizatipn of duration.}
-
-\item{shape_path}{specify the shape of the path line. Higher values result in smoother paths.}
 
 \item{colour_path}{sepcify the path line colour.}
 
