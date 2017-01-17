@@ -3,10 +3,11 @@
 #' @param res_gda MCA result.
 #' @param group vector containing group definition.
 #' @param group_names names of the groups.
+#' @param excl vector indicating excluded modalities.
 #'
 #' @return list containing group results.
 #' @export
-gda_describe_group <- function(res_gda, group = NULL, group_names = NULL) {
+gda_describe_group <- function(res_gda, group = NULL, group_names = NULL, excl = NULL) {
 
   # Check GDA result
   if(!inherits(res_gda, c("MCA"))) stop("GDA result have to be MCA results.")
@@ -30,8 +31,7 @@ gda_describe_group <- function(res_gda, group = NULL, group_names = NULL) {
   ctr <- ctr %>% bind_cols(., df_group_names)
 
   # Gruppen contrib berechnen
-  ctr_group_axes <- ctr %>% group_by(group) %>%
-    summarise_each(funs(sum), matches("Dim"))
+  ctr_group_axes <- ctr %>% group_by(group) %>% summarise_at(funs(sum), matches("Dim"))
 
   # Gesamtvarianz und Beitrag der einzelnen Gruppen berechnen
 
@@ -41,10 +41,21 @@ gda_describe_group <- function(res_gda, group = NULL, group_names = NULL) {
   # Anzahl der Variablen
   var <- ncol(res_gda$call$X)
 
-  # Beitrag pro Variable berechnen
-  var_cat_n <- res_gda$call$X %>% mutate_all(funs(nlevels)) %>% distinct
+  # Different Kategorien und Variablen
+  diff_cat_var <- cat - var
 
-  ctr_var_overall <- var_cat_n %>% mutate_all(funs( (.-1)/(cat-var)*100 )) %>% gather("cat", "ctr") %>% add_column(group = rep(group_names, group)) %>% as_tibble
+  # Gruppe der Variable
+  group_var <- as_tibble(list(var = rownames(res_gda$var$eta2))) %>% add_column(group = rep(group_names, group))
+
+  # Beitrag pro Variable berechnen
+   #res_gda$call$X %>% mutate_all(funs(nlevels)) %>% distinct
+  if( is.null(excl) ) var_cat_mod <- GDAtools::getindexcat(res_gda$call$X)
+  else var_cat_mod <- GDAtools::getindexcat(res_gda$call$X)[-excl]
+
+  var_cat_n <- var_cat_mod %>% as_tibble %>% separate(value, c("var", "mod"), sep="\\.") %>% count(var) %>% full_join(group_var)
+
+  # Beitrag pro Variable berechnen
+  ctr_var_overall <- var_cat_n %>% mutate( ctr = (n-1)/(diff_cat_var)*100 ) %>% rename(mod_n = n)
 
   # Beitrag pro Gruppe berechnen
   ctr_group_overall <- ctr_var_overall %>% group_by(group) %>% summarise_at(vars(ctr), sum)
