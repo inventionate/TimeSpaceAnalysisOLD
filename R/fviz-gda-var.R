@@ -104,6 +104,7 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
       # Plot group specific modalities
       p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$category), axes.linetype = "solid", axes = axes)
     }
+    #@ TODO biplot auswählen, wenn individuals=T
   }
   if(inherits(res_gda, c("MFA"))) {
     group_names <- res_gda$call$name.group
