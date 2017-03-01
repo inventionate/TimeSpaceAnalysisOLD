@@ -16,7 +16,7 @@ get_gda_trajectory <- function(res_gda, time_point_names = NULL) {
 
   if(length(time_points) == 0) stop("There are no different time points!")
 
-  if(is.null(time_point_names)) time_point_names <- paste(rep("Zeitpunkt", 1 + time_points), 1:2)
+  if(is.null(time_point_names)) time_point_names <- paste(rep("Zeitpunkt", 1 + time_points), 1:(1 + time_points))
 
   # Basisdatensatz konstruieren
 
