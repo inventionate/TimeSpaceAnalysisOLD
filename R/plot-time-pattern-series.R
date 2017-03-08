@@ -16,7 +16,7 @@ plot_time_pattern_series <- function(data_tp, alpha = 0.3, palette = "Set1", myr
   data_ts <- get_time_pattern_series(data_tp)
 
   # Zeitserien plotten
-  p <- ggplot(data_ts$data_series, aes(x = day, y = duration)) +
+  p <- ggplot(data_ts$data_series, aes(x = day, y = duration, group = questionnaire_id)) +
     geom_line(alpha = alpha) + facet_wrap(~activity) +
     geom_line(data = data_ts$data_series_average, aes(x = day, y = avg_duration, group = as.factor(zeitmuster), colour = as.factor(zeitmuster)),
               inherit.aes = FALSE, size = 2) +
