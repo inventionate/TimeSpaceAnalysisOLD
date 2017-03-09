@@ -29,6 +29,7 @@ NULL
 #' @param point_padding Amount of padding around labeled point. Defaults to unit(0, "lines").
 #' @param myriad use Myriad Pro font (boolean).
 #' @param exclude_sleep exclude sleep duration (boolean).
+#' @param shape if not NULL the path will be curved.
 #'
 #' @return ggplot2 visualization of place chronology data.
 #' @export
@@ -36,7 +37,7 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
                                    alpha_path = 0.75, linetype_path = "solid", force_repel = 1, legend = FALSE, structure = FALSE, map_extent = "panel",
                                    title = "Orte Chronologie", axis_label = FALSE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
                                    print_place_duration = FALSE, activity_duration_overall = TRUE, facet_scales = "fixed", point_padding = unit(1e-06, "lines"),
-                                   myriad = TRUE, exclude_sleep = TRUE) {
+                                   myriad = TRUE, exclude_sleep = TRUE, shape = 0.2) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -69,11 +70,30 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   }
 
   # Grafische Elemente hinzufügen
-  plot_pc <- plot_pc +
-    geom_path(data = data_pc$data_places_chronology, aes(label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path) #+
-    # @TODO Dokumentieren und optional machen, inkl. Veränderungsmöglichkeiten.
-    # ggalt::stat_bkde2d(bandwidth=brandwidth, aes(alpha = ..level.., fill = ..level..), geom = "polygon",
-    #                    show.legend = FALSE)
+  if(is.null(shape))
+  {
+    plot_pc <- plot_pc + geom_path(aes(label = NULL), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
+  } else
+  {
+    plot.new()
+    curved_data <- NULL
+    for(i in seq_along(id)) {
+      tmp_data <- data_pc$data_places_chronology %>% filter(questionnaire_id == id[i])
+
+      if( nrow(tmp_data) == 0) stop("Mindestens eine ID wurde nicht gefunden")
+
+      spline_data <- data.frame(xspline(tmp_data$lon, tmp_data$lat, shape=shape, open = FALSE, draw = FALSE))
+
+      questionnaire_id <- rep(id[i], nrow(spline_data))
+
+      spline_data <- data.frame(questionnaire_id, spline_data)
+
+      curved_data <- bind_rows(curved_data, spline_data)
+    }
+    invisible(dev.off())
+
+    plot_pc <- plot_pc + geom_path(data=curved_data, inherit.aes = FALSE, aes(x, y), colour = colour_path, size = size_path, alpha = alpha_path, linetype = linetype_path)
+  }
   if(unique_places) {
     plot_pc <- plot_pc +
       geom_point(data = data_pc$data_unique_places_overall, aes(label = NULL), size = 5, colour = colour_path, alpha = 0.75) +
