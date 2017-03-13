@@ -135,14 +135,17 @@
 # Gruppennamen der einzelnen Kategorien extrahieren
 .get_group_names <- function(res_gda, group, group_names) {
 
-  if(is.null(res_gda$call$excl)) var_num <- getindexcat(res_gda$call$X)
-  else var_num <- getindexcat(res_gda$call$X)[-res_gda$call$excl]
+  data <- res_gda$call$X %>% mutate_all(funs( sub("\\.", "_", .) ))
+  colnames(data) <- colnames(data) %>% sub("\\.", "_", .)
+
+  if(is.null(res_gda$call$excl)) var_num <- GDAtools::getindexcat(data)
+  else var_num <- GDAtools::getindexcat(data)[-res_gda$call$excl]
 
   var_num <- var_num %>%
     tibble(var.cat = .) %>% separate(var.cat, c("var", "cat"), sep = "[.]") %>%
     select(var) %>% count(var) %>% mutate_at(vars(var), funs(as.factor))
 
-  var <- tibble(var = colnames(res_gda$call$X)) %>% mutate_all(funs(as.factor))
+  var <- tibble(var = colnames(data)) %>% mutate_all(funs(as.factor))
 
   n_mod <- left_join(var, var_num, by = "var") %>% .$n
   # n_mod <- res_gda$call$X %>% mutate_each(funs(n_distinct)) %>% distinct
