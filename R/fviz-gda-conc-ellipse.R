@@ -34,7 +34,7 @@ fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour =
     add_theme()
 
   # 2D Density contours
-  if( density ) p <- p + geom_density_2d(colour = "gray")
+  if( density ) p <- p + geom_density_2d(data = res_gda$ind$coord %>% as_data_frame, inherit.aes = FALSE, aes(`Dim 1`, `Dim 2`), colour = "gray")
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
