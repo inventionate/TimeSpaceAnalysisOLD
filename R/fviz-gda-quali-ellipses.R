@@ -81,7 +81,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   coord_ind_quali <- df_source %>%
     group_by(x, y, var_quali) %>%
     mutate(count = n()) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(var_quali = forcats::fct_drop(var_quali))
 
   coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(mean))
   size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame

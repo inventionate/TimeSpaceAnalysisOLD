@@ -1,8 +1,8 @@
 Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time-space analysis
-Version: 1.0.12
-Date: 2017-03-29
+Version: 1.0.13
+Date: 2017-05-25
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
 Encoding: UTF-8
@@ -10,7 +10,6 @@ Description: Use Geometric Data Analysis approaches (e.g. MCA or MFA), time patt
 License: GPL (>= 3) | file LICENSE
 Depends:
     R (>= 3.3),
-    plyr,
     tidyverse,
     forcats,
     grid,
@@ -30,7 +29,6 @@ Depends:
     factoextra,
     archivist,
     archivist.github,
-    pander,
     bookdown
 Suggests:
     explor,
