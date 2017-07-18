@@ -12,7 +12,7 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
   ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
   print_place_duration = FALSE, activity_duration_overall = TRUE,
   facet_scales = "fixed", point_padding = unit(1e-06, "lines"),
-  myriad = TRUE, exclude_sleep = TRUE)
+  myriad = TRUE, exclude_sleep = TRUE, shape = 0.2)
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
@@ -66,6 +66,8 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 \item{myriad}{use Myriad Pro font (boolean).}
 
 \item{exclude_sleep}{exclude sleep duration (boolean).}
+
+\item{shape}{if not NULL the path will be curved.}
 }
 \value{
 ggplot2 visualization of place chronology data.
@@ -73,4 +75,3 @@ ggplot2 visualization of place chronology data.
 \description{
 Plot single or multiple place chronologies in different scales.
 }
-

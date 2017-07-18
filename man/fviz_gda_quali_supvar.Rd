@@ -47,4 +47,3 @@ ggplot2 visualization of supplementary variables.
 \description{
 Visualize supplementary variables.
 }
-

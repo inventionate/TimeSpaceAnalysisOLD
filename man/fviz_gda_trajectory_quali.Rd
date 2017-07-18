@@ -39,4 +39,3 @@ ggplot2 visualization.
 \description{
 Visualize trajectories and structuring factors.
 }
-

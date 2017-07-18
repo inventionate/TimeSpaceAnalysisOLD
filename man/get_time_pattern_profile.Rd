@@ -17,4 +17,3 @@ Reshaped data frame.
 \description{
 Reshape time pattern profile data frame.
 }
-

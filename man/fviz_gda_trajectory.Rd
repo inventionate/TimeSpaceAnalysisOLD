@@ -34,4 +34,3 @@ trajectory ggplot2 visualization.
 \description{
 Visualization of trajectories (connected active and passive individual points).
 }
-

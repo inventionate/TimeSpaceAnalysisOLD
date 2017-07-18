@@ -33,4 +33,3 @@ ggplot2 visualization of place chronology time pattern data.
 \description{
 Plot place chronology time pattern data.
 }
-

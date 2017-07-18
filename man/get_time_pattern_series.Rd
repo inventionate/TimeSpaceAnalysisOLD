@@ -15,4 +15,3 @@ Reshaped data frame.
 \description{
 Reshape time pattern series data.
 }
-

@@ -19,4 +19,3 @@ optimised data frame.
 \description{
 Optimise data frame for Geometric Data Analysis
 }
-

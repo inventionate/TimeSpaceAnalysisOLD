@@ -26,4 +26,3 @@ Returns a list:
 \description{
 Calculate crossed variables double breakdown of variance.
 }
-

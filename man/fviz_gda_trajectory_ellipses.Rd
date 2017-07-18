@@ -39,4 +39,3 @@ ggplot2 visualization.
 \description{
 Visualization of trajectory structuring factor ellipses.
 }
-

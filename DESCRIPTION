@@ -1,15 +1,15 @@
 Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time-space analysis
-Version: 1.0.13
-Date: 2017-05-25
+Version: 1.0.14
+Date: 2017-07-18
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
 Encoding: UTF-8
 Description: Use Geometric Data Analysis approaches (e.g. MCA or MFA), time pattern analysis (see "time sequence clustering") and places chronologies (see "time geography") analysis.
 License: GPL (>= 3) | file LICENSE
 Depends:
-    R (>= 3.3),
+    R (>= 3.4),
     tidyverse,
     forcats,
     grid,
@@ -22,7 +22,6 @@ Depends:
     ggmap,
     RColorBrewer,
     dendextend,
-    kml3d,
     GDAtools,
     FactoMineR,
     missMDA,
@@ -31,12 +30,13 @@ Depends:
     archivist.github,
     bookdown
 Suggests:
+    kml3d,
     explor,
     questionr,
     testthat
 BugReports: https://github.com/inventionate/TimeSpaceAnalysis/issues
 URL: https://github.com/inventionate/TimeSpaceAnalysis
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 LazyData: TRUE
 Collate:
     'get-path-coord.R'

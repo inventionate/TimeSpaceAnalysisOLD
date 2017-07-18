@@ -17,4 +17,3 @@ list containing time point separated ind coord and time point names.
 \description{
 Extract trajectory data.
 }
-

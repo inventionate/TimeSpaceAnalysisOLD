@@ -38,4 +38,3 @@ ggplot2 visualization of variable correlation square (variables representation).
 \description{
 Visualize MCA variable representation square.
 }
-

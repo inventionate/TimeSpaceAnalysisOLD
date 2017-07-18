@@ -19,4 +19,3 @@ The SQLite data tables.
 \description{
 Load data frame form a SQLite database.
 }
-

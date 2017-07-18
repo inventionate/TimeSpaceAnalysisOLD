@@ -50,4 +50,3 @@ ggplot2 interaction cloud visualizsation.
 \description{
 Visualize interaction cloud.
 }
-

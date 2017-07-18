@@ -38,4 +38,3 @@ ggplot2 visualization of additive cloud.
 \description{
 Visualize additive cloud.
 }
-

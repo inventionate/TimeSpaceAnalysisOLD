@@ -24,4 +24,3 @@ reshaped data frame for further visualization.
 \description{
 Reshape place chronology data.
 }
-

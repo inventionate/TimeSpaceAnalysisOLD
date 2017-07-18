@@ -17,4 +17,3 @@ data frame with MCA variable names, types, coords and eta2 values.
 \description{
 Reshapes MCA results.
 }
-

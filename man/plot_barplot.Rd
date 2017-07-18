@@ -46,4 +46,3 @@ ggplot2 barplot.
 \description{
 Visualize a barplot.
 }
-

@@ -19,4 +19,3 @@ list with MFA group specific exclude indices.
 \description{
 Extract list of MFA group indices to exclude (for sMFA).
 }
-

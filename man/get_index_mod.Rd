@@ -17,4 +17,3 @@ indices of modalities.
 \description{
 Exctract index of specific modalities.
 }
-

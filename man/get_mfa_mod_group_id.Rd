@@ -15,4 +15,3 @@ vector containing group ids in MFA result order.
 \description{
 Extract the corresponding group id of MFA variable categories.
 }
-

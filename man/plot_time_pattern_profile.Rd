@@ -22,4 +22,3 @@ ggplot2 avgerage time pattern profile plot.
 \description{
 Plot average time pattern profiles.
 }
-

@@ -20,4 +20,3 @@ ggplot2 time pattern series plot.
 \description{
 Plot time pattern series data.
 }
-

@@ -15,4 +15,3 @@ plottable legend grob.
 \description{
 Extract legends form ggplot2 objects.
 }
-

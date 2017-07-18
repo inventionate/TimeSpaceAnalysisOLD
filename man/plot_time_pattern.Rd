@@ -26,4 +26,3 @@ ggplot2 visualization of time pattern data.
 \description{
 Plot single or multiple time pattern.
 }
-

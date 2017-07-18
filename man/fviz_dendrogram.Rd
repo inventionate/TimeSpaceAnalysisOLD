@@ -31,4 +31,3 @@ ggplot2 dendrogram visualization.
 \description{
 Visualize HCPC hclus trees.
 }
-

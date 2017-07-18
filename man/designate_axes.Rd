@@ -24,4 +24,3 @@ ggplot2 annotations.
 \description{
 Designate axes parts.
 }
-

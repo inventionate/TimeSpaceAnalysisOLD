@@ -17,4 +17,3 @@ SQLite database file.
 \description{
 Saves data into a SQLite database.
 }
-

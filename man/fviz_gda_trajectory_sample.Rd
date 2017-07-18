@@ -34,4 +34,3 @@ ggplot2 visualization.
 \description{
 Visualization of the separated concentration ellipses of the sample.
 }
-

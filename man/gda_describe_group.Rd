@@ -21,4 +21,3 @@ list containing group results.
 \description{
 Calculate group contributions.
 }
-

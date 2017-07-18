@@ -48,4 +48,3 @@ ggplot2 visualization containing selected modalities.
 \description{
 Visualize specific contributing modalities in a plane.
 }
-

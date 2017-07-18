@@ -15,4 +15,3 @@ ggplot2 geoms.
 \description{
 Optimise ggplot2 plot.
 }
-

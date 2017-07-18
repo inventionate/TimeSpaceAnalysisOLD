@@ -35,4 +35,3 @@ ggplot2 visalization of supplementary individuals.
 \description{
 Add supplementary individuals.
 }
-

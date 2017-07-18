@@ -19,4 +19,3 @@ reshaped data frame for further visualization.
 \description{
 Reshpape place chronology time pattern data.
 }
-

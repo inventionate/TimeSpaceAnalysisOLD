@@ -19,4 +19,3 @@ list containing axis contribution results.
 \description{
 Calculate axis contributions.
 }
-

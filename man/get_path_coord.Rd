@@ -21,4 +21,3 @@ data frame with path coords.
 \description{
 Extract coords of categories to concat.
 }
-

@@ -20,4 +20,3 @@ reshaped data frame for further visualization.
 \description{
 Reshape time pattern data.
 }
-

@@ -27,4 +27,3 @@ Returns a list:
 \description{
 Calculate results for supplementary variables.
 }
-
