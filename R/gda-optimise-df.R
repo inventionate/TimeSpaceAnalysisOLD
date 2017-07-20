@@ -20,7 +20,7 @@ gda_optimise_df <- function(df_name, mod_excl = NA, prop_na_excl = 0.2) {
     filter(questionnaire_id %nin% df_name_na_id$questionnaire_id) %>%
     # mutate_each(funs(as.character)) %>%
     # mutate_each(funs(rename_na), -questionnaire_id) %>%
-    mutate_each(funs(as.factor)) %>%
+    mutate_all(funs(as.factor)) %>%
     # Alle NAs in Faktorlevels umwandeln. Der Gebrauch von NA ist problematisch, da dann
     # die Indixierung nicht mehr funktioniert. FactoMineR ändert nämlich das Level.
     # lapply(., function(x) addNA(x, ifany = TRUE)) %>%
