@@ -3,10 +3,11 @@
 #' @param df_name name of the data frame to optimise.
 #' @param mod_excl specify, which modalities should excluded.
 #' @param prop_na_excl overall level to exclude specified modalities.
+#' @param rename_na rename NA with label
 #'
 #' @return optimised data frame.
 #' @export
-gda_optimise_df <- function(df_name, mod_excl = NA, prop_na_excl = 0.2) {
+gda_optimise_df <- function(df_name, mod_excl = NA, prop_na_excl = 0.2, rename_na = FALSE) {
   # rename_na <- function(values) {
   #   values[is.na(values)] <- "Fehlender Wert"
   #   return(values)
@@ -26,7 +27,7 @@ gda_optimise_df <- function(df_name, mod_excl = NA, prop_na_excl = 0.2) {
     # lapply(., function(x) addNA(x, ifany = TRUE)) %>%
     as.data.frame()
   # Fehlende Werte mit Variablennamen idnetifizieren, damit FactoMineR keine Umbenennung vornimmt.
-  for (j in 1:ncol(df_name)) df_name[,j] <- as.factor(replace(as.character(df_name[,j]),is.na(df_name[,j]),paste(attributes(df_name)$names[j],"Fehlender Wert",sep="_")))
+  if( rename_na ) for (j in 1:ncol(df_name)) df_name[,j] <- as.factor(replace(as.character(df_name[,j]),is.na(df_name[,j]),paste(attributes(df_name)$names[j],"Fehlender Wert",sep="_")))
   # Questionnaire ID als Zeilenname hinzufügen und Spalte löschen
   rownames(df_name) <- df_name$questionnaire_id
   df_name <- df_name[,-1]

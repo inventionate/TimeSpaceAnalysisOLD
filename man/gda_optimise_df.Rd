@@ -4,7 +4,8 @@
 \alias{gda_optimise_df}
 \title{Optimise data frame for Geometric Data Analysis}
 \usage{
-gda_optimise_df(df_name, mod_excl = NA, prop_na_excl = 0.2)
+gda_optimise_df(df_name, mod_excl = NA, prop_na_excl = 0.2,
+  rename_na = FALSE)
 }
 \arguments{
 \item{df_name}{name of the data frame to optimise.}
@@ -12,6 +13,8 @@ gda_optimise_df(df_name, mod_excl = NA, prop_na_excl = 0.2)
 \item{mod_excl}{specify, which modalities should excluded.}
 
 \item{prop_na_excl}{overall level to exclude specified modalities.}
+
+\item{rename_na}{rename NA with label}
 }
 \value{
 optimised data frame.
