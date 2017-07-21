@@ -49,8 +49,8 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
   }
   else {
     modalities <- df %>% data.frame %>% select(matches(paste0("^Dim.", axes[1], "|", axes[2], "$"))) %>%
-      tibble::rownames_to_column(var = "category") %>% mutate_all(funs(. * eigenvalues$.), matches("Dim")) %>%
-      mutate_(ctr = paste0("Dim.", axes[1], " + Dim.", axes[2])) %>% arrange(desc(ctr)) %>%
+      tibble::rownames_to_column(var = "category") %>% mutate_at(vars(matches("Dim")), funs(. * eigenvalues$.)) %>%
+      mutate(ctr = !! paste0("Dim.", axes[1], " + Dim.", axes[2])) %>% arrange(desc(ctr)) %>%
       slice(1:contrib) %>% select(category) %>% data.frame
 
   }
@@ -76,12 +76,11 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
         tibble::rownames_to_column() %>% bind_cols(., df_group_names, data.frame(weight = col_weight * res_gda$call$N)) %>%
         filter(rowname %in% modalities$category)
 
-
       # Plot
       p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$category), axes.linetype = "solid", axes = axes,  pointsize = 0)
       if(individuals) {
         if(individuals_size == "auto") {
-          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes, modalities_coord$weight) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
         } else {
           p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y), size = individuals_size, inherit.aes = FALSE, alpha = individuals_alpha)
         }
@@ -154,7 +153,7 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
     p <- p + theme(legend.position = "bottom")
   }
 
-  if(individuals_size == "auto") p <- p + scale_size_continuous(range = c(3, 3 * max(.count_distinct_ind(res_gda)$count)), guide = FALSE)
+  #if(individuals_size == "auto") p <- p + scale_size_continuous(range = c(3, 3 * max(.count_distinct_ind(res_gda)$count)), guide = FALSE)
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)

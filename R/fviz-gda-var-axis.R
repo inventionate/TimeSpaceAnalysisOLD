@@ -70,7 +70,7 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes,  pointsize = 0)
       if(individuals) {
         if(individuals_size == "auto") {
-          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
+          p <- p + geom_point(data = .count_distinct_ind(res_gda, axes, modalities_coord$weight) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
         } else {
           p <- p + geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(), aes(x, y), size = individuals_size, inherit.aes = FALSE, alpha = individuals_alpha)
         }

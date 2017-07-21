@@ -1,5 +1,5 @@
 # Eine Sammlung hilfreicher Funktionen
-.count_distinct_ind <- function(res_gda, axes = 1:2) {
+.count_distinct_ind <- function(res_gda, axes = 1:2, normalize = NULL) {
   # Koordinaten der Individuen vorbereiten
   # Punkte an den gleichen Stellen vergößern und multiple entfernen.
   coord_ind <- tibble(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]]) %>%
@@ -7,6 +7,8 @@
     mutate(count = n()) %>%
     ungroup() %>%
     data.frame()
+
+  if( !is.null(normalize) ) coord_ind <- coord_ind %>% mutate_at("count", funs( . * (mean(normalize))^(1/2) ))
 
   return(coord_ind)
 }
