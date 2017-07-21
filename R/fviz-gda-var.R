@@ -49,7 +49,7 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
   }
   else {
     modalities <- df %>% data.frame %>% select(matches(paste0("^Dim.", axes[1], "|", axes[2], "$"))) %>%
-      tibble::rownames_to_column(var = "category") %>% mutate_each(funs(. * eigenvalues$.), matches("Dim")) %>%
+      tibble::rownames_to_column(var = "category") %>% mutate_all(funs(. * eigenvalues$.), matches("Dim")) %>%
       mutate_(ctr = paste0("Dim.", axes[1], " + Dim.", axes[2])) %>% arrange(desc(ctr)) %>%
       slice(1:contrib) %>% select(category) %>% data.frame
 
