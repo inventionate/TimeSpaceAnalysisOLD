@@ -4,7 +4,7 @@
 \alias{gda_describe_group}
 \title{Calculate group contributions.}
 \usage{
-gda_describe_group(res_gda, group = NULL, group_names = NULL, excl = NULL)
+gda_describe_group(res_gda, group = NULL, group_names = NULL)
 }
 \arguments{
 \item{res_gda}{MCA result.}
@@ -12,8 +12,6 @@ gda_describe_group(res_gda, group = NULL, group_names = NULL, excl = NULL)
 \item{group}{vector containing group definition.}
 
 \item{group_names}{names of the groups.}
-
-\item{excl}{vector indicating excluded modalities.}
 }
 \value{
 list containing group results.
