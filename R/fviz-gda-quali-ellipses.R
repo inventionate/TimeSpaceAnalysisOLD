@@ -99,7 +99,34 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- p + scale_size_continuous(range = c(1, 7))
   if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size), colour = "black", shape = 23, inherit.aes = FALSE)
   else p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali), colour = "black", shape = 23, size = 10, inherit.aes = FALSE)
-  if(concentration_ellipses) p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = conc_linetype, segments = 100, level = 0.8647, inherit.aes = FALSE)
+  if(concentration_ellipses) {
+
+    ellipse_axes <- NULL
+    for(i in seq_along(var_levels))
+    {
+      p_calc <- ggplot() + stat_ellipse(data = coord_ind_quali %>% filter(var_quali == var_levels[i]), aes(x, y), segments = 500, type = "norm", level = 0.86)
+
+      # Get ellipse coords from plot
+      pb = ggplot_build(p_calc)
+      el = pb$data[[1]][c("x","y")]
+
+      # Calculate centre of ellipse
+      ctr = coord_mean_quali %>% filter(var_quali == var_levels[i]) %>% select(x, y) %>% as.matrix %>% as.vector
+
+      # Calculate distance to centre from each ellipse pts
+      dist2center <- sqrt(rowSums(t(t(el)-ctr)^2))
+
+      # Identify axes points
+      df <- bind_cols(el, dist2center = dist2center, var_quali = rep(var_levels[i], length(dist2center))) %>% arrange(dist2center) %>% slice(c(1, 2, n()-1, n())) %>% mutate(dist2center = round(dist2center, 2))
+
+      # Store results
+      ellipse_axes <- bind_rows(ellipse_axes, df)
+    }
+
+     p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = conc_linetype, segments = 100, level = 0.8647, inherit.aes = FALSE) +
+       geom_path(data = ellipse_axes, aes(x = x, y = y, group = dist2center, colour = var_quali), linetype = "dashed")
+
+  }
   if(confidence_ellipses) {
     conf_ellipses_coord <- FactoMineR::coord.ellipse(data.frame(coord_ind_quali[c(3,1,2)]), bary = TRUE)$res
     if(conf_colour) p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, colour = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
