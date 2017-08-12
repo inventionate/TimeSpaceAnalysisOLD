@@ -35,7 +35,7 @@ gda_describe_axis <- function(res_gda, axis = 1, contrib = "auto") {
 
   # Datensatz Dimensionen ctr
   df_dims <- df_category %>% mutate(coord = ifelse(coord < 0, "negative", "positive")) %>%
-    group_by(coord) %>% summarise_each(funs(sum), matches("ctr"))
+    group_by(coord) %>% summarise_at(vars(matches("ctr")), funs(sum))
 
   # Datensatz angezeigte Kategorien gesamt ctr
   df_total <- df_dims %>% ungroup %>% summarise(ctr = sum(ctr))
