@@ -55,7 +55,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   }
 
   # Mittelwerte und Gruppengewicht berechnen
-  coord_mean_var_quali <- coord_var_quali %>% select(-mass) %>% group_by(time, var_quali) %>% summarise_each(funs(mean))
+  coord_mean_var_quali <- coord_var_quali %>% select(-mass) %>% group_by(time, var_quali) %>% summarise_all(funs(mean))
   coord_mass_var_quali <- coord_var_quali %>% count(var_quali, time) %>% rename(mass = n)
   coord_mean_mass_var_quali <- full_join(coord_mean_var_quali, coord_mass_var_quali, by = c("time", "var_quali"))
 
