@@ -60,7 +60,7 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
   # Die Gewichte der Zeilen korrigieren, da die MFA diese ausgleicht, was zur Varianzberechnung nicht korrekt ist.
   #if(inherits(res_gda, c("MFA"))) row_weight <- res_gda$call$row.w.init
   n <- sum(row_weight)
-  FK <- colSums(row_weight*(dichotom(as.data.frame(factor(var)),out='numeric')))/n
+  FK <- colSums(row_weight*(GDAtools::dichotom(as.data.frame(factor(var)),out='numeric')))/n
   v <- factor(var)
   wt <- row_weight
   # Hier direkt alle Individuen aus dem GDA Ergebnis

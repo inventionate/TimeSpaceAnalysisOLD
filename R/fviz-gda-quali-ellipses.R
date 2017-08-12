@@ -33,7 +33,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   if(myriad) .add_fonts()
 
   # Datensatz auslesen
-  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
+  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
   var_levels <- df_var_quali %>% select_(var_quali) %>% data.frame %>% .[,1] %>% factor %>% levels
 
   # Auf Fehlende Werte prüfen.
@@ -43,7 +43,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
     message("Info: Missing data will be imputed!")
 
-    var <- var %>% mutate_each(funs(as.factor))
+    var <- var %>% mutate_all(funs(as.factor))
 
     # Nur aktive Individuen verwenden
     if(!is.null(res_gda$call$ind.sup)) X <- res_gda$call$X[-res_gda$call$ind.sup,]

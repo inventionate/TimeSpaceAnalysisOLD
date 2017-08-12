@@ -26,7 +26,7 @@ get_gda_trajectory <- function(res_gda, time_point_names = NULL) {
   # Zusätzliche Koordinaten (Zeitpunkte n)
   coord_all <- bind_rows(coord_main, res_gda$ind.sup$coord %>% data.frame %>% tibble::rownames_to_column() %>%
                            separate(rowname, c("id", "time")) %>%
-                           mutate(time = mapvalues(time,
+                           mutate(time = plyr::mapvalues(time,
                                                    1:(length(time_point_names) - 1),
                                                    time_point_names[2:length(time_point_names)]))) %>%
     mutate(time = factor(time, levels = time_point_names))

@@ -38,7 +38,7 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
   }
 
   # Mittelpunkte
-  coord_mean <- coord_all %>% select(-id) %>% group_by(time) %>% summarise_each(funs(mean))
+  coord_mean <- coord_all %>% select(-id) %>% group_by(time) %>% summarise_all(funs(mean))
 
   # Massen der Individuenmittelpunkte
   coord_mass <- coord_all %>% select(-id) %>% count(time) %>% rename(mass = n)
@@ -63,8 +63,37 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
 
   }
 
+  # Calculate sample ellipse
+
+
+  ellipse_axes <- NULL
+  for(i in seq_along(time_point_names))
+  {
+    p_calc <- ggplot() + stat_ellipse(data = coord_all %>% filter(time == time_point_names[i]), aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), segments = 500, type = "norm", level = 0.86)
+
+    # Get ellipse coords from plot
+    pb = ggplot_build(p_calc)
+    el = pb$data[[1]][c("x","y")]
+
+    # Calculate centre of ellipse
+    ctr = coord_mean %>% filter(time == time_point_names[i]) %>% select(x = paste0("Dim.", axes[1]), y = paste0("Dim.", axes[2])) %>% as.matrix %>% as.vector
+
+    # Calculate distance to centre from each ellipse pts
+    dist2center <- sqrt(rowSums(t(t(el)-ctr)^2))
+
+    # Identify axes points
+    df <- bind_cols(el, dist2center = dist2center, time = rep(time_point_names[i], length(dist2center))) %>% arrange(dist2center) %>% slice(c(1, 2, n()-1, n())) %>% mutate(dist2center = round(dist2center, 2))
+
+    # Store results
+    ellipse_axes <- bind_rows(ellipse_axes, df)
+  }
+
+
+
+  # Plot Ellipse
   p <- p + stat_ellipse(data = coord_all, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
-                        alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid")
+                        alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid") +
+    geom_path(data = ellipse_axes, aes(x = x, y = y, group = dist2center, colour = time), linetype = "dashed")
 
   if(ind_points) p <- p + geom_point(data = coord_all, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)
 

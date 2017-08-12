@@ -29,7 +29,7 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
-  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_each(funs(as.character))
+  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
 
   # Berechnungen der passiven Variable durchführen
   supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute)

@@ -99,7 +99,7 @@
   if(!is.null(select$within_inertia))
   {
     warning("Only complete cases will be used to calculate within inertia!")
-    ind_mean_coord <- coord_complete %>% select(-time) %>% group_by(id) %>% summarise_each(funs(mean))
+    ind_mean_coord <- coord_complete %>% select(-time) %>% group_by(id) %>% summarise_all(funs(mean))
     ind_mean_coord_id <- data.frame(ind_mean_coord)$id
 
     # "within inertia" berechnen (adaptiert von FactoMineR)
