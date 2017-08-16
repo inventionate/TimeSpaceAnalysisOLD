@@ -33,46 +33,49 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   if(myriad) .add_fonts()
 
   # Datensatz auslesen
-  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
-  var_levels <- df_var_quali %>% select_(var_quali) %>% data.frame %>% .[,1] %>% factor %>% levels
+  var <- df_var_quali %>% select(!! var_quali) %>% mutate_all(funs(as.character))
+  var_levels <- df_var_quali %>% select(!! var_quali) %>% mutate_all(funs(as.factor)) %>% magrittr::extract2(var_quali) %>% levels
 
   # Auf Fehlende Werte prüfen.
   exclude_na <- which(is.na(var))
 
-  if( length(exclude_na) != 0 & impute ) {
+  if( length(exclude_na) != 0 ) {
 
-    message("Info: Missing data will be imputed!")
+    if( impute ) {
+      message("Info: Missing data will be imputed!")
 
-    var <- var %>% mutate_all(funs(as.factor))
+      var <- var %>% mutate_all(funs(as.factor))
 
-    # Nur aktive Individuen verwenden
-    if(!is.null(res_gda$call$ind.sup)) X <- res_gda$call$X[-res_gda$call$ind.sup,]
-    else X <- res_gda$call$X
+      # Nur aktive Individuen verwenden
+      if(!is.null(res_gda$call$ind.sup)) X <- res_gda$call$X[-res_gda$call$ind.sup,]
+      else X <- res_gda$call$X
 
-    if(inherits(res_gda, c("MCA"))) {
+      if(inherits(res_gda, c("MCA"))) {
 
-      var_impute <- missMDA::imputeMCA(data.frame(X, var))
+        var_impute <- missMDA::imputeMCA(data.frame(X, var))
 
+      }
+
+      if(inherits(res_gda, c("MFA"))) {
+
+        var_impute <- missMDA::imputeMFA(data.frame(X, var),
+                                         c(res_gda$call$group, 1),
+                                         res_gda$call$ncp,
+                                         c(res_gda$call$type, "n"))
+
+      }
+
+      var <- var_impute$completeObs[var_quali]
+    } else {
+      # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
+      var[is.na(var)] <- "Fehlender Wert"
+      var_levels <- c(var_levels, "Fehlender Wert")
     }
 
-    if(inherits(res_gda, c("MFA"))) {
-
-      var_impute <- missMDA::imputeMFA(data.frame(X, var),
-                                       c(res_gda$call$group, 1),
-                                       res_gda$call$ncp,
-                                       c(res_gda$call$type, "n"))
-
-    }
-
-    var <- var_impute$completeObs[var_quali]
-  } else {
-    # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
-    var[is.na(var)] <- "Fehlender Wert"
-    var_levels <- c(var_levels, "Fehlender Wert")
   }
 
   # Spalte in Vektor umwandeln
-  var <- var[,1]
+  var <- var %>% magrittr::extract2(var_quali)
 
   # Datensatz zusammenstellen (Koordinaten mit passiver Variable zusammenführen)
   df_source <- tibble(x = res_gda$ind$coord[, axes[1]], y = res_gda$ind$coord[, axes[2]], var_quali = factor(var)) %>%
