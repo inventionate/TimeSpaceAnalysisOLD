@@ -14,7 +14,7 @@
 #' @return ggplot2 dendrogram visualization.
 #' @export
 fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8,
-                            pointsize = 2, linetype = "dashed", myriad = TRUE, cut_height = NULL) {
+                            pointsize = 2, linetype = "dashed", myriad = TRUE, cut_height = NULL, title = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -48,5 +48,8 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
           legend.position = "none",
           axis.title.x = element_blank(),
           axis.text.x	= element_blank())
+
+  if(!is.null(title)) p <- p + ggtitle(title)
+
   return(p)
 }
