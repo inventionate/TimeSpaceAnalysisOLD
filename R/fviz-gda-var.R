@@ -158,6 +158,9 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
+  # Seitenverhältnis fixieren
+  p <- p + coord_fixed()
+
   # Plotten
   return(p)
 }
