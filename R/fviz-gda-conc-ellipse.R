@@ -39,6 +39,9 @@ fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour =
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
+  # Seitenverhältnis fixieren
+  p <- p + coord_fixed()
+
   # Plotten
   return(p)
 }

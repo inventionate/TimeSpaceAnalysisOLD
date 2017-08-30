@@ -6,7 +6,7 @@
 \usage{
 fviz_add_sup_ind(res_gda, sup_ind = NULL, colour = "red",
   ind_visible = FALSE, label = NULL, size = 10, myriad = TRUE,
-  group = NULL, group_names = NULL, group_style = "both")
+  group = NULL, group_names = NULL, group_style = "both", axes = 1:2)
 }
 \arguments{
 \item{res_gda}{MCA results.}
@@ -28,6 +28,8 @@ fviz_add_sup_ind(res_gda, sup_ind = NULL, colour = "red",
 \item{group_names}{names of the groups.}
 
 \item{group_style}{style to plot (vector containing "shape", "colour" or "both).}
+
+\item{axes}{the GDA dimensions to plot.}
 }
 \value{
 ggplot2 visalization of supplementary individuals.
