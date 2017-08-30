@@ -29,7 +29,8 @@ Depends:
     archivist,
     archivist.github,
     bookdown,
-    rlang
+    rlang,
+    glue
 Suggests:
     kml3d,
     explor,

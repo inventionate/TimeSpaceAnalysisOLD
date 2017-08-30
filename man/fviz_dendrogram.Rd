@@ -6,7 +6,7 @@
 \usage{
 fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
   circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed",
-  myriad = TRUE)
+  myriad = TRUE, cut_height = NULL)
 }
 \arguments{
 \item{res_hcpc}{(s)HCPC results.}
@@ -24,6 +24,10 @@ fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
 \item{pointsize}{leaves pointsize.}
 
 \item{linetype}{hline linetype.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{cut_height}{cut dendrogram at specific hight.}
 }
 \value{
 ggplot2 dendrogram visualization.

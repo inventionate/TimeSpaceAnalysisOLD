@@ -8,10 +8,13 @@
 #' @param hline hline height.
 #' @param pointsize leaves pointsize.
 #' @param linetype hline linetype.
+#' @param myriad use Myriad Pro font (boolean).
+#' @param cut_height cut dendrogram at specific hight.
 #'
 #' @return ggplot2 dendrogram visualization.
 #' @export
-fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed", myriad = TRUE) {
+fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8,
+                            pointsize = 2, linetype = "dashed", myriad = TRUE, cut_height = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -24,7 +27,10 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
     set("branches_lwd", 0.5) %>%
     set("leaves_pch", 20) %>%
     set("leaves_cex", pointsize)
-  if(!circle) {
+  if( !is.null(cut_height) ) {
+    dend <- cut(dend, h = cut_height)$upper
+  }
+  if( !circle ) {
     p <- ggplot(as.ggdend(dend), labels = labels) +
       geom_hline(yintercept = hline, linetype = linetype)
   } else {
