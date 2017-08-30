@@ -137,6 +137,9 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
+  # Seitenverhältnis fixieren
+  p <- p + coord_fixed()
+
   # Plotten
   return(p)
 }
