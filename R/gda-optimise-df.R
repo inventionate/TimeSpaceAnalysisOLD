@@ -20,7 +20,7 @@ gda_optimise_df <- function(df_name, mod_excl = NA, prop_na_excl = 0.2, rename_n
   df_name <- df_name %>%
     rownames_to_column("id") %>%
     filter(id %nin% df_name_na_id$id) %>%
-    mutate_all(funs(as.factor)) %>%
+    select(-id) %>%
     as_tibble()
 
   # FactoMineR compatibility (rename missing values)
