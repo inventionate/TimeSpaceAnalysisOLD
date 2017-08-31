@@ -18,7 +18,7 @@
 #' @export
 fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8,
                             pointsize = 2, linetype = "dashed", myriad = TRUE, cut_height = NULL, title = NULL,
-                            cut_upper = NULL, colour_upper = "#555555") {
+                            cut_upper = NULL, colour_upper = "#555555", hlabel = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -61,6 +61,7 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
   if( !circle ) {
     p <- ggplot(data_dend, labels = labels) +
       geom_hline(yintercept = hline, linetype = linetype)
+    if( !is.null(hlabel) ) p <- p + annotate(geom = "text", x = 0, y = hline + 0.01,  label = hlabel)
   } else {
     p <- ggplot(data_dend, labels = labels) +
       scale_y_reverse(expand = c(0.2, 0)) +
