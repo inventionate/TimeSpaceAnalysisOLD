@@ -25,7 +25,7 @@ NULL
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
                                scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-                               plot_modif_rates = TRUE, impute_ncp = 1:2) {
+                               plot_modif_rates = TRUE, impute_ncp = 2) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()

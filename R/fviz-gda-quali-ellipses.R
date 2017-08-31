@@ -22,6 +22,7 @@ NULL
 #' @param ncol Number of facet columns.
 #' @param individuals show individual points (boolean).
 #' @param impute_ncp number of dimensions to predict missing values.
+#' @param relevel character vector containing new level order.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -29,14 +30,20 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
-                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 1:2) {
+                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2, relevel = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
   # Datensatz auslesen
   var <- df_var_quali %>% select(!! var_quali) %>% mutate_all(funs(as.character))
-  var_levels <- df_var_quali %>% select(!! var_quali) %>% mutate_all(funs(as.factor)) %>% magrittr::extract2(var_quali) %>% levels
+  var_levels <- df_var_quali %>% select(!! var_quali) %>% mutate_all(funs(as.factor)) %>%
+    magrittr::extract2(var_quali) %>% levels
+
+  # Reihenfolge der Levels festlegen
+  if( !is.null(relevel) ) {
+    var_levels <- relevel
+  }
 
   # Auf Fehlende Werte prüfen.
   exclude_na <- which(is.na(var))
@@ -88,7 +95,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
     group_by(x, y, var_quali) %>%
     mutate(count = n()) %>%
     ungroup() %>%
-    mutate(var_quali = forcats::fct_drop(var_quali))
+    mutate(var_quali = fct_drop(var_quali))
 
   coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(mean))
   size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
@@ -131,7 +138,10 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
       # Store results
       ellipse_axes <- bind_rows(ellipse_axes, df) %>% mutate(group = paste(dist2center, var_quali))
+
     }
+
+    if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
     p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
      geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, colour = var_quali), linetype = "dashed", inherit.aes = FALSE)

@@ -14,7 +14,7 @@
 #' \item{v.test}{data frame of categories test-values}
 #' \item{supvar}{vector of the supplementary variable categories}
 #' @export
-supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, impute_ncp = 1:2) {
+supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, impute_ncp = 2) {
 
   # Datensatz auslesen
   var <- var_quali_df %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
