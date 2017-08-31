@@ -8,7 +8,7 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali,
   title = "MCA quali var structure", path = FALSE, linetype = "solid",
   axes = 1:2, scale_point = TRUE, size_point = 3, scale_text = FALSE,
   size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-  plot_modif_rates = TRUE, impute_ncp = 2)
+  plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -42,6 +42,8 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali,
 \item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 
 \item{impute_ncp}{number of dimensions to predict missing values.}
+
+\item{relevel}{character vector containing new level order.}
 }
 \value{
 ggplot2 visualization of supplementary variables.

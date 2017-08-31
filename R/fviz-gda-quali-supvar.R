@@ -19,13 +19,14 @@ NULL
 #' @param impute impute missing data (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param impute_ncp number of dimensions to predict missing values.
+#' @param relevel character vector containing new level order.
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
                                scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-                               plot_modif_rates = TRUE, impute_ncp = 2) {
+                               plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -46,6 +47,8 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   order_levels <- df_var_quali %>% select(matches(var_quali)) %>% data.frame
 
   order_levels <- levels(factor(order_levels[,1]))
+
+  if( !is.null(relevel) ) order_levels <- relevel
 
   if( length(which(is.na(var))) != 0 & !impute ) order_levels <- c(order_levels, "Fehlender Wert")
 
