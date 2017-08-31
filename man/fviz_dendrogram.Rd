@@ -38,7 +38,7 @@ fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
 
 \item{hlabel}{label of hline.}
 
-\item{hlabel_pos}{psoition of hlabel.}
+\item{hlabel_pos}{position of hlabel.}
 }
 \value{
 ggplot2 dendrogram visualization.

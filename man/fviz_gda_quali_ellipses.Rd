@@ -10,7 +10,7 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE,
   impute = TRUE, concentration_ellipses = TRUE,
   confidence_ellipses = FALSE, conf_colour = FALSE,
-  plot_modif_rates = TRUE, ncol = 3)
+  plot_modif_rates = TRUE, ncol = 3, individuals = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA (MCA, MFA) result (rownames have to be individual questionnaire IDs).}
@@ -25,9 +25,9 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
 
 \item{alpha_point}{opacity of individual points.}
 
-\item{conc_linetype}{linetype of concentration ellipse.}
+\item{conc_linetype}{linetype of concentration ellipses.}
 
-\item{conf_linetype}{linetype of confidence ellipse.}
+\item{conf_linetype}{linetype of confidence ellipses.}
 
 \item{scale_mean_points}{scale mean point size in respect of the group size (boolean).}
 
@@ -48,6 +48,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
 \item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 
 \item{ncol}{Number of facet columns.}
+
+\item{individuals}{show individual points (boolean).}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.

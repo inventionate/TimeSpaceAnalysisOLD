@@ -20,6 +20,7 @@ NULL
 #' @param impute impute missing data (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param ncol Number of facet columns.
+#' @param individuals show individual points (boolean).
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -27,7 +28,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
-                                    plot_modif_rates = TRUE, ncol = 3) {
+                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -99,7 +100,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 500)
 
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
-  if(facet) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
+  if(indiviuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
 
   p <- p + scale_size_continuous(range = c(1, 7))
 
