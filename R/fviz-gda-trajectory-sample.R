@@ -105,7 +105,7 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
     ylab(paste0("Achse ", axes[2], "(", round(res_gda$eig$`percentage of variance`[axes[2]], 1), "%)"))
 
   # Theme adaptieren
-  p <- p + add_theme()
+  p <- add_theme(p)
 
   # Beschreibung der Punkte
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())

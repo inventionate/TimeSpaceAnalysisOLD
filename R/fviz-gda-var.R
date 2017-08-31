@@ -142,7 +142,8 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
       p <- fviz_mfa_quali_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$category), axes.linetype = "solid", axes = axes)
     }
   }
-  p <- p + add_theme() + ggtitle(title)
+
+  p <- add_theme(p) + ggtitle(title)
 
   # Legende für Größen ausblenden
   p <- p + scale_size(guide = FALSE)
@@ -157,9 +158,6 @@ fviz_gda_var <- function(res_gda, contrib = "auto", title = "GDA plane high cont
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
-
-  # Seitenverhältnis fixieren
-  p <- p + coord_fixed()
 
   # Plotten
   return(p)

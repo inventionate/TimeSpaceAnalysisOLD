@@ -60,7 +60,7 @@ fviz_gda_interaction <- function(res_gda, df_var_quali, var_quali, title = "MCA 
   # Beide Möglichkeiten abbilden
   if(variable == "both") p <- p + facet_wrap(~variable)
   # Designanpassungen
-  p <- p + add_theme() + ggtitle(title)
+  p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)

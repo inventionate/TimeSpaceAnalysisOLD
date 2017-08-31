@@ -46,10 +46,9 @@ fviz_mca_var_corr <- function(res_gda,  axes = c(1,2), geom=c("point", "text"), 
     }
 
   # Set fix dimensions
-  p <- p + add_theme() +
+  p <- add_theme(p) +
     scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
-    scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
-    theme(panel.border = element_rect(linetype = "solid", fill = "transparent"))
+    scale_y_continuous(expand = c(0,0), limits = c(0,1))
 
   # If there are no passive variables use only one colour
   if( nlevels(vars$type) == 1 ) p <- p + scale_colour_manual(values = c("black"))

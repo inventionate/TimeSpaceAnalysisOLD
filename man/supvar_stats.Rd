@@ -4,7 +4,8 @@
 \alias{supvar_stats}
 \title{Calculate results for supplementary variables.}
 \usage{
-supvar_stats(res_gda, var_quali_df, var_quali, impute = TRUE)
+supvar_stats(res_gda, var_quali_df, var_quali, impute = TRUE,
+  impute_ncp = 2)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -14,6 +15,8 @@ supvar_stats(res_gda, var_quali_df, var_quali, impute = TRUE)
 \item{var_quali}{supplementary variable name (string).}
 
 \item{impute}{impute missing data (boolean).}
+
+\item{impute_ncp}{number of dimensions to predict missing values.}
 }
 \value{
 Returns a list:

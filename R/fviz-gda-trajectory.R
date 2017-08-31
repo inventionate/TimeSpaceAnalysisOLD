@@ -54,7 +54,7 @@ fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inert
   }
 
   # Theme adaptieren
-  p <- p + add_theme()
+  p <- add_theme(p)
 
   # Beschreibung der Punkte
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())

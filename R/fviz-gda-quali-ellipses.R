@@ -158,13 +158,10 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
   if(facet) p <- p + facet_wrap(~var_quali, ncol = ncol)
 
-  p <- p + add_theme() + ggtitle(title)
+  p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
-
-  # Seitenverhältnis fixieren
-  p <- p + coord_fixed()
 
   # Plotten
   return(p)

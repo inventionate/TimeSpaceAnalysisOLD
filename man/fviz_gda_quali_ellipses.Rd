@@ -10,7 +10,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
   scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE,
   impute = TRUE, concentration_ellipses = TRUE,
   confidence_ellipses = FALSE, conf_colour = FALSE,
-  plot_modif_rates = TRUE, ncol = 3, individuals = TRUE)
+  plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2,
+  relevel = NULL)
 }
 \arguments{
 \item{res_gda}{GDA (MCA, MFA) result (rownames have to be individual questionnaire IDs).}
@@ -50,6 +51,10 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
 \item{ncol}{Number of facet columns.}
 
 \item{individuals}{show individual points (boolean).}
+
+\item{impute_ncp}{number of dimensions to predict missing values.}
+
+\item{relevel}{character vector containing new level order.}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.

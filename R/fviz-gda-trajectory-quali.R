@@ -82,7 +82,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   p <- p + facet_wrap(~var_quali)
 
   # Theme adaptieren
-  p <- p + add_theme()
+  p <- add_theme(p)
 
   # Beschreibung der Punkte
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())

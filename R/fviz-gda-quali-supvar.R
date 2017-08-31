@@ -73,13 +73,10 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
 
   # Standardthema hinzufügen
-  p <- p + add_theme() + ggtitle(title)
+  p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
-
-  # Seitenverhältnis fixieren
-  p <- p + coord_fixed()
 
   # Plotten
   return(p)

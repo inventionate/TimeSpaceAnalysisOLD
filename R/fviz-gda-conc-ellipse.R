@@ -30,17 +30,16 @@ fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour =
                         alpha = alpha, colour = colour, linetype = linetype) +
     geom_point(data = .count_distinct_ind(res_gda, axes) %>% distinct(),
                aes(x, y, size = count), inherit.aes = FALSE) +
-    scale_size_continuous(range = c(scale_size, scale_size * max(.count_distinct_ind(res_gda)$count))) +
-    add_theme()
+    scale_size_continuous(range = c(scale_size, scale_size * max(.count_distinct_ind(res_gda)$count)))
+
+  # Theme adaptieren
+  p <- add_theme(p)
 
   # 2D Density contours
   if( density ) p <- p + geom_density_2d(data = res_gda$ind$coord %>% as_data_frame, inherit.aes = FALSE, aes(`Dim 1`, `Dim 2`), colour = "gray")
 
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
-
-  # Seitenverhältnis fixieren
-  p <- p + coord_fixed()
 
   # Plotten
   return(p)

@@ -4,9 +4,11 @@
 \alias{add_theme}
 \title{Optimise ggplot2 plot.}
 \usage{
-add_theme(font_family = "Myriad Pro")
+add_theme(plot, font_family = "Myriad Pro")
 }
 \arguments{
+\item{plot}{ggplot2 object.}
+
 \item{font_family}{plot overall font family.}
 }
 \value{

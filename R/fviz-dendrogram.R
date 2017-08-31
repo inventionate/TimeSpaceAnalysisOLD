@@ -70,15 +70,7 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
       coord_polar(theta = "x")
   }
 
-  p <- p + theme_minimal() + ylab("Level Index") +
-    theme(text = element_text(family = "Myriad Pro"),
-          title = element_text(face = "bold", size = 17),
-          strip.text = element_text(size = 16),
-          panel.grid.minor=element_blank(),
-          panel.grid.major=element_blank(),
-          legend.position = "none",
-          axis.title.x = element_blank(),
-          axis.text.x	= element_blank())
+  p <- add_theme(p) + ylab("Level Index")
 
   if(!is.null(title)) p <- p + ggtitle(title)
 
