@@ -80,7 +80,7 @@
   coord_complete <- coord_all %>% filter(id %in% selected_ind_complete$id)
 
   # Info bzgl. der Anzahl kompleter Fälle.
-  print(paste0("Info: ", length(selected_ind_complete$id), " complete cases."))
+  print(glue("Info: {length(selected_ind_complete$id)} complete cases."))
 
   # Selection (es wird select_ind definiert)
   selected_ind <- coord_all %>% select(id)
@@ -117,13 +117,13 @@
     if(select$within_inertia[[2]] == 0) {
       selected_ind_high <- NULL
     } else {
-      selected_ind_high <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
+      selected_ind_high <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(glue("Dim.{axes[1]}$")), Dim.2 = matches(glue("Dim.{axes[2]}$"))) %>%
         tibble::rownames_to_column() %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(desc(within_inertia)) %>% slice(1:select$within_inertia[[2]])
     }
     if(select$within_inertia[[1]] == 0) {
       selected_ind_low <- NULL
     } else {
-      selected_ind_low <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(paste0("Dim.", axes[1], "$")), Dim.2 = matches(paste0("Dim.", axes[2], "$"))) %>%
+      selected_ind_low <- ind_within_inertia %>% data.frame %>% select(Dim.1 = matches(glue("Dim.{axes[1]}$")), Dim.2 = matches(glue("Dim.{axes[2]}$"))) %>%
         tibble::rownames_to_column() %>% rename(id = rowname) %>% mutate(within_inertia = Dim.1 + Dim.2) %>% arrange(within_inertia) %>% slice(1:select$within_inertia[[1]])
     }
     selected_ind <- selected_ind_wi <- rbind(selected_ind_high, selected_ind_low)
@@ -171,17 +171,17 @@
 
     modif_rates <- GDAtools::modif.rate(res_gda)
 
-    xlab = paste0("Achse ", axes[1], " (", modif_rates[axes[1], 1], "%)")
+    xlab = glue("Achse {axes[1]} ({modif_rates[axes[1], 1]}%)")
 
-    ylab = paste0("Achse ", axes[2], " (", modif_rates[axes[2], 1], "%)")
+    ylab = glue("Achse {axes[2]} ({modif_rates[axes[2], 1]}%)")
 
   } else {
 
     eig <- factoextra::get_eigenvalue(res_gda)[,2]
 
-    xlab = paste0("Achse  ", axes[1], " (", round(eig[axes[1]],1), "%)")
+    xlab = glue("Achse {axes[1]} ({round(eig[axes[1]], 1)}%)")
 
-    ylab = paste0("Achse ", axes[2], " (", round(eig[axes[2]], 1),"%)")
+    ylab = glue("Achse {axes[2]} ({round(eig[axes[2]], 1)}%)")
 
   }
 
