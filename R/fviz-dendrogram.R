@@ -70,7 +70,11 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
       coord_polar(theta = "x")
   }
 
-  p <- add_theme(p) + ylab("Level Index")
+  p <- add_theme(p) +
+    coord_cartesian() +
+    theme(axis.text.x = element_blank()) +
+    xlab(NULL) +
+    ylab("Level Index")
 
   if(!is.null(title)) p <- p + ggtitle(title)
 
