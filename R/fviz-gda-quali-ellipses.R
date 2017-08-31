@@ -21,6 +21,7 @@ NULL
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param ncol Number of facet columns.
 #' @param individuals show individual points (boolean).
+#' @param impute_ncp number of dimensions to predict missing values.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -28,7 +29,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
-                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE) {
+                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 1:2) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -53,7 +54,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
       if(inherits(res_gda, c("MCA"))) {
 
-        var_impute <- missMDA::imputeMCA(data.frame(X, var))
+        var_impute <- missMDA::imputeMCA(data.frame(X, var), ncp = impute_ncp)
 
       }
 
@@ -62,7 +63,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
         var_impute <- missMDA::imputeMFA(data.frame(X, var),
                                          c(res_gda$call$group, 1),
                                          res_gda$call$ncp,
-                                         c(res_gda$call$type, "n"))
+                                         c(res_gda$call$type, "n"),
+                                         ncp = impute_ncp)
 
       }
 

@@ -4,6 +4,7 @@
 #' @param var_quali_df the supplementary data frame.
 #' @param var_quali supplementary variable name (string).
 #' @param impute impute missing data (boolean).
+#' @param impute_ncp number of dimensions to predict missing values.
 #'
 #' @return Returns a list:
 #' \item{weight}{numeric vector of categories weights}
@@ -13,7 +14,7 @@
 #' \item{v.test}{data frame of categories test-values}
 #' \item{supvar}{vector of the supplementary variable categories}
 #' @export
-supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
+supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, impute_ncp = 1:2) {
 
   # Datensatz auslesen
   var <- var_quali_df %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
@@ -31,7 +32,7 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE) {
 
     if(inherits(res_gda, c("MCA"))) {
 
-      var_impute <- missMDA::imputeMCA(data.frame(X, var))
+      var_impute <- missMDA::imputeMCA(data.frame(X, var), ncp = impute_ncp)
 
     }
 

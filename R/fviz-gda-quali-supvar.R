@@ -18,13 +18,14 @@ NULL
 #' @param myriad use Myriad Pro font family (boolean).
 #' @param impute impute missing data (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param impute_ncp number of dimensions to predict missing values.
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
                                scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-                               plot_modif_rates = TRUE) {
+                               plot_modif_rates = TRUE, impute_ncp = 1:2) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -32,7 +33,7 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
 
   # Berechnungen der passiven Variable durchführen
-  supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute)
+  supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute, impute_ncp)
 
   # Achsen auswählen
   supvar <- data.frame(weight = supvar_stats$weight, coord = supvar_stats$coord) %>%
