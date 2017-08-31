@@ -12,6 +12,7 @@
 
   return(coord_ind)
 }
+
 # Data frame selection
 .select <- function(d, filter = NULL, check= TRUE){
 
@@ -37,11 +38,13 @@
 
   return (d)
 }
+
 # Add Myriad Pro font
 .add_fonts <- function () {
   showtext::showtext.auto()
   sysfonts::font.add("Myriad Pro", regular = "MyriadPro-Regular.otf", bold = "MyriadPro-Bold.otf", italic = "MyriadPro-It.otf", bolditalic = "MyriadPro-BoldIt.otf")
 }
+
 # Calculate crossed within variance
 .crossed_within_variance <- function(var, weight, coord) {#, eigenvalues) {
   # Varianzen berechnen
@@ -134,6 +137,7 @@
 
   return(selected_ind)
 }
+
 # Gruppennamen der einzelnen Kategorien extrahieren
 .get_group_names <- function(res_gda, group, group_names) {
 
