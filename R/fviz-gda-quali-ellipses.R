@@ -11,8 +11,8 @@ NULL
 #' @param axes the GDA dimensions to plot.
 #' @param palette Colour brewer scale.
 #' @param alpha_point opacity of individual points.
-#' @param conc_linetype linetype of concentration ellipse.
-#' @param conf_linetype linetype of confidence ellipse.
+#' @param conc_linetype linetype of concentration ellipses.
+#' @param conf_linetype linetype of confidence ellipses.
 #' @param myriad use Myriad Pro font family (boolean).
 #' @param concentration_ellipses plot concentration ellipse (boolean).
 #' @param confidence_ellipses plot confidence ellipses (boolean).
@@ -96,12 +96,16 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   if(inherits(res_gda, c("MFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), axes.linetype = "solid", axes = axes)
 
   # ALlgemeine Konzentrationsellipse hinzufügen (level = 86,47% nach Le Roux/Rouanet 2010: 69, da es sich um eine 2-dimesnionale Konzentrationsellipse handelt)
-  p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 100)
+  p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 500)
+
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
   if(facet) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
+
   p <- p + scale_size_continuous(range = c(1, 7))
+
   if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size), colour = "black", shape = 23, inherit.aes = FALSE)
   else p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali), colour = "black", shape = 23, size = 10, inherit.aes = FALSE)
+
   if(concentration_ellipses) {
 
     ellipse_axes <- NULL
@@ -123,20 +127,24 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
       df <- bind_cols(el, dist2center = dist2center, var_quali = rep(var_levels[i], length(dist2center))) %>% arrange(dist2center) %>% slice(c(1, 2, n()-1, n())) %>% mutate(dist2center = round(dist2center, 2))
 
       # Store results
-      ellipse_axes <- bind_rows(ellipse_axes, df)
+      ellipse_axes <- bind_rows(ellipse_axes, df) %>% mutate(group = paste(dist2center, var_quali))
     }
 
-     p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = conc_linetype, segments = 100, level = 0.8647, inherit.aes = FALSE) +
-       geom_path(data = ellipse_axes, aes(x = x, y = y, group = dist2center, colour = var_quali), linetype = "dashed")
+    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
+     geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, colour = var_quali), linetype = "dashed", inherit.aes = FALSE)
 
   }
+
   if(confidence_ellipses) {
     conf_ellipses_coord <- FactoMineR::coord.ellipse(data.frame(coord_ind_quali[c(3,1,2)]), bary = TRUE)$res
     if(conf_colour) p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, colour = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
     else p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, group = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
   }
+
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
+
   if(facet) p <- p + facet_wrap(~var_quali, ncol = ncol)
+
   p <- p + add_theme() + ggtitle(title)
 
   # Beschriftung anpassen

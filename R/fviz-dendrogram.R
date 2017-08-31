@@ -13,12 +13,14 @@
 #' @param title the plot title.
 #' @param cut_upper style upper dendrogram.
 #' @param colour_upper colour of the upper dendrogram.
+#' @param hlabel label of hline.
+#' @param hlabel_pos position of hlabel.
 #'
 #' @return ggplot2 dendrogram visualization.
 #' @export
 fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALSE, circle = FALSE, hline = 0.8,
                             pointsize = 2, linetype = "dashed", myriad = TRUE, cut_height = NULL, title = NULL,
-                            cut_upper = NULL, colour_upper = "#555555", hlabel = NULL) {
+                            cut_upper = NULL, colour_upper = "#555555", hlabel = NULL, hlabel_pos = 0.001) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -61,7 +63,7 @@ fviz_dendrogram <- function(res_hcpc, palette = NULL, cluster = 1, labels = FALS
   if( !circle ) {
     p <- ggplot(data_dend, labels = labels) +
       geom_hline(yintercept = hline, linetype = linetype)
-    if( !is.null(hlabel) ) p <- p + annotate(geom = "text", x = 0, y = hline + 0.01,  label = hlabel)
+    if( !is.null(hlabel) ) p <- p + annotate(geom = "text", x = 0, y = hline + hlabel_pos,  label = hlabel)
   } else {
     p <- ggplot(data_dend, labels = labels) +
       scale_y_reverse(expand = c(0.2, 0)) +

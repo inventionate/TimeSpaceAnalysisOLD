@@ -7,7 +7,7 @@
 fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
   circle = FALSE, hline = 0.8, pointsize = 2, linetype = "dashed",
   myriad = TRUE, cut_height = NULL, title = NULL, cut_upper = NULL,
-  colour_upper = "#555555")
+  colour_upper = "#555555", hlabel = NULL, hlabel_pos = 0.001)
 }
 \arguments{
 \item{res_hcpc}{(s)HCPC results.}
@@ -35,6 +35,10 @@ fviz_dendrogram(res_hcpc, palette = NULL, cluster = 1, labels = FALSE,
 \item{cut_upper}{style upper dendrogram.}
 
 \item{colour_upper}{colour of the upper dendrogram.}
+
+\item{hlabel}{label of hline.}
+
+\item{hlabel_pos}{psoition of hlabel.}
 }
 \value{
 ggplot2 dendrogram visualization.
