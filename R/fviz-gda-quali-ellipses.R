@@ -100,7 +100,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 500)
 
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
-  if(indiviuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
+  if(individuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
 
   p <- p + scale_size_continuous(range = c(1, 7))
 
