@@ -171,19 +171,23 @@
 
     modif_rates <- GDAtools::modif.rate(res_gda)
 
-    xlab = glue("Achse {axes[1]} ({modif_rates[axes[1], 1]}%)")
+    rate_1 <- modif_rates[axes[1], 1]
 
-    ylab = glue("Achse {axes[2]} ({modif_rates[axes[2], 1]}%)")
+    rate_2 <- modif_rates[axes[2], 1]
 
   } else {
 
     eig <- factoextra::get_eigenvalue(res_gda)[,2]
 
-    xlab = glue("Achse {axes[1]} ({round(eig[axes[1]], 1)}%)")
+    rate_1 <- round(eig[axes[1]], 1)
 
-    ylab = glue("Achse {axes[2]} ({round(eig[axes[2]], 1)}%)")
+    rate_2 <- round(eig[axes[2]], 1)
 
   }
+
+  xlab = glue("Achse {axes[1]} ({rate_1}%)")
+
+  ylab = glue("Achse {axes[2]} ({rate_2}%)")
 
   p <- ggplot_gda + labs(title = title, x = xlab, y = ylab)
 }
