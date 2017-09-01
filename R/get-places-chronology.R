@@ -24,14 +24,14 @@ get_places_chronology <- function(data, id = "all", weekday = "all", title, excl
   if (id[[1]] != "all") {
     data_places_chronology <- filter(data_places_chronology, questionnaire_id %in% id)
     # Titel anpassen.
-    title <- paste(title, as.character(id))
+    if ( !is.null(title) ) title <- paste(title, as.character(id))
   }
 
   # Anzahl der zu plottenden Wochentage.
   if (weekday[[1]] != "all") {
     data_places_chronology <- filter(data_places_chronology, day %in% weekday)
     # Titel anpassen.
-    title <- paste(title, as.character(weekday))
+    if ( !is.null(title) ) title <- paste(title, as.character(weekday))
   }
 
   # Datensatz für Gesamtaktivitäten

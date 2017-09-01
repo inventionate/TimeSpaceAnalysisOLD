@@ -50,11 +50,7 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
         #scale_fill_brewer(name = "Tätigkeiten:",
         #                 labels = c("Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen"),
         #                palette = "Spectral") +
-        scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=TRUE)) +
-        theme_bw() + theme(axis.title = element_blank(), plot.title = element_text(face = "bold", size = 23, family = "Myriad Pro"),
-                           axis.text.x = element_blank(), axis.ticks.x = element_blank(), panel.border = element_blank(),
-                           legend.text = element_text(size = 15), legend.title = element_text(face = "bold", size = 17),
-                           plot.margin = unit(c(0, 0, -0, 0), "cm"), text = element_text(family = "Myriad Pro"))
+        scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=TRUE))
 
       if(!legend) plot_pc_zm <- plot_pc_zm + theme(legend.position = "none")
 
@@ -64,6 +60,9 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
       # Allgemeines Zeitmuster plotten.
       plot_pc_zm <- plot_time_pattern(data_pc_zm, id = id, reshape_data = FALSE, ncol = ncol, print_prop_duration = print_prop_duration)
     }
+
+    # Theme
+    plot_pc_zm <- add_theme(plot_pc_zm)
 
   if(graph) print(plot_pc_zm)
 

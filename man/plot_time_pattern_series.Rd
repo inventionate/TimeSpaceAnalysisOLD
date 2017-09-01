@@ -5,7 +5,8 @@
 \title{Plot time pattern series data.}
 \usage{
 plot_time_pattern_series(data_tp, alpha = 0.3, palette = "Set1",
-  myriad = TRUE)
+  myriad = TRUE, title = "Time pattern profiles (kml3d results)",
+  hour_limits = c(0, 24), hour_scale = c(0, 4, 8, 12, 16, 20, 24))
 }
 \arguments{
 \item{data_tp}{data frame including questionnaire_id, kml3d results and time pattern data.}
@@ -13,6 +14,14 @@ plot_time_pattern_series(data_tp, alpha = 0.3, palette = "Set1",
 \item{alpha}{opacity of the time pattern lines.}
 
 \item{palette}{colour of average time pattern lines.}
+
+\item{myriad}{use Myriad Pro font (boolean).}
+
+\item{title}{plot title.}
+
+\item{hour_limits}{y axis limits (hours).}
+
+\item{hour_scale}{y axis breaks (hours).}
 }
 \value{
 ggplot2 time pattern series plot.

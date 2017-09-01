@@ -28,7 +28,14 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
 
     if(print_prop_duration) {
       data %>%
-        mutate(day = mapvalues(day, c(1:7), c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"))) %>%
+        mutate(day = fct_recode(as.factor(day),
+                                "Montag" = "1",
+                                "Dienstag" = "2",
+                                "Mittwoch" = "3",
+                                "Donnerstag" = "4",
+                                "Freitag" = "5",
+                                "Samstag" = "6",
+                                "Sonntag" = "7")) %>%
         select(questionnaire_id, day, activity, prop_duration) %>%
         mutate(prop_duration =  round(prop_duration * 100, 2)) %>%
         arrange(questionnaire_id) %>%
@@ -38,22 +45,23 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
     }
 
     p <- ggplot(data, aes(x = day, y = prop_duration))
+
     if(fluid) p <- p + geom_area(aes(fill = activity), position = "fill") + geom_vline(xintercept = c(1:7), linetype = "dotted", colour = "white")
     else p <- p + geom_bar(aes(fill = activity), position = "fill", stat = "identity", width = 1) + geom_vline(xintercept = c(1.5:6.5), linetype = "solid", colour = "white", size = 0.75)
-    p <- p + scale_x_continuous(breaks = c(1:7), labels = c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag")) +
-      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%"))
+
+    p <- p + scale_x_continuous(breaks = c(1:7), labels = c("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"), name = "Wochentag") +
+      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%"), name = "Zeitanteil in Prozent")
       # scale_fill_brewer(name = "Tätigkeiten", labels = c("Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit",
       #                                                     "Arbeitszeit", "Freizeit", "Schlafen"), palette = "Spectral") +
+
     if(reshape_data) p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=FALSE))
     else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
-    p <- p + theme_bw() +
-    # ggtitle(paste('Zeitmuster
-    # ID', test$questionnaire_id))
-      theme(axis.title = element_blank(), plot.title = element_text(face = "bold", size = 23), text = element_text(family = "Myriad Pro"),
-            legend.text = element_text(size = 15), legend.title = element_text(face = "bold", size = 17, family = "Myriad Pro"))
 
     # Mehrere Gafiken parallel erzeugen
     if(length(id) > 1 | id[[1]] == "all") p <- p + facet_wrap(~questionnaire_id, ncol = ncol)
+
+    # Theme
+    p <- add_theme(p) + coord_cartesian() + theme(legend.title = element_blank(), legend.position = "right")
 
     return(p)
 }

@@ -13,7 +13,10 @@ get_time_pattern_series <- function(data_tp)
     mutate(day_activity = str_replace(day_activity, "_\\d+", "")) %>%
     separate(day_activity, c("day", "activity"), "_") %>%
     mutate(day = fct_relevel(str_to_title(day), "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"),
-           activity = fct_relevel(str_to_title(activity), "Veranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen"))
+           activity = fct_recode(
+             str_to_title(activity),
+             "Lehrveranstaltungen" = "Veranstaltungen")) %>%
+    mutate(activity = fct_relevel(activity,"Lehrveranstaltungen", "Zwischenzeit", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen"))
 
   # Durchschnittsprofile berechnen
   data_series_average <- data_series %>%
