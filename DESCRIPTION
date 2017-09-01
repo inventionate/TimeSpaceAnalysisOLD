@@ -32,9 +32,9 @@ Depends:
     bookdown,
     rlang,
     glue,
-    kml3d,
     stringr
 Suggests:
+    kml3d,
     explor,
     questionr,
     testthat

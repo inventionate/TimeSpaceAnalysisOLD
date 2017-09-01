@@ -26,7 +26,7 @@ plot_time_pattern_profile <- function(data_tp, id = "all", ncol = 2, fluid = FAL
     scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%"), name = "Zeitanteil in Prozent") +
     scale_fill_manual(name = "Tätigkeiten", values = colours)
 
-  p <- add_theme(p) + coord_cartesian()
+  p <- add_theme(p) + coord_cartesian() + theme(legend.title = element_blank(), legend.position = "right")
 
   # Mehrere Gafiken parallel erzeugen
   p <- p + facet_wrap(~zeitmuster, ncol = ncol)

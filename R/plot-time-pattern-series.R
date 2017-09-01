@@ -30,7 +30,7 @@ plot_time_pattern_series <- function(data_tp, alpha = 0.3, palette = "Set1", myr
     scale_y_continuous(limits = hour_limits, breaks = hour_scale, name="Dauer (in Stunden)") +
     ggtitle(title)
 
-  p <- add_theme(p) + coord_cartesian()
+  p <- add_theme(p) + coord_cartesian() + theme(legend.position = "bottom", legend.title = element_blank())
 
   return(p)
 }
