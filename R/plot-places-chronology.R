@@ -142,7 +142,7 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
 
   if(!is.null(ylim)) plot_pc <- plot_pc + scale_y_continuous(limits = ylim)
 
-  if(legend) plot_pc <- plot_pc + theme(legend.position = "bottom", legend.title = element_blank())
+  if(legend) plot_pc <- plot_pc + theme(legend.position = "right", legend.title = element_blank())
 
   # Plotten
   if(graph) print(plot_pc)

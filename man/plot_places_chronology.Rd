@@ -5,21 +5,21 @@
 \title{Plot single or multiple place chronologies in different scales.}
 \usage{
 plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
-  size_range = c(3, 15), colour_path = "black", size_path = 2,
-  alpha_path = 0.75, linetype_path = "solid", force_repel = 1,
-  legend = FALSE, structure = FALSE, map_extent = "panel",
-  title = "Orte Chronologie", axis_label = FALSE, xlim = NULL,
-  ylim = NULL, graph = TRUE, ncol = 3, unique_places = FALSE,
-  print_place_duration = FALSE, activity_duration_overall = TRUE,
-  facet_scales = "fixed", point_padding = unit(1e-06, "lines"),
-  myriad = TRUE, exclude_sleep = TRUE, shape = 0.2)
+  size_range = c(3, 15), colour_path = "darkred", size_path = 2,
+  alpha_path = 0.75, linetype_path = "solid", force_repel = 3,
+  legend = TRUE, structure = TRUE, map_extent = "panel", title = NULL,
+  axis_label = TRUE, xlim = NULL, ylim = NULL, graph = TRUE, ncol = 3,
+  unique_places = TRUE, print_place_duration = TRUE,
+  activity_duration_overall = TRUE, facet_scales = "fixed",
+  point_padding = unit(1, "lines"), myriad = TRUE, exclude_sleep = TRUE,
+  shape = 0.2, labels = NULL)
 }
 \arguments{
 \item{data}{a data frame (columns: ID, day, duration, place, address, lon, lat, prop_duration).}
 
 \item{id}{vector, which contains questionnaire ids. Choosa "all" to compute all ids.}
 
-\item{weekday}{vactor, which contains the weekday to plot.}
+\item{weekday}{vector, which contains the weekday to plot.}
 
 \item{map}{a ggmap map object.}
 
@@ -47,7 +47,7 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 
 \item{xlim}{specify plot x limits.}
 
-\item{ylim}{spcify plot y limits.}
+\item{ylim}{specify plot y limits.}
 
 \item{graph}{whether to plot or not to plot the praph (boolean).}
 
@@ -68,6 +68,8 @@ plot_places_chronology(data, id = "all", weekday = "all", map = NULL,
 \item{exclude_sleep}{exclude sleep duration (boolean).}
 
 \item{shape}{if not NULL the path will be curved.}
+
+\item{labels}{facet labels.}
 }
 \value{
 ggplot2 visualization of place chronology data.

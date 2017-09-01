@@ -10,8 +10,9 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
 
   # Relevante Variablen auswählen
   data <- data %>%
-    select(questionnaire_id, date, day, duration, activity) %>%
-    mutate(activity = factor(activity))
+    ungroup() %>%
+    select(questionnaire_id, day, duration, activity) %>%
+    mutate(activity = as.factor(activity))
 
   # Leeren Datensatz hinzufügen, um vergleichbare Ausgangsbedingungen zu schaffen.
   # D. h., jeder Person wird eine vergleichbare Aktivität mit der Länge Null hinzugefügt.
@@ -45,12 +46,11 @@ get_places_chronology_time_pattern <- function(data, id = "all", weekday = "all"
     ungroup() %>%
     group_by(questionnaire_id, day, activity) %>%
     mutate(prop_duration = sum(prop_duration)) %>%
-    distinct(.keep_all = TRUE) %>%
-    arrange(questionnaire_id, date, activity) %>%
+    distinct(questionnaire_id, day, activity, prop_duration) %>%
     ungroup() %>%
     # Festlegen der Reihenfolge der Levels und orden der Daten.
-    mutate(activity = factor(activity, levels = c("Lehrveranstaltung", "Lerngruppe", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen"))) %>%
-    arrange(activity)
+    mutate(activity = fct_relevel(activity, "Lehrveranstaltung", "Lerngruppe", "Selbststudium", "Fahrzeit", "Arbeitszeit", "Freizeit", "Schlafen")) %>%
+    arrange(questionnaire_id, day, activity)
 
   return(data_pc_zm)
 }

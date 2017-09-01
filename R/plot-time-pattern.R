@@ -9,10 +9,14 @@ NULL
 #' @param reshape_data whether reshape data or not.
 #' @param print_prop_duration whether to print or not to print prop duration data (boolean).
 #' @param fluid should be static bars or fluid lines visualized (boolean).
+#' @param myriad use Myriad Pro font (boolean).
+#' @param labels facet labels.
+#' @param legend show legend (boolean).
 #'
 #' @return ggplot2 visualization of time pattern data.
 #' @export
-plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE, fluid = FALSE, myriad = TRUE) {
+plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE,
+                              fluid = FALSE, myriad = TRUE, labels = NULL, legend = TRUE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -58,7 +62,7 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
     else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
 
     # Mehrere Gafiken parallel erzeugen
-    if(length(id) > 1 | id[[1]] == "all") p <- p + facet_wrap(~questionnaire_id, ncol = ncol)
+    if(length(id) > 1 | id[[1]] == "all") p <- p + facet_wrap(~questionnaire_id, ncol = ncol, labeller = as_labeller(labels))
 
     # Theme
     p <- add_theme(p) + coord_cartesian() + theme(legend.title = element_blank(), legend.position = "right")

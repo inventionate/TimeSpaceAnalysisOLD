@@ -12,11 +12,12 @@ NULL
 #' @param bar_width specify the width of the bars.
 #' @param ncol number of cols, if there are multiple plots (facets).
 #' @param myriad use Myriad Pro font (boolean).
+#' @param labels facet labels.
 #'
 #' @return ggplot2 visualization of place chronology time pattern data.
 #' @export
 plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all", graph = TRUE, print_prop_duration = TRUE, legend = TRUE,
-                                                bar_width = 1, ncol = 3, myriad = TRUE) {
+                                                bar_width = 1, ncol = 3, myriad = TRUE, labels = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -44,7 +45,7 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
       }
 
       # Plotten der Zeitmuster
-      plot_pc_zm <- ggplot2::ggplot(data_pc_zm, aes(x = day, y = prop_duration)) +
+      plot_pc_zm <- ggplot(data_pc_zm, aes(x = day, y = prop_duration)) +
         geom_bar(aes(fill = activity), stat = "identity", position = "stack", width = bar_width) +
         scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), labels = c("0%", "25%", "50%", "75%", "100%")) +
         #scale_fill_brewer(name = "Tätigkeiten:",
@@ -52,17 +53,17 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
         #                palette = "Spectral") +
         scale_fill_manual(name = "Tätigkeiten", values = colours, guide = guide_legend(reverse=TRUE))
 
-      if(!legend) plot_pc_zm <- plot_pc_zm + theme(legend.position = "none")
-
-      if(length(id) > 1 | id[[1]] == "all") plot_pc_zm <- plot_pc_zm + facet_wrap(~questionnaire_id, ncol = ncol)
+      if(length(id) > 1 | id[[1]] == "all") plot_pc_zm <- plot_pc_zm + facet_wrap(~questionnaire_id, ncol = ncol, labeller = as_labeller(labels))
 
     } else {
       # Allgemeines Zeitmuster plotten.
-      plot_pc_zm <- plot_time_pattern(data_pc_zm, id = id, reshape_data = FALSE, ncol = ncol, print_prop_duration = print_prop_duration)
+      plot_pc_zm <- plot_time_pattern(data_pc_zm, id = id, reshape_data = FALSE, ncol = ncol, print_prop_duration = print_prop_duration, labels = labels)
     }
 
     # Theme
-    plot_pc_zm <- add_theme(plot_pc_zm)
+    plot_pc_zm <- add_theme(plot_pc_zm) + coord_cartesian() + theme(legend.title = element_blank(), legend.position = "right")
+
+    if(!legend) plot_pc_zm <- plot_pc_zm + theme(legend.position = "none")
 
   if(graph) print(plot_pc_zm)
 
