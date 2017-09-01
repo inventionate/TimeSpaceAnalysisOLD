@@ -14,6 +14,7 @@ add_theme <- function(plot, font_family = "Myriad Pro") {
           strip.text = element_text(size = 13),
           axis.text = element_text(size = 9),
           axis.title = element_text(size = 12),
+          axis.ticks = element_line(size = 0.5),
           panel.grid.minor=element_blank(),
           panel.grid.major=element_blank(),
           panel.background = element_blank(),
