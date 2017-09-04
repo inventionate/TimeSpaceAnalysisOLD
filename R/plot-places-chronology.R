@@ -45,11 +45,12 @@ plot_places_chronology <- function(data, id = "all", weekday = "all", map = NULL
   # Datensatz aufbereiten.
   data_pc <- get_places_chronology(data, id, weekday, title, exclude_sleep)
 
-  if(print_place_duration) {
+  if(print_place_duration & nrow(data_pc$data_unique_places_overall) > 0) {
     data_pc$data_unique_places_overall %>%
       select(questionnaire_id, place, place_duration) %>%
       mutate(place_duration =  round(place_duration, 2)) %>%
       arrange(questionnaire_id) %>%
+      mutate(questionnaire_id = as.character(questionnaire_id)) %>%
       group_by(questionnaire_id, place) %>%
       spread(questionnaire_id, place_duration) %>%
       print(n = nrow(.))

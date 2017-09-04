@@ -19,6 +19,7 @@ Depends:
     Hmisc,
     ggrepel,
     ggforce,
+    cowplot,
     ggthemes,
     ggmap,
     RColorBrewer,
