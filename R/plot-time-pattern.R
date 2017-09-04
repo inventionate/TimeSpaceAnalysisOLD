@@ -12,11 +12,12 @@ NULL
 #' @param myriad use Myriad Pro font (boolean).
 #' @param labels facet labels.
 #' @param legend show legend (boolean).
+#' @param facet plot facets (boolean).
 #'
 #' @return ggplot2 visualization of time pattern data.
 #' @export
 plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, print_prop_duration = TRUE,
-                              fluid = FALSE, myriad = TRUE, labels = NULL, legend = TRUE) {
+                              fluid = FALSE, myriad = TRUE, labels = NULL, legend = TRUE, facet = TRUE) {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -66,7 +67,7 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
     else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
 
     # Mehrere Gafiken parallel erzeugen
-    if(length(id) > 1 | id[[1]] == "all") p <- p + facet_wrap(~questionnaire_id, ncol = ncol, labeller = as_labeller(labels))
+    if(length(id) > 1 | id[[1]] == "all" | facet = TRUE) p <- p + facet_wrap(~questionnaire_id, ncol = ncol, labeller = as_labeller(labels))
 
     # Theme
     p <- add_theme(p) + coord_cartesian() + theme(legend.title = element_blank(), legend.position = "right")
