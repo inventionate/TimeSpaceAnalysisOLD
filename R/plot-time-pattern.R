@@ -67,7 +67,7 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
     else p <- p + scale_fill_manual(name = "Tätigkeiten", values = colours)
 
     # Mehrere Gafiken parallel erzeugen
-    if(length(id) > 1 | id[[1]] == "all" | facet = TRUE) p <- p + facet_wrap(~questionnaire_id, ncol = ncol, labeller = as_labeller(labels))
+    if( length(id) > 1 | id[[1]] == "all" | is_true(facet) ) p <- p + facet_wrap(~questionnaire_id, ncol = ncol, labeller = as_labeller(labels))
 
     # Theme
     p <- add_theme(p) + coord_cartesian() + theme(legend.title = element_blank(), legend.position = "right")
