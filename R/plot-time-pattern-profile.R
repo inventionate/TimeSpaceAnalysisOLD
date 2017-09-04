@@ -17,7 +17,8 @@ plot_time_pattern_profile <- function(data_tp, id = "all", ncol = 2, fluid = FAL
 
   data_tsp <- get_time_pattern_profile(data_tp, id)
 
-  colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_tsp$activity))
+  # Fixe sieben Kategorien
+  colours <- c("#f15b60", "#ce7058", "#faa75b", "#9e67ab", "#5a9bd4", "#7ac36a", "#737373")
 
   p <- ggplot(data_tsp, aes(x = day, y = prop_avg_duration))
   if(fluid) p <- p + geom_area(aes(fill = activity), position = "fill") + geom_vline(xintercept = c(1:7), linetype = "dotted", colour = "white")
