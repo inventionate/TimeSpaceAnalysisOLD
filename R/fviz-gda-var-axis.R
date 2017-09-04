@@ -24,7 +24,7 @@ NULL
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2,
-                              group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Dark2",
+                              group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Set1",
                               individuals = FALSE, individuals_size = "auto", individuals_alpha = 0.5, individuals_names = FALSE,
                               myriad = TRUE, plot_modif_rates = TRUE) {
   # Add Myriad Pro font family
