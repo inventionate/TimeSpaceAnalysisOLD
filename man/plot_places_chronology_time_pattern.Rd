@@ -6,7 +6,8 @@
 \usage{
 plot_places_chronology_time_pattern(data, id = "all", weekday = "all",
   graph = TRUE, print_prop_duration = TRUE, legend = TRUE,
-  bar_width = 1, ncol = 3, myriad = TRUE, labels = NULL)
+  bar_width = 1, ncol = 3, myriad = TRUE, labels = NULL,
+  facet_label = TRUE)
 }
 \arguments{
 \item{data}{data frame, which contains place chronology time pattern data.}
@@ -28,6 +29,8 @@ plot_places_chronology_time_pattern(data, id = "all", weekday = "all",
 \item{myriad}{use Myriad Pro font (boolean).}
 
 \item{labels}{facet labels.}
+
+\item{facet_label}{show facets (boolean).}
 }
 \value{
 ggplot2 visualization of place chronology time pattern data.

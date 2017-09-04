@@ -6,7 +6,7 @@
 \usage{
 plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE,
   print_prop_duration = TRUE, fluid = FALSE, myriad = TRUE,
-  labels = NULL, legend = TRUE)
+  labels = NULL, legend = TRUE, facet = TRUE)
 }
 \arguments{
 \item{data}{data frame which contains time pattern data.}
@@ -26,6 +26,8 @@ plot_time_pattern(data, id = "all", ncol = 3, reshape_data = TRUE,
 \item{labels}{facet labels.}
 
 \item{legend}{show legend (boolean).}
+
+\item{facet}{plot facets (boolean).}
 }
 \value{
 ggplot2 visualization of time pattern data.

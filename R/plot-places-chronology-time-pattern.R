@@ -13,11 +13,12 @@ NULL
 #' @param ncol number of cols, if there are multiple plots (facets).
 #' @param myriad use Myriad Pro font (boolean).
 #' @param labels facet labels.
+#' @param facet_label show facets (boolean).
 #'
 #' @return ggplot2 visualization of place chronology time pattern data.
 #' @export
 plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all", graph = TRUE, print_prop_duration = TRUE, legend = TRUE,
-                                                bar_width = 1, ncol = 3, myriad = TRUE, labels = NULL) {
+                                                bar_width = 1, ncol = 3, myriad = TRUE, labels = NULL, facet_label = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -28,9 +29,10 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
     # Tagesauswahl definieren
     if (weekday[[1]] != "all") {
       # Farbpalette festlegen
-      colours <- RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_pc_zm$activity))
+      # colours <- RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data_pc_zm$activity))
+      colours <- c("#f15b60", "#ce7058", "#faa75b", "#9e67ab", "#5a9bd4", "#7ac36a", "#737373")
       # Die Farbe für "Lerngruppe" ändern, damit es sich von "Zwischenzeit" unterscheidet.
-      colours[6] <- "#FD5A9D"
+      colours[2] <- "#d77fb4"
 
       # Prozentuale Verteilung der Aktivitäten
       if(print_prop_duration) {
@@ -65,7 +67,9 @@ plot_places_chronology_time_pattern <- function(data, id = "all", weekday = "all
 
     if(!legend) plot_pc_zm <- plot_pc_zm + theme(legend.position = "none")
 
-  if(graph) print(plot_pc_zm)
+    if(!facet_label) plot_pc_zm <- plot_pc_zm + theme(strip.text = element_blank())
+
+    if(graph) print(plot_pc_zm)
 
   return(plot_pc_zm)
 }

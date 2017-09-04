@@ -23,17 +23,19 @@ plot_time_pattern <- function(data, id = "all", ncol = 3, reshape_data = TRUE, p
 
   data <- get_time_pattern(data, id, reshape_data)
 
-  # Fixe sieben Kategorien
-  colours <- c("#f15b60", "#ce7058", "#faa75b", "#9e67ab", "#5a9bd4", "#7ac36a", "#737373")
-
-  # Flexible Kategorienanzahl
-    # if(reshape_data) {
-    #   colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
-    # } else {
-    #   colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
-    #   # Die Farbe für "Lerngruppen" ändern, da es sich deutlich von "Zwischenzeit" unterscheiden sollte.
-    #   # colours[6] <- "#FD5A9D"
-    # }
+    if(reshape_data) {
+      # Flexible Kategorienanzahl
+      # colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
+      # Fixe sieben Kategorien
+      colours <- c("#f15b60", "#ce7058", "#faa75b", "#9e67ab", "#5a9bd4", "#7ac36a", "#737373")
+    } else {
+      # Flexible Kategorienanzahl
+      # colours <-  RColorBrewer::brewer.pal(name="Spectral", n = nlevels(data$activity))
+      # Fixe sieben Kategorien
+      colours <- c("#f15b60", "#ce7058", "#faa75b", "#9e67ab", "#5a9bd4", "#7ac36a", "#737373")
+      # Die Farbe für "Lerngruppen" ändern, da es sich deutlich von "Zwischenzeit" unterscheiden sollte.
+      colours[2] <- "#d77fb4"
+    }
 
     if(print_prop_duration) {
       data %>%

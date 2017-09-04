@@ -7,9 +7,9 @@
 fviz_gda_var_axis(res_gda, axis = 1, contrib = "auto",
   title = "GDA axis high contribution modalities", axes = 1:2,
   group = NULL, group_names = NULL, group_style = "both", textsize = 4,
-  colour_palette = "Dark2", individuals = FALSE,
-  individuals_size = "auto", individuals_alpha = 0.5,
-  individuals_names = FALSE, myriad = TRUE, plot_modif_rates = TRUE)
+  colour_palette = "Set1", individuals = FALSE, individuals_size = "auto",
+  individuals_alpha = 0.5, individuals_names = FALSE, myriad = TRUE,
+  plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
