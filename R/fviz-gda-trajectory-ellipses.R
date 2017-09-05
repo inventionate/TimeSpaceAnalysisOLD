@@ -15,13 +15,14 @@ NULL
 #' @param impute use imputation for missing data.
 #' @param concentration_ellipse plot confidence ellipses (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param alpha ellipse fill alpha.
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, impute = TRUE,
                                          time_point_names = NULL, ind_points = TRUE, concentration_ellipse = TRUE,
                                          title = "Trajectory individuals structuring factors ellipse plot",
-                                         plot_modif_rates = TRUE) {
+                                         plot_modif_rates = TRUE, alpha = 0.15) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -45,8 +46,8 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
 
   # Datensatz um qualitative Variable ergänzen, um Gruppierungen vorzunehmen.
   coord_var_quali <- bind_cols(coord_all, tibble(var_quali = df_full$var_quali)) %>%
-    select_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "var_quali", "time") %>%
-    group_by_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "var_quali", "time") %>% mutate(mass = n()) %>% ungroup()
+    select(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}"), var_quali, time) %>%
+    group_by_all %>% mutate(mass = n()) %>% ungroup()
 
   # Behandlung von fehlenden Werten
   if(!impute) {
@@ -60,15 +61,44 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   coord_mean_mass_var_quali <- full_join(coord_mean_var_quali, coord_mass_var_quali, by = c("time", "var_quali"))
 
   # Plot der Daten
-  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), pointsize = -1, axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- .create_plot()
   else stop("Only MCA plots are currently supported!")
 
   # Concentartion ellipse
-  if(concentration_ellipse) p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x, y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 100)
+  if(concentration_ellipse) p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x, y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed",
+                                                  segments = 500, fill = "transparent")
 
   # Quali ellipses
-  p <- p + stat_ellipse(data = coord_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
-                        alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid")
+  ellipse_axes <- NULL
+  for( i in seq_along(coord_mean_mass_var_quali %>% .$time) )
+  {
+    p_calc <- ggplot() + stat_ellipse(data = coord_var_quali %>% filter(var_quali == coord_mean_mass_var_quali$var_quali[i] & time == coord_mean_mass_var_quali$time[i]), aes_string(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}")), segments = 500, type = "norm", level = 0.86)
+
+    # Get ellipse coords from plot
+    pb = ggplot_build(p_calc)
+    el = pb$data[[1]][c("x","y")]
+
+    # Calculate centre of ellipse
+    ctr = coord_mean_mass_var_quali %>% ungroup %>% filter(var_quali == coord_mean_mass_var_quali$var_quali[i] & time == coord_mean_mass_var_quali$time[i]) %>%
+      select(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}")) %>% as.matrix %>% as.vector
+
+    # Calculate distance to centre from each ellipse pts
+    dist2center <- sqrt(rowSums(t(t(el)-ctr)^2))
+
+    # Identify axes points
+    df <- bind_cols(el, dist2center = dist2center, var_quali = rep(coord_mean_mass_var_quali$var_quali[i], length(dist2center)), time = rep(coord_mean_mass_var_quali$time[i], length(dist2center))) %>% arrange(dist2center) %>% slice(c(1, 2, n()-1, n())) %>% mutate(dist2center = round(dist2center, 2))
+
+    # Store results
+    ellipse_axes <- bind_rows(ellipse_axes, df) %>% mutate(group = paste(dist2center, var_quali))
+
+  }
+
+  # if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
+
+  p <- p + stat_ellipse(data = coord_var_quali, aes_string(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}"), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
+                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid")
+
+  p <- p + geom_path(data = ellipse_axes, aes(x, y, group = group, colour = time), linetype = "dashed", inherit.aes = FALSE)
 
   if(ind_points) p <- p + geom_point(data = coord_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)
 
@@ -77,9 +107,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
     geom_path(data = coord_mean_mass_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), size = 1,
               arrow = arrow(length = unit(0.2, "cm"), type = "closed")) +
     facet_wrap(~var_quali) +
-    ggtitle(title) +
-    xlab(paste0("Achse ", axes[1], "(", round(res_gda$eig$`percentage of variance`[axes[1]], 1), "%)")) +
-    ylab(paste0("Achse ", axes[2], "(", round(res_gda$eig$`percentage of variance`[axes[2]], 1), "%)"))
+    ggtitle(title)
 
   # Theme adaptieren
   p <- add_theme(p)

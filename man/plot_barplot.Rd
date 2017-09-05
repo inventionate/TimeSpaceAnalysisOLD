@@ -39,6 +39,8 @@ plot_barplot(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 \item{ylim}{y-axis range.}
 
 \item{xlim}{y-axis range.}
+
+\item{myriad}{use Myriad Pro font.}
 }
 \value{
 ggplot2 barplot.

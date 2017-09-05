@@ -1,7 +1,7 @@
 Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time-space analysis
-Version: 1.1.0
+Version: 1.1.1
 Date: 2017-08-31
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
@@ -43,7 +43,7 @@ BugReports: https://github.com/inventionate/TimeSpaceAnalysis/issues
 URL: https://github.com/inventionate/TimeSpaceAnalysis
 RoxygenNote: 6.0.1
 LazyData: TRUE
-Collate:
+Collate: 
     'get-path-coord.R'
     'add-path.R'
     'add-theme.R'

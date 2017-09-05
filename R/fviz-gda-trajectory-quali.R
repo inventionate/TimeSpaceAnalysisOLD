@@ -60,7 +60,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   coord_ind_timeseries <-  coord_var_quali %>% filter(id %in% selected_ind$id)
 
   # Plot der Daten
-  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), pointsize = -1, axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- .create_plot()
   else stop("Only MCA plots are currently supported!")
 
   p <- p + scale_colour_brewer(palette = "YlGnBu", direction = -1) +

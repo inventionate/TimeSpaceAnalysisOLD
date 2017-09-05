@@ -13,12 +13,14 @@ NULL
 #' @param concentration_ellipse show or hide overall concentration ellipse (boolean).
 #' @param complete plot only complete cases (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param alpha ellipse fill alpha.
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad = TRUE, axes = 1:2,
                                      ind_points = TRUE, concentration_ellipse = TRUE, complete = TRUE,
-                                     title = "Trajectory plot to compare samples", plot_modif_rates = TRUE) {
+                                     title = "Trajectory plot to compare samples", plot_modif_rates = TRUE,
+                                     alpha = 0.15) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -51,13 +53,13 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
     group_by_(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), "time") %>% mutate(mass = n()) %>% ungroup()
 
   # Plot der Daten
-  if(inherits(res_gda, c("MCA"))) p <- factoextra::fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), pointsize = -1, axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- .create_plot()
   else stop("Only MCA plots are currently supported!")
 
   # Concentartion ellipse
   if(concentration_ellipse) {
 
-    p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x, y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 100)
+    p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x, y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", fill = "transparent", segments = 500)
 
     if(ind_points) p <- p + geom_point(data = .count_distinct_ind(res_gda), aes(x, y, size = count), colour = "black", alpha = 0.1, show.legend = FALSE)
 
@@ -88,11 +90,9 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
     ellipse_axes <- bind_rows(ellipse_axes, df)
   }
 
-
-
   # Plot Ellipse
   p <- p + stat_ellipse(data = coord_all, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
-                        alpha = 0.15, segments = 100, level = 0.8647, linetype = "solid") +
+                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid") +
     geom_path(data = ellipse_axes, aes(x = x, y = y, group = dist2center, colour = time), linetype = "dashed")
 
   if(ind_points) p <- p + geom_point(data = coord_all, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)

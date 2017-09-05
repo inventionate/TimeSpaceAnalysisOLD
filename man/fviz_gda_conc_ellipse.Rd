@@ -5,9 +5,9 @@
 \title{Title}
 \usage{
 fviz_gda_conc_ellipse(res_gda, level = 0.8647, alpha = 0.1,
-  colour = "black", linetype = "dashed", density = FALSE, axes = 1:2,
-  myriad = TRUE, scale_size = 1, title = "GDA individuals plot",
-  plot_modif_rates = TRUE)
+  colour = "black", linetype = "dashed", density = FALSE, fill = "gray",
+  axes = 1:2, myriad = TRUE, scale_size = 1,
+  title = "GDA individuals plot", plot_modif_rates = TRUE)
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -16,11 +16,13 @@ fviz_gda_conc_ellipse(res_gda, level = 0.8647, alpha = 0.1,
 
 \item{alpha}{opacity level (default 0.1).}
 
-\item{colour}{ellipse fill colour.}
+\item{colour}{ellipse border colour.}
 
 \item{linetype}{ellipse edge linetype.}
 
 \item{density}{show density contours (boolean).}
+
+\item{fill}{ellipse fill colour.}
 
 \item{axes}{the GDA dimensions to plot.}
 

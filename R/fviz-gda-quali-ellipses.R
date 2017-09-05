@@ -23,6 +23,7 @@ NULL
 #' @param individuals show individual points (boolean).
 #' @param impute_ncp number of dimensions to predict missing values.
 #' @param relevel character vector containing new level order.
+#' @param alpha_ellipses concentration ellipses fill alpha.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -30,7 +31,8 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     facet = TRUE, alpha_point = 0.75, conc_linetype = "solid", conf_linetype = "solid",
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
-                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2, relevel = NULL) {
+                                    plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2, relevel = NULL,
+                                    alpha_ellipses = 0.15) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -102,11 +104,12 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)
 
   # Plot
-  if(inherits(res_gda, c("MCA"))) p <- fviz_mca_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), axes.linetype = "solid", axes = axes)
-  if(inherits(res_gda, c("MFA"))) p <- fviz_mfa_ind(res_gda, label = "none", invisible = c("ind", "ind.sup"), axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- .create_plot()
+  else stop("Only MCA plots are currently supported!")
 
   # ALlgemeine Konzentrationsellipse hinzufügen (level = 86,47% nach Le Roux/Rouanet 2010: 69, da es sich um eine 2-dimesnionale Konzentrationsellipse handelt)
-  p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed", segments = 500)
+  p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed",
+                        segments = 500, fill = "transparent")
 
   # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
   if(individuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
@@ -143,7 +146,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
     if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
-    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = 0.15, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
+    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = alpha_ellipses, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
      geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, colour = var_quali), linetype = "dashed", inherit.aes = FALSE)
 
   }

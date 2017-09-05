@@ -17,6 +17,7 @@ NULL
 #' @param ylim y-axis range.
 #' @param xlim y-axis range.
 #' @param include_na show NAs or not (boolean).
+#' @param myriad use Myriad Pro font.
 #'
 #' @return ggplot2 barplot.
 #' @export
@@ -41,17 +42,17 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 
   p <- ggplot(data_freq, aes(var, absolute))+
     geom_bar(stat="identity") +
-    geom_hline(yintercept = 0, colour = "gray10") +
-    geom_vline(xintercept = 0, colour = "gray10") +
-    theme_minimal() +
     xlab(xlab) +
     ylab(ylab) +
     ylim(0, n) +
-    theme(plot.title = element_text(face = "bold",vjust = 1.5,size = titlesize),
-          text = element_text(size = textsize, family = "Myriad Pro"),
-          axis.title.x = element_text(vjust = -0.5),
-          panel.grid.major = element_line(size = 0.5, color = "gray80", linetype = "dashed")) +
     ggtitle(title)
+
+  p <- add_theme(p) + coord_cartesian() +
+    theme(
+      panel.border = element_blank(),
+      axis.text = element_text(size = 12),
+      axis.line = element_line(colour = "gray70", size = 0.75)
+    )
 
   if(!is.na(xlim[1])) p <- p + xlim(xlim)
   if(!is.na(ylim[1])) p <- p + ylim(ylim)

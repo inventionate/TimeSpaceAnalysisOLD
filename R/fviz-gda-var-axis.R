@@ -36,7 +36,7 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
 
   # Check GDA algorithm
   if(inherits(res_gda, c("MCA"))) df <- res_gda$var$contrib
-  if(inherits(res_gda, c("MFA"))) df <- res_gda$quali.var$contrib
+  else stop("Only MCA plots are currently supported!")
 
   # Auswahl festlegen
   modalities <- df %>% data.frame %>% select(ctr = matches(paste0("^Dim.", axis, "$"))) %>% tibble::rownames_to_column() %>%
@@ -67,7 +67,9 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
         filter(rowname %in% modalities$rowname)
 
       # Plot
-      p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes,  pointsize = 0)
+      p <- fviz_mca_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "blank", axes = axes,  pointsize = 0) +
+        geom_hline(yintercept = 0, colour = "gray70", linetype = "solid") + geom_vline(xintercept = 0, colour = "gray70", linetype = "solid")
+
       if(individuals) {
         if(individuals_size == "auto") {
           p <- p + geom_point(data = .count_distinct_ind(res_gda, axes, modalities_coord$weight) %>% distinct(), aes(x, y, size = count), inherit.aes = FALSE, alpha = individuals_alpha)
@@ -91,38 +93,11 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
 
     } else {
       # Plot group specific modalities
-      p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
+      p <- fviz_mca_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "blank", axes = axes) +
+        geom_hline(yintercept = 0, colour = "gray70", linetype = "solid") + geom_vline(xintercept = 0, colour = "gray70", linetype = "solid")
     }
   }
-  if(inherits(res_gda, c("MFA"))) {
-    group_names <- res_gda$call$name.group
 
-    if(!is.null(group_style)) {
-      # Identify groups and modality coordinates.
-      group_id <- get_mfa_mod_group_id(res_gda)
-      modalities_coord <- res_gda$quali.var$coord %>% data.frame %>% tibble::rownames_to_column() %>% filter(rowname %in% modalities$rowname)
-      # Add group ids
-      modalities_coord <- left_join(modalities_coord, group_id, by = c("rowname" = "mod")) %>% data.frame
-
-      # Plot group specific modalities
-      p <- fviz_mfa_quali_var(res_gda, label = "none", select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes, pointsize = 0)
-      if(group_style == "both") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", shape = "group_id", size = "weight"))
-      if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group_id", size = "weight"), shape = 17)
-      if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group_id", size = "weight"), colour = "black")
-      if(group_style %in% c("colour", "both")) {
-        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]),
-                                                                              colour = "group_id", label = factor(modalities_coord$rowname)),
-                                          size = textsize, show.legend = FALSE)
-      }
-      if(group_style == "shape") {
-      p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = factor(modalities_coord$rowname)),
-                                        size = textsize, show.legend = FALSE)
-      }
-    }
-    else {
-      p <- fviz_mfa_quali_var(res_gda, col.var = "black", repel = TRUE, select.var = list(name = modalities$rowname), axes.linetype = "solid", axes = axes)
-    }
-  }
   p <- add_theme(p) + ggtitle(title)
 
   # Legende für Größen ausblenden

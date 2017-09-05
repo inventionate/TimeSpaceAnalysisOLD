@@ -1,3 +1,10 @@
+# Create plot
+.create_plot <- function() {
+
+   ggplot() + geom_hline(yintercept = 0, colour = "gray70", linetype = "solid") + geom_vline(xintercept = 0, colour = "gray70", linetype = "solid")
+
+}
+
 # Eine Sammlung hilfreicher Funktionen
 .count_distinct_ind <- function(res_gda, axes = 1:2, normalize = NULL) {
   # Koordinaten der Individuen vorbereiten

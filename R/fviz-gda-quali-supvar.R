@@ -55,8 +55,8 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   supvar <- supvar %>% slice(match(order_levels, rowname))
 
   # Plot
-  if(inherits(res_gda, c("MCA"))) p <- fviz_mca_var(res_gda, label = "none", invisible = "var", axes.linetype = "solid", axes = axes)
-  if(inherits(res_gda, c("MFA"))) p <- fviz_mfa_quali_var(res_gda, label = "none", invisible = "var", axes.linetype = "solid", axes = axes)
+  if(inherits(res_gda, c("MCA"))) p <- .create_plot()
+  else stop("Only MCA plots are currently supported!")
 
   # Skalierungsgrenzen festlegen
   p <- p + scale_size_continuous(range = c(1, 7))
