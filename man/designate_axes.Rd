@@ -5,7 +5,8 @@
 \title{Designate axes parts.}
 \usage{
 designate_axes(x = NULL, y = NULL, designation = c("left/bottom",
-  "right/top"), rotate = FALSE, size = 5)
+  "right/top"), rotate = FALSE, size = 5, fontface = "bold.italic",
+  alpha = 1)
 }
 \arguments{
 \item{x}{coordinate of the axes designation. The value will automatically mirrored.}
@@ -17,6 +18,10 @@ designate_axes(x = NULL, y = NULL, designation = c("left/bottom",
 \item{rotate}{designate x (FALSE) or y axis (TRUE).}
 
 \item{size}{size of the designation titles.}
+
+\item{fontface}{fontface.}
+
+\item{alpha}{font alpha.}
 }
 \value{
 ggplot2 annotations.
