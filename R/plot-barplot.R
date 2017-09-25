@@ -58,11 +58,11 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
   if(!is.na(ylim[1])) p <- p + ylim(ylim)
 
   if(labels_inline) {
-    p <- p + geom_text(aes(label = absolute, ymax = absolute, family = "Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
+    p <- p + geom_text(aes(label = absolute, family = "Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
     geom_text(aes(label = paste("(", relative, "%)",sep = ""), ymax = absolute, family = "Myriad Pro"), vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
   } else {
-    p <- p + geom_text(aes(label = absolute, ymax = absolute, family = "Myriad Pro"), vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
-    geom_text(aes(label = paste("(", relative, "%)",sep = ""), ymax = absolute, family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
+    p <- p + geom_text(aes(label = absolute, family = "Myriad Pro"), vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
+    geom_text(aes(label = paste("(", relative, "%)",sep = ""), family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
   }
 
   if(rotate_x_axis_text) p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
