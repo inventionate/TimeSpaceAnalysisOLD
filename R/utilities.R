@@ -48,8 +48,8 @@
 
 # Add Myriad Pro font
 .add_fonts <- function () {
-  showtext::showtext.auto()
-  sysfonts::font.add("Myriad Pro", regular = "MyriadPro-Regular.otf", bold = "MyriadPro-Bold.otf", italic = "MyriadPro-It.otf", bolditalic = "MyriadPro-BoldIt.otf")
+  showtext::showtext_auto()
+  sysfonts::font_add("Myriad Pro", regular = "MyriadPro-Regular.otf", bold = "MyriadPro-Bold.otf", italic = "MyriadPro-It.otf", bolditalic = "MyriadPro-BoldIt.otf")
 }
 
 # Calculate crossed within variance
