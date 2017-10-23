@@ -79,11 +79,11 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
     if( abs_freq ) {
 
       p <- p + geom_text(aes(label = absolute), family = "Myriad Pro", vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
-        geom_text(aes(label = glue("({relative}{symbol})"), ymax = absolute), family = "Myriad Pro", vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
+        geom_text(aes(label = glue("({relative}{symbol})")), family = "Myriad Pro", vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
 
     } else {
 
-      p <- p + geom_text(aes(label = glue("{relative}{symbol}"), ymax = absolute), family = "Myriad Pro", vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
+      p <- p + geom_text(aes(label = glue("{relative}{symbol}")), family = "Myriad Pro", vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
         geom_text(aes(label = glue("({absolute})")), family = "Myriad Pro", vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
 
     }
@@ -106,7 +106,7 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 
   if(rotate_x_axis_text) p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-  if(amount) p <- p + xlab(bquote(paste(.(xlab)," (n = ",.(n),")"))) + theme(axis.title.x = element_text(vjust = -0.3))
+  if(amount) p <- p + xlab(glue("{xlab} (n = {nrow(data.frame(dfname))})")) + theme(axis.title.x = element_text(vjust = -0.3))
 
   return(p)
 }
