@@ -18,16 +18,17 @@ NULL
 #' @param xlim y-axis range.
 #' @param include_na show NAs or not (boolean).
 #' @param myriad use Myriad Pro font.
+#' @param abs_freq use absolute or relative freq (boolean).
+#' @param symbol relative freq symbol.
 #'
 #' @return ggplot2 barplot.
 #' @export
 plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE, labels_inline = FALSE, amount = FALSE, rotate_x_axis_text = FALSE,
-                         textsize = 20, titlesize = 25, labelsize = 8, include_na = TRUE, digits = 0, ylim = NA, xlim = NA, myriad = TRUE){
+                         textsize = 20, titlesize = 25, labelsize = 8, include_na = TRUE, digits = 0, ylim = NA, xlim = NA, myriad = TRUE,
+                         abs_freq = TRUE, symbol = "%"){
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
-
-  n <- nrow(data.frame(na.omit(dfname)))
 
   if(include_na) absolute_freq <- table(dfname, useNA = "always")
   else absolute_freq <- table(dfname)
@@ -40,7 +41,22 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
 
   colnames(data_freq) <- c("var", "absolute", "relative")
 
-  p <- ggplot(data_freq, aes(var, absolute))+
+  # Choose absolute or relative.
+  if ( abs_freq ) {
+
+    freq <-  "absolute"
+
+    n <- nrow(data.frame(na.omit(dfname)))
+
+  } else {
+
+    freq <-  "relative"
+
+    n <- 100
+
+  }
+
+  p <- ggplot(data_freq, aes_string("var", freq)) +
     geom_bar(stat="identity") +
     xlab(xlab) +
     ylab(ylab) +
@@ -55,14 +71,37 @@ plot_barplot <- function(dfname, xlab = "", ylab = "", title = "", sort = FALSE,
     )
 
   if(!is.na(xlim[1])) p <- p + xlim(xlim)
+
   if(!is.na(ylim[1])) p <- p + ylim(ylim)
 
   if(labels_inline) {
-    p <- p + geom_text(aes(label = absolute, family = "Myriad Pro"), vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
-    geom_text(aes(label = paste("(", relative, "%)",sep = ""), ymax = absolute, family = "Myriad Pro"), vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
+
+    if( abs_freq ) {
+
+      p <- p + geom_text(aes(label = absolute), family = "Myriad Pro", vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
+        geom_text(aes(label = glue("({relative}{symbol})"), ymax = absolute), family = "Myriad Pro", vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
+
+    } else {
+
+      p <- p + geom_text(aes(label = glue("{relative}{symbol}"), ymax = absolute), family = "Myriad Pro", vjust = 1.5, size = labelsize, colour = "white", position = "stack") +
+        geom_text(aes(label = glue("({absolute})")), family = "Myriad Pro", vjust = 4, size = labelsize/1.5, colour = "white", position = "stack")
+
+    }
+
   } else {
-    p <- p + geom_text(aes(label = absolute, family = "Myriad Pro"), vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
-    geom_text(aes(label = paste("(", relative, "%)",sep = ""), family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
+
+    if( abs_freq ) {
+
+      p <- p + geom_text(aes(label = absolute), family = "Myriad Pro", vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
+        geom_text(aes(label = glue("({relative}{symbol})"), family = "Myriad Pro"), vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
+
+    } else {
+
+      p <- p + geom_text(aes(label = glue("{relative}{symbol}")), family = "Myriad Pro", vjust = -1.5, size = labelsize, colour = "black", position = "stack") +
+        geom_text(aes(label = glue("({absolute})")), family = "Myriad Pro", vjust = -0.5, size = labelsize/1.5, colour = "black", position = "stack")
+
+    }
+
   }
 
   if(rotate_x_axis_text) p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
