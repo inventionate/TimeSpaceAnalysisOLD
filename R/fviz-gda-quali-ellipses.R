@@ -167,5 +167,5 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
   # Plotten
-  return(p)
+  p
 }

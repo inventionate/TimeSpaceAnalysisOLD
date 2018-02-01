@@ -16,13 +16,14 @@ NULL
 #' @param concentration_ellipse plot confidence ellipses (boolean).
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param alpha ellipse fill alpha.
+#' @param select choose time point.
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, impute = TRUE,
                                          time_point_names = NULL, ind_points = TRUE, concentration_ellipse = TRUE,
                                          title = "Trajectory individuals structuring factors ellipse plot",
-                                         plot_modif_rates = TRUE, alpha = 0.15) {
+                                         plot_modif_rates = TRUE, alpha = 0.15, select = NULL) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -95,10 +96,25 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
 
   # if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
-  p <- p + stat_ellipse(data = coord_var_quali, aes_string(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}"), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
-                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid") +
-    geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, ), linetype = "dashed", alpha = 0.5, inherit.aes = FALSE)
+  # Filter data
+  if ( !is.null(select) )
+  {
+    coord_var_quali %<>% filter(var_quali %in% select)
 
+    ellipse_axes %<>% filter(var_quali %in% select)
+
+    coord_mean_mass_var_quali %<>% filter(var_quali %in% select)
+
+    p <- p + stat_ellipse(data = coord_var_quali, aes_string(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}"), colour = "time"), geom ="polygon",  type = "norm",
+                          alpha = alpha, segments = 500, level = 0.8647, linetype = "solid")
+  } else {
+
+    p <- p + stat_ellipse(data = coord_var_quali, aes_string(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}"), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
+                          alpha = alpha, segments = 500, level = 0.8647, linetype = "solid")
+
+  }
+
+  p <- p + geom_path(data = ellipse_axes, aes(x = x, y = y, group = group), linetype = "dashed", alpha = 0.5, inherit.aes = FALSE)
   # aes(colour = time) führt zu einem Fehler.
 
   if(ind_points) p <- p + geom_point(data = coord_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)
@@ -106,16 +122,28 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   p <- p + geom_point(data = coord_mean_mass_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), size = paste0("mass", "* 1.75")), colour = "black", shape = 18, show.legend = FALSE) +
     geom_point(data = coord_mean_mass_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), size = "mass", colour = "time"), shape = 18, show.legend = FALSE) +
     geom_path(data = coord_mean_mass_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), size = 1,
-              arrow = arrow(length = unit(0.2, "cm"), type = "closed")) +
-    facet_wrap(~var_quali) +
-    ggtitle(title)
+              arrow = arrow(length = unit(0.2, "cm"), type = "closed"))
+
+  if ( !is.null(select) )
+  {
+    p <- p + facet_wrap(~var_quali)
+  }
+
+  if ( length(select) == 1 & title == "Trajectory individuals structuring factors ellipse plot")
+  {
+    title <- glue("{title} classification category {select}")
+  }
+
+  p <- p + ggtitle(title)
 
   # Theme adaptieren
   p <- add_theme(p)
 
   # Beschreibung der Punkte
-  p <- p + theme(legend.position = "bottom", legend.title = element_blank())
-
+  if ( length(select) > 1 )
+  {
+    p <- p + theme(legend.position = "bottom", legend.title = element_blank())
+  }
   # Beschriftung anpassen
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
