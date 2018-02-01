@@ -96,9 +96,10 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   # if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
   p <- p + stat_ellipse(data = coord_var_quali, aes_string(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}"), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
-                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid")
+                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid") +
+    geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, ), linetype = "dashed", alpha = 0.5, inherit.aes = FALSE)
 
-  p <- p + geom_path(data = ellipse_axes, aes(x, y, group = group, colour = time), linetype = "dashed", inherit.aes = FALSE)
+  # aes(colour = time) führt zu einem Fehler.
 
   if(ind_points) p <- p + geom_point(data = coord_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)
 
@@ -119,6 +120,6 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
 
   # Plotten
-  return(p)
+  p
 
 }
