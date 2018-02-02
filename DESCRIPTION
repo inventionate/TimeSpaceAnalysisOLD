@@ -1,8 +1,8 @@
 Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time-space analysis
-Version: 1.1.2
-Date: 2018-02-01
+Version: 1.1.3
+Date: 2018-02-02
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
 Encoding: UTF-8
@@ -82,6 +82,7 @@ Collate:
     'get-time-pattern-series.R'
     'get-time-pattern-profile.R'
     'get-time-pattern.R'
+    'modified-rates.R'
     'plot-barplot.R'
     'plot-places-chronology-time-pattern.R'
     'plot-places-chronology.R'
