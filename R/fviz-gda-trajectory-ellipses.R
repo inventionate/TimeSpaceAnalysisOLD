@@ -81,7 +81,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
 
     # Calculate centre of ellipse
     ctr = coord_mean_mass_var_quali %>% ungroup %>% filter(var_quali == coord_mean_mass_var_quali$var_quali[i] & time == coord_mean_mass_var_quali$time[i]) %>%
-      select(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}")) %>% as.matrix %>% as.vector
+      select(glue("Dim.{axes[1]}"), glue("Dim.{axes[2]}")) %>% as.matrix() %>% as.vector()
 
     # Calculate distance to centre from each ellipse pts
     dist2center <- sqrt(rowSums(t(t(el)-ctr)^2))
@@ -93,6 +93,16 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
     ellipse_axes <- bind_rows(ellipse_axes, df) %>% mutate(group = paste(dist2center, var_quali))
 
   }
+
+  odd_indexes <- seq(1,nrow(ellipse_axes), 2)
+
+  even_indexes <- seq(2,nrow(ellipse_axes), 2)
+
+  start_points <- ellipse_axes %>% slice(odd_indexes)
+
+  end_points <- ellipse_axes %>% slice(even_indexes) %>% select(xend = x, yend = y, group)
+
+  ellipse_axes <- full_join(start_points, end_points, by = "group")
 
   # if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
@@ -114,8 +124,8 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
 
   }
 
-  p <- p + geom_path(data = ellipse_axes, aes(x = x, y = y, group = group), linetype = "dashed", alpha = 0.5, inherit.aes = FALSE)
-  # aes(colour = time) führt zu einem Fehler.
+  p <- p + geom_segment(data = ellipse_axes, aes(x = x, xend = xend, y = y, yend = yend, group = group, colour = time), linetype = "dashed", inherit.aes = FALSE)
+
 
   if(ind_points) p <- p + geom_point(data = coord_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)
 
