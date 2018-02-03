@@ -180,7 +180,7 @@
 
   if( plot_modif_rates ) {
 
-    modif_rates <- GDAtools::modif.rate(res_gda)
+    modif_rates <- modified_rates(res_gda)
 
     rate_1 <- modif_rates[axes[1], 1]
 
