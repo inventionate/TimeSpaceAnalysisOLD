@@ -134,7 +134,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
     geom_path(data = coord_mean_mass_var_quali, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), size = 1,
               arrow = arrow(length = unit(0.2, "cm"), type = "closed"))
 
-  if ( !is.null(select) )
+  if ( is.null(select) )
   {
     p <- p + facet_wrap(~var_quali)
   }
