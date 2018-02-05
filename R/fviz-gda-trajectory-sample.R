@@ -90,10 +90,21 @@ fviz_gda_trajectory_sample <- function(res_gda, time_point_names = NULL, myriad 
     ellipse_axes <- bind_rows(ellipse_axes, df)
   }
 
+  odd_indexes <- seq(1,nrow(ellipse_axes), 2)
+
+  even_indexes <- seq(2,nrow(ellipse_axes), 2)
+
+  start_points <- ellipse_axes %>% slice(odd_indexes)
+
+  end_points <- ellipse_axes %>% slice(even_indexes) %>% select(xend = x, yend = y, dist2center)
+
+  ellipse_axes <- full_join(start_points, end_points, by = "dist2center")
+
   # Plot Ellipse
   p <- p + stat_ellipse(data = coord_all, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), fill = "time", colour = "time"), geom ="polygon",  type = "norm",
-                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid") +
-    geom_path(data = ellipse_axes, aes(x = x, y = y, group = dist2center, colour = time), linetype = "dashed")
+                        alpha = alpha, segments = 500, level = 0.8647, linetype = "solid")
+
+  p <- p + geom_segment(data = ellipse_axes, aes(x = x, xend = xend, y = y, yend = yend, group = dist2center, colour = time), linetype = "dashed", inherit.aes = FALSE)
 
   if(ind_points) p <- p + geom_point(data = coord_all, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time", size = "mass"), show.legend = FALSE)
 
