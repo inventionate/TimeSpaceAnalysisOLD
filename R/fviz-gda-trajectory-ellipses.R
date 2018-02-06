@@ -150,7 +150,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   p <- add_theme(p)
 
   # Beschreibung der Punkte
-  if ( length(select) > 1 )
+  if ( length(select) > 1 | is.null(select) )
   {
     p <- p + theme(legend.position = "bottom", legend.title = element_blank())
   }
