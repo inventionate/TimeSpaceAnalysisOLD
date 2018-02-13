@@ -17,13 +17,14 @@ NULL
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param alpha ellipse fill alpha.
 #' @param select choose time point.
+#' @param axis_lab_name name of axis label.
 #'
 #' @return ggplot2 visualization.
 #' @export
 fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes = 1:2, myriad = TRUE, impute = TRUE,
                                          time_point_names = NULL, ind_points = TRUE, concentration_ellipse = TRUE,
                                          title = "Trajectory individuals structuring factors ellipse plot",
-                                         plot_modif_rates = TRUE, alpha = 0.15, select = NULL) {
+                                         plot_modif_rates = TRUE, alpha = 0.15, select = NULL, axis_lab_name = "Achse") {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -155,7 +156,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
     p <- p + theme(legend.position = "bottom", legend.title = element_blank())
   }
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, axis_lab_name = axis_lab_name)
 
   # Plotten
   p

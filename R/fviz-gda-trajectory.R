@@ -13,12 +13,13 @@ NULL
 #' @param labels plot labels (boolean).
 #' @param time_point_names vector containing the name of the time points.
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
+#' @param axis_lab_name name of axis label.
 #'
 #' @return trajectory ggplot2 visualization.
 #' @export
 fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inertia = NULL, case = NULL),
                                 title = "Trajectory individuals plot", axes = 1:2, labels = FALSE,
-                                myriad = TRUE, time_point_names = NULL, plot_modif_rates = TRUE) {
+                                myriad = TRUE, time_point_names = NULL, plot_modif_rates = TRUE, axis_lab_name = "Achse") {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -60,7 +61,7 @@ fviz_gda_trajectory <- function(res_gda, select = list(name = NULL, within_inert
   p <- p + theme(legend.position = "bottom", legend.title = element_blank())
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, axis_lab_name = axis_lab_name)
 
   # Plotten
   return(p)

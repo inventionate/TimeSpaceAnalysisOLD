@@ -25,6 +25,7 @@ NULL
 #' @param relevel character vector containing new level order.
 #' @param alpha_ellipses concentration ellipses fill alpha.
 #' @param plot_eta2 plot eta2 value per axis (boolean).
+#' @param axis_lab_name name of axis label.
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -33,7 +34,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
                                     plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2, relevel = NULL,
-                                    alpha_ellipses = 0.15, plot_eta2 = TRUE) {
+                                    alpha_ellipses = 0.15, plot_eta2 = TRUE, axis_lab_name = "Achse") {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -180,7 +181,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, supvar_eta2)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, supvar_eta2, axis_lab_name = axis_lab_name)
 
   # Plotten
   p

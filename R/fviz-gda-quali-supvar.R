@@ -21,13 +21,15 @@ NULL
 #' @param impute_ncp number of dimensions to predict missing values.
 #' @param relevel character vector containing new level order.
 #' @param plot_eta2 plot eta2 value per axis (boolean).
+#' @param axis_lab_name name of axis label.
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
                                scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-                               plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL, plot_eta2 = TRUE) {
+                               plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL, plot_eta2 = TRUE,
+                               axis_lab_name = "Achse") {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -89,7 +91,7 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, supvar_eta2)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, supvar_eta2, axis_lab_name = axis_lab_name)
 
   # Plotten
   return(p)

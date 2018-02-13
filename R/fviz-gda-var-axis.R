@@ -20,13 +20,15 @@ NULL
 #' @param individuals_size set individual point size manual or "auto".
 #' @param individuals_alpha set alpha value.
 #' @param individuals_names plot individual names (boolean).
+#' @param axis_lab_name name of axis label.
+#' @param group_lab_name name of variable groups.
 #'
 #' @return ggplot2 visualization containing selected modalities.
 #' @export
 fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA axis high contribution modalities", axes = 1:2,
                               group = NULL, group_names = NULL, group_style = "both", textsize = 4, colour_palette = "Set1",
                               individuals = FALSE, individuals_size = "auto", individuals_alpha = 0.5, individuals_names = FALSE,
-                              myriad = TRUE, plot_modif_rates = TRUE) {
+                              myriad = TRUE, plot_modif_rates = TRUE, axis_lab_name = "Achse", group_lab_name = "Themengruppen") {
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
@@ -104,13 +106,13 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
   p <- p + scale_size(guide = FALSE)
 
   if(!is.null(group_style) & !is.null(group)) {
-    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = "Themengruppen", palette = colour_palette, labels = modalities_coord %>% select(group) %>% distinct, type = "qualitative")
-    if(group_style %in% c("shape", "both")) p <- p + scale_shape(name = "Themengruppen", labels = modalities_coord %>% select(group) %>% distinct, solid = TRUE)
+    if(group_style %in% c("colour", "both")) p <- p + scale_colour_brewer(name = glue("{group_lab_name}"), palette = colour_palette, labels = modalities_coord %>% select(group) %>% distinct, type = "qualitative")
+    if(group_style %in% c("shape", "both")) p <- p + scale_shape(name =glue("{group_lab_name}"), labels = modalities_coord %>% select(group) %>% distinct, solid = TRUE)
     p <- p + theme(legend.position = "bottom")
   }
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, axis_lab_name = axis_lab_name)
 
   # Plotten
   return(p)

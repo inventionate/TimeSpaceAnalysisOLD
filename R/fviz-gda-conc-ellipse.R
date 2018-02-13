@@ -14,11 +14,13 @@ NULL
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param density show density contours (boolean).
 #' @param fill ellipse fill colour.
+#' @param axis_lab_name name of axis label.
 #'
 #' @return ggplot2 GDA visualisation with concentration ellipse.
 #' @export
 fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour = "black", linetype = "dashed", density = FALSE, fill = "gray",
-                                  axes = 1:2, myriad = TRUE, scale_size = 1, title = "GDA individuals plot", plot_modif_rates = TRUE) {
+                                  axes = 1:2, myriad = TRUE, scale_size = 1, title = "GDA individuals plot", plot_modif_rates = TRUE,
+                                  axis_lab_name = "Achse") {
 
   # Add Myriad Pro font family
   if( myriad ) .add_fonts()
@@ -40,7 +42,7 @@ fviz_gda_conc_ellipse <- function(res_gda, level = 0.8647, alpha = 0.1, colour =
   if( density ) p <- p + geom_density_2d(data = res_gda$ind$coord %>% as_data_frame, inherit.aes = FALSE, aes(`Dim 1`, `Dim 2`), colour = "gray")
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, axis_lab_name = axis_lab_name)
 
   # Plotten
   return(p)
