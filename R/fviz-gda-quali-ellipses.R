@@ -24,6 +24,7 @@ NULL
 #' @param impute_ncp number of dimensions to predict missing values.
 #' @param relevel character vector containing new level order.
 #' @param alpha_ellipses concentration ellipses fill alpha.
+#' @param plot_eta2 plot eta2 value per axis (boolean).
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -32,7 +33,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
                                     plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2, relevel = NULL,
-                                    alpha_ellipses = 0.15) {
+                                    alpha_ellipses = 0.15, plot_eta2 = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -45,6 +46,21 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   # Reihenfolge der Levels festlegen
   if( !is.null(relevel) ) {
     var_levels <- relevel
+  }
+
+  #eta2 extrahieren
+  if ( plot_eta2 ) {
+
+    # Berechnungen der passiven Variable durchführen
+    supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute, impute_ncp)
+
+    supvar_eta2 <- bind_cols(rowname = rownames(supvar_stats$var), supvar_stats$var) %>%
+      filter(rowname == "eta2") %>% select(-rowname) %>% mutate_all(funs(round(., 3)))
+
+  } else {
+
+    supvar_eta2 <- NULL
+
   }
 
   # Auf Fehlende Werte prüfen.
@@ -164,7 +180,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, supvar_eta2)
 
   # Plotten
   p
