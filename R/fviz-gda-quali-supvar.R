@@ -20,25 +20,35 @@ NULL
 #' @param plot_modif_rates plot modified rates instead of eigenvalue percentage (boolean).
 #' @param impute_ncp number of dimensions to predict missing values.
 #' @param relevel character vector containing new level order.
+#' @param plot_eta2 plot eta2 value per axis (boolean).
 #'
 #' @return ggplot2 visualization of supplementary variables.
 #' @export
 fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA quali var structure",
                                path = FALSE, linetype = "solid", axes = 1:2, scale_point = TRUE, size_point = 3,
                                scale_text = FALSE, size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-                               plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL) {
+                               plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL, plot_eta2 = TRUE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
 
-  var <- df_var_quali %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
+  var <- df_var_quali %>% select(!! var_quali) %>% data.frame %>% mutate_all(funs(as.character))
 
   # Berechnungen der passiven Variable durchführen
   supvar_stats <- supvar_stats(res_gda, df_var_quali, var_quali, impute, impute_ncp)
 
   # Achsen auswählen
-  supvar <- data.frame(weight = supvar_stats$weight, coord = supvar_stats$coord) %>%
-    tibble::rownames_to_column() %>% select(rowname, weight, matches(paste0("Dim.",axes[1], "$|Dim.", axes[2], "$")))
+  supvar <- bind_cols(rowname = rownames(supvar_stats$coord), weight = supvar_stats$weight, supvar_stats$coord) %>%
+    select(rowname, weight, matches(glue("Dim.{axes[1]}$|Dim.{axes[2]}$")))
+
+  #eta2 extrahieren
+  if ( plot_eta2 ) {
+    supvar_eta2 <- bind_cols(rowname = rownames(supvar_stats$var), supvar_stats$var) %>%
+      filter(rowname == "eta2") %>% select(-rowname) %>% mutate_all(funs(round(., 3)))
+  } else {
+    supvar_eta2 <- NULL
+  }
+
 
   # Spaltennamen anpassen
   colnames(supvar) <- c("rowname", "weight", "Dim.1", "Dim.2")
@@ -79,7 +89,7 @@ fviz_gda_quali_supvar <- function(res_gda, df_var_quali, var_quali, title = "MCA
   p <- add_theme(p) + ggtitle(title)
 
   # Beschriftung anpassen
-  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates)
+  p <- .gda_plot_labels(res_gda, p, title, axes, plot_modif_rates, supvar_eta2)
 
   # Plotten
   return(p)

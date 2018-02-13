@@ -176,9 +176,9 @@
   return(df_group_names)
 }
 # Beschriftung eines Plots anpassen
-.gda_plot_labels <- function(res_gda, ggplot_gda, title, axes, plot_modif_rates = TRUE) {
+.gda_plot_labels <- function(res_gda, ggplot_gda, title, axes, plot_modif_rates = TRUE, eta2 = NULL) {
 
-  if( plot_modif_rates ) {
+  if ( plot_modif_rates ) {
 
     modif_rates <- modified_rates(res_gda)
 
@@ -196,9 +196,19 @@
 
   }
 
-  xlab = glue("Achse {axes[1]} ({rate_1}%)")
+  if ( !is.null(eta2) ) {
 
-  ylab = glue("Achse {axes[2]} ({rate_2}%)")
+    xlab = glue("Achse {axes[1]} ({rate_1}%) – η² = {eta2[axes[1]]}")
+
+    ylab = glue("Achse {axes[2]} ({rate_2}% – η² = {eta2[axes[2]]})")
+
+  } else {
+
+    xlab = glue("Achse {axes[1]} ({rate_1}%)")
+
+    ylab = glue("Achse {axes[2]} ({rate_2}%)")
+
+  }
 
   p <- ggplot_gda + labs(title = title, x = xlab, y = ylab)
 }

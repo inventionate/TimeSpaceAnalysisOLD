@@ -17,7 +17,7 @@
 supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, impute_ncp = 2) {
 
   # Datensatz auslesen
-  var <- var_quali_df %>% select_(var_quali) %>% data.frame %>% mutate_all(funs(as.character))
+  var <- var_quali_df %>% select(!! var_quali) %>% mutate_all(funs(as.character(.)))
 
   # Check, ob es fehlende Werte gibt und ggf. imputieren
   if( length(which(is.na(var))) != 0 & impute ) {
