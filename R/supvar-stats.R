@@ -32,7 +32,7 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, impute
 
     if(inherits(res_gda, c("MCA"))) {
 
-      var_impute <- missMDA::imputeMCA(data.frame(X, var), ncp = impute_ncp)
+      var_impute <- missMDA::imputeMCA(data.frame(X, var$var), ncp = impute_ncp)
 
     }
 
@@ -40,21 +40,23 @@ supvar_stats <- function(res_gda, var_quali_df, var_quali, impute = TRUE, impute
 
       warning("MFA input. Variances, cos2 and v.test aren't calculated!")
 
-      var_impute <- missMDA::imputeMFA(data.frame(X, var),
+      var_impute <- missMDA::imputeMFA(data.frame(X, var$var),
                        c(res_gda$call$group, 1),
                        res_gda$call$ncp,
                        c(res_gda$call$type, "n"))
 
     }
-
-    var <- var_impute$completeObs[var_quali]
+    # Spalte in Vektor umwandeln
+    var <- var_impute$completeObs$var
   } else {
+
+    # Spalte in Vektor umwandeln
+    var %<>% magrittr::extract2("var")
+
     # Fehlende Werte durch Kategorie ersetzen (falls nicht imputiert wurde).
     var[is.na(var)] <- "Fehlender Wert"
   }
 
-  # Spalte in Vektor umwandeln
-  var %<>% magrittr::extract2("var")
   # Adaptiert von GDAtools.
   row_weight <- res_gda$call$row.w
   if(inherits(res_gda, c("MFA"))) row_weight <- res_gda$call$row.w.init
