@@ -8,7 +8,8 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali,
   title = "MCA quali var structure", path = FALSE, linetype = "solid",
   axes = 1:2, scale_point = TRUE, size_point = 3, scale_text = FALSE,
   size_text = 3, palette = "Set1", myriad = TRUE, impute = TRUE,
-  plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL)
+  plot_modif_rates = TRUE, impute_ncp = 2, relevel = NULL,
+  plot_eta2 = TRUE, axis_lab_name = "Achse")
 }
 \arguments{
 \item{res_gda}{GDA result.}
@@ -44,6 +45,10 @@ fviz_gda_quali_supvar(res_gda, df_var_quali, var_quali,
 \item{impute_ncp}{number of dimensions to predict missing values.}
 
 \item{relevel}{character vector containing new level order.}
+
+\item{plot_eta2}{plot eta2 value per axis (boolean).}
+
+\item{axis_lab_name}{name of axis label.}
 }
 \value{
 ggplot2 visualization of supplementary variables.

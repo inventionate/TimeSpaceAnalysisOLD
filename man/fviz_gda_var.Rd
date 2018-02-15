@@ -9,7 +9,8 @@ fviz_gda_var(res_gda, contrib = "auto",
   myriad = TRUE, group = NULL, group_names = NULL, group_style = "both",
   textsize = 4, colour_palette = "Set1", individuals = FALSE,
   individuals_size = "auto", individuals_alpha = 0.5,
-  individuals_names = FALSE, plot_modif_rates = TRUE)
+  individuals_names = FALSE, plot_modif_rates = TRUE,
+  axis_lab_name = "Achse", group_lab_name = "Themengruppen")
 }
 \arguments{
 \item{res_gda}{GDA result data frame.}
@@ -41,6 +42,10 @@ fviz_gda_var(res_gda, contrib = "auto",
 \item{individuals_names}{plot individual names (boolean).}
 
 \item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
+
+\item{axis_lab_name}{name of axis label.}
+
+\item{group_lab_name}{name of variable groups.}
 }
 \value{
 ggplot2 visualization containing selected modalities.

@@ -26,6 +26,7 @@ NULL
 #' @param alpha_ellipses concentration ellipses fill alpha.
 #' @param plot_eta2 plot eta2 value per axis (boolean).
 #' @param axis_lab_name name of axis label.
+#' @param show_prop show prop label as mean point (boolean).
 #'
 #' @return ggplo2 visualization with concentration and quali var ellipses.
 #' @export
@@ -34,7 +35,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                                     scale_mean_points = TRUE, axes = 1:2, palette = "Set1", myriad = TRUE, impute = TRUE,
                                     concentration_ellipses = TRUE, confidence_ellipses = FALSE, conf_colour = FALSE,
                                     plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2, relevel = NULL,
-                                    alpha_ellipses = 0.15, plot_eta2 = TRUE, axis_lab_name = "Achse") {
+                                    alpha_ellipses = 0.15, plot_eta2 = TRUE, axis_lab_name = "Achse", show_prop = FALSE) {
 
   # Add Myriad Pro font family
   if(myriad) .add_fonts()
@@ -118,7 +119,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
   coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(mean))
   size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
-  coord_mean_quali <- data.frame(coord_mean_quali, size = size_mean_quali)
+  coord_mean_quali <- bind_cols(coord_mean_quali, size = size_mean_quali) %>% mutate(prop = glue("{var_quali}: {round(size/sum(size) * 100, 1)}%"))
 
   # Plot
   if(inherits(res_gda, c("MCA"))) p <- .create_plot()
@@ -128,13 +129,10 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
   p <- p + stat_ellipse(data = .count_distinct_ind(res_gda), aes(x = x, y = y), geom ="polygon", level = 0.8647, type = "norm", alpha = 0.1, colour = "black", linetype = "dashed",
                         segments = 500, fill = "transparent")
 
-  # Konzentrationsellipsen für die passiven Variablengruppen (i. d. F. "Geschlecht")
+  # Konzentrationsellipsen für die passiven Variablengruppen
   if(individuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
 
   p <- p + scale_size_continuous(range = c(1, 7))
-
-  if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size), colour = "black", shape = 23, inherit.aes = FALSE)
-  else p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali), colour = "black", shape = 23, size = 10, inherit.aes = FALSE)
 
   if(concentration_ellipses) {
 
@@ -173,6 +171,11 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
     if(conf_colour) p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, colour = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
     else p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, group = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
   }
+
+  if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size), colour = "black", shape = 23, inherit.aes = FALSE)
+  else p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali), colour = "black", shape = 23, size = 10, inherit.aes = FALSE)
+
+  if(show_prop) p <- p + geom_label(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size, label = prop), colour = "black", inherit.aes = FALSE)
 
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
 

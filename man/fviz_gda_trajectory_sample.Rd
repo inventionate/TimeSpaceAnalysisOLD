@@ -7,7 +7,7 @@
 fviz_gda_trajectory_sample(res_gda, time_point_names = NULL, myriad = TRUE,
   axes = 1:2, ind_points = TRUE, concentration_ellipse = TRUE,
   complete = TRUE, title = "Trajectory plot to compare samples",
-  plot_modif_rates = TRUE, alpha = 0.15)
+  plot_modif_rates = TRUE, alpha = 0.15, axis_lab_name = "Achse")
 }
 \arguments{
 \item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
@@ -29,6 +29,8 @@ fviz_gda_trajectory_sample(res_gda, time_point_names = NULL, myriad = TRUE,
 \item{plot_modif_rates}{plot modified rates instead of eigenvalue percentage (boolean).}
 
 \item{alpha}{ellipse fill alpha.}
+
+\item{axis_lab_name}{name of axis label.}
 }
 \value{
 ggplot2 visualization.

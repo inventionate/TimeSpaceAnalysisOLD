@@ -11,7 +11,8 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
   impute = TRUE, concentration_ellipses = TRUE,
   confidence_ellipses = FALSE, conf_colour = FALSE,
   plot_modif_rates = TRUE, ncol = 3, individuals = TRUE, impute_ncp = 2,
-  relevel = NULL, alpha_ellipses = 0.15)
+  relevel = NULL, alpha_ellipses = 0.15, plot_eta2 = TRUE,
+  axis_lab_name = "Achse", show_prop = FALSE)
 }
 \arguments{
 \item{res_gda}{GDA (MCA, MFA) result (rownames have to be individual questionnaire IDs).}
@@ -57,6 +58,12 @@ fviz_gda_quali_ellipses(res_gda, df_var_quali, var_quali,
 \item{relevel}{character vector containing new level order.}
 
 \item{alpha_ellipses}{concentration ellipses fill alpha.}
+
+\item{plot_eta2}{plot eta2 value per axis (boolean).}
+
+\item{axis_lab_name}{name of axis label.}
+
+\item{show_prop}{show prop label as mean point (boolean).}
 }
 \value{
 ggplo2 visualization with concentration and quali var ellipses.

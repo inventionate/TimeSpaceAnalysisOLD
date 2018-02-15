@@ -8,7 +8,8 @@ fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
   myriad = TRUE, impute = TRUE, time_point_names = NULL,
   ind_points = TRUE, concentration_ellipse = TRUE,
   title = "Trajectory individuals structuring factors ellipse plot",
-  plot_modif_rates = TRUE, alpha = 0.15, select = NULL)
+  plot_modif_rates = TRUE, alpha = 0.15, select = NULL,
+  axis_lab_name = "Achse")
 }
 \arguments{
 \item{res_gda}{MCA result (rownames have to be questionnaire IDs including time number, e.g. 87654_1).}
@@ -36,6 +37,8 @@ fviz_gda_trajectory_ellipses(res_gda, df_var_quali, var_quali, axes = 1:2,
 \item{alpha}{ellipse fill alpha.}
 
 \item{select}{choose time point.}
+
+\item{axis_lab_name}{name of axis label.}
 }
 \value{
 ggplot2 visualization.
