@@ -115,11 +115,14 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
     group_by(x, y, var_quali) %>%
     mutate(count = n()) %>%
     ungroup() %>%
-    mutate(var_quali = fct_drop(var_quali))
+    mutate(var_quali = fct_drop(var_quali),
+           colour = as.character(as.numeric(var_quali)))
 
-  coord_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(mean))
-  size_mean_quali <- coord_ind_quali %>% group_by(var_quali) %>% summarise_all(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
-  coord_mean_quali <- bind_cols(coord_mean_quali, size = size_mean_quali) %>% mutate(prop = glue("{var_quali}: {round(size/sum(size) * 100, 1)}%"))
+  coord_mean_quali <- coord_ind_quali %>% select(-colour) %>% group_by(var_quali) %>% summarise_all(funs(mean))
+  size_mean_quali <- coord_ind_quali %>% select(-colour) %>% group_by(var_quali) %>% summarise_all(funs(length)) %>% ungroup() %>% mutate(size = count) %>% select(size) %>% data.frame
+  coord_mean_quali <- bind_cols(coord_mean_quali, size = size_mean_quali) %>%
+    mutate(prop = glue("{var_quali}: {round(size/sum(size) * 100, 1)}%"),
+           colour = as.character(as.numeric(var_quali)))
 
   # Plot
   if(inherits(res_gda, c("MCA"))) p <- .create_plot()
@@ -130,7 +133,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
                         segments = 500, fill = "transparent")
 
   # Konzentrationsellipsen für die passiven Variablengruppen
-  if(individuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = var_quali, size = count), inherit.aes = FALSE, alpha = alpha_point)
+  if(individuals) p <- p + geom_point(data = coord_ind_quali, aes(x = x, y = y, colour = colour, size = count), inherit.aes = FALSE, alpha = alpha_point)
 
   p <- p + scale_size_continuous(range = c(1, 7))
 
@@ -159,23 +162,25 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
     }
 
-    if( !is.null(relevel) ) ellipse_axes <- ellipse_axes %>% mutate(var_quali = fct_relevel(var_quali, relevel))
+    if( !is.null(relevel) ) ellipse_axes %<>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
-    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = var_quali, colour = var_quali), geom ="polygon",  type = "norm", alpha = alpha_ellipses, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
-     geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, colour = var_quali), linetype = "dashed", inherit.aes = FALSE)
+    ellipse_axes %<>% mutate(colour = as.character(as.numeric(factor(var_quali))))
+
+    p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = colour, colour = colour), geom ="polygon",  type = "norm", alpha = alpha_ellipses, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
+     geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, colour = colour), linetype = "dashed", inherit.aes = FALSE)
 
   }
 
   if(confidence_ellipses) {
     conf_ellipses_coord <- FactoMineR::coord.ellipse(data.frame(coord_ind_quali[c(3,1,2)]), bary = TRUE)$res
-    if(conf_colour) p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, colour = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
-    else p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, group = var_quali), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
+    if(conf_colour) p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, colour = colour), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
+    else p <- p + geom_path(data = conf_ellipses_coord, aes(x, y, group = colour), show.legend = FALSE, linetype = conf_linetype, size = 0.75)
   }
 
-  if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size), colour = "black", shape = 23, inherit.aes = FALSE)
-  else p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali), colour = "black", shape = 23, size = 10, inherit.aes = FALSE)
+  if(scale_mean_points) p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = colour, size = size), colour = "black", shape = 23, inherit.aes = FALSE)
+  else p <- p + geom_point(data = coord_mean_quali, aes(x = x, y = y, fill = colour), colour = "black", shape = 23, size = 10, inherit.aes = FALSE)
 
-  if(show_prop) p <- p + geom_label(data = coord_mean_quali, aes(x = x, y = y, fill = var_quali, size = size, label = prop), colour = "black", inherit.aes = FALSE)
+  if(show_prop) p <- p + geom_label(data = coord_mean_quali, aes(x = x, y = y, fill = colour, size = size, label = prop), colour = "black", inherit.aes = FALSE)
 
   if(palette != FALSE) p <- p + scale_colour_brewer(palette = palette) + scale_fill_brewer(palette = palette)
 
