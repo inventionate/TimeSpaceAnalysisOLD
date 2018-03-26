@@ -164,7 +164,7 @@ fviz_gda_quali_ellipses <- function(res_gda, df_var_quali, var_quali, title = "M
 
     if( !is.null(relevel) ) ellipse_axes %<>% mutate(var_quali = fct_relevel(var_quali, relevel))
 
-    ellipse_axes %<>% mutate(colour = as.character(as.numeric(factor(var_quali))))
+    ellipse_axes %<>% mutate(colour = as.character(as.numeric(factor(var_quali, levels = levels(coord_ind_quali$var_quali)))))
 
     p <- p + stat_ellipse(data = coord_ind_quali, aes(x = x, y = y, fill = colour, colour = colour), geom ="polygon",  type = "norm", alpha = alpha_ellipses, linetype = conc_linetype, segments = 500, level = 0.8647, inherit.aes = FALSE) +
      geom_path(data = ellipse_axes, aes(x = x, y = y, group = group, colour = colour), linetype = "dashed", inherit.aes = FALSE)
