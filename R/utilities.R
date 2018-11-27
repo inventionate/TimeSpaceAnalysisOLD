@@ -90,7 +90,7 @@
   coord_complete <- coord_all %>% filter(id %in% selected_ind_complete$id)
 
   # Info bzgl. der Anzahl kompleter Fälle.
-  print(glue("Info: {length(selected_ind_complete$id)} complete cases."))
+  message(glue("Info: {length(selected_ind_complete$id)} complete cases."))
 
   # Selection (es wird select_ind definiert)
   selected_ind <- coord_all %>% select(id)
