@@ -84,12 +84,12 @@ fviz_gda_var_axis <- function(res_gda, axis = 1, contrib = "auto", title = "GDA 
       if(group_style == "colour") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "group", size = "weight"), shape = 17)
       if(group_style == "shape") p <- p + geom_point(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), shape = "group", size = "weight"), colour = "black")
       if(group_style %in% c("colour", "both")) {
-        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]),
+        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), vjust = 0, hjust = 0,
                                                                               colour = "group", label = factor(modalities_coord$rowname)),
                                           size = textsize, show.legend = FALSE)
       }
       if(group_style == "shape") {
-        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = factor(modalities_coord$rowname)),
+        p <- p + ggrepel::geom_text_repel(data = modalities_coord, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), label = factor(modalities_coord$rowname)), vjust = 0, hjust = 0,
                                           size = textsize, show.legend = FALSE)
       }
 

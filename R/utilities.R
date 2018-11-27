@@ -114,8 +114,9 @@
 
     # "within inertia" berechnen (adaptiert von FactoMineR)
     tmp <- array(0, dim = c(dim(ind_mean_coord %>% select(-id)), length(time_point_names)))
+
     for(i in seq_along(time_point_names)) {
-      tmp[,,i] <- (coord_complete %>% filter(time == time_point_names[i] & id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / length(time_point_names)
+      tmp[,,i] <- as.matrix((coord_complete %>% filter(time == time_point_names[i] & id %in% ind_mean_coord_id) %>% select(-id, -time) - ind_mean_coord %>% select(-id))^2 / length(time_point_names))
     }
     variab.auxil <- apply(tmp,2,sum)
     tmp <- sweep(tmp,2,variab.auxil,FUN="/") * 100
