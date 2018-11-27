@@ -9,7 +9,7 @@ get_time_pattern_series <- function(data_tp)
 
   # Daten für die Zeitserien aufbereiten
   data_series <- data_tp %>%
-    gather("day_activity", "duration", 3:51) %>%
+    gather("day_activity", "duration", 4:52) %>%
     mutate(day_activity = str_replace(day_activity, "_\\d+", "")) %>%
     separate(day_activity, c("day", "activity"), "_") %>%
     mutate(day = fct_relevel(str_to_title(day), "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"),
