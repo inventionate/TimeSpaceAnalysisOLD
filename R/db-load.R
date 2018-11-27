@@ -1,4 +1,4 @@
-#' Load data frame form a SQLite database.
+ #' Load data frame form a SQLite database.
 #'
 #' @param remote_db_path path to the remote database (SQLite).
 #' @param copy copy bring data into an R (boolean).
