@@ -64,7 +64,7 @@ fviz_gda_trajectory_quali <- function(res_gda, df_var_quali, var_quali, axes = 1
   if(inherits(res_gda, c("MCA"))) p <- .create_plot()
   else stop("Only MCA plots are currently supported!")
 
-  p <- p + scale_colour_brewer(palette = "YlGnBu", direction = -1) +
+  p <- p + scale_colour_viridis_d() +
     geom_point(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2])), colour = "black", size = 4) +
     geom_point(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), colour = "time"), size = 2.5) +
     geom_path(data = coord_ind_timeseries, aes_string(paste0("Dim.", axes[1]), paste0("Dim.", axes[2]), group = "id"), size = 1,

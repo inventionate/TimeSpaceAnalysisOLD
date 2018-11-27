@@ -63,7 +63,7 @@ fviz_gda_trajectory_ellipses <- function(res_gda, df_var_quali, var_quali, axes 
   coord_mean_mass_var_quali <- full_join(coord_mean_var_quali, coord_mass_var_quali, by = c("time", "var_quali"))
 
   # Plot der Daten
-  if(inherits(res_gda, c("MCA"))) p <- .create_plot()
+  if(inherits(res_gda, c("MCA"))) p <- .create_plot() + scale_colour_viridis_d()
   else stop("Only MCA plots are currently supported!")
 
   # Concentartion ellipse
