@@ -1,8 +1,8 @@
 Package: TimeSpaceAnalysis
 Type: Package
 Title: Statistical tools for time-space analysis
-Version: 1.1.4
-Date: 2018-03-26
+Version: 1.1.5
+Date: 2018-11-27
 Author: Fabian Mundt
 Maintainer: Fabian Mundt <f.mundt@inventionate.de>
 Encoding: UTF-8
